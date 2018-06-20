@@ -1,0 +1,207 @@
+[
+
+
+  {
+    "name": "timepoint_png",
+    "url": "static/img/timepoint.png"
+  },
+  {
+    "name": "boyskeleton",
+    "url": "static/img/choicepage/boyskeleton/boy.json"
+  },
+
+  {
+    "name": "indexMonster1_json",
+    "url": "static/themetypeui/monster1_song.json"
+  },
+  {
+    "name": "indexMonster2_json",
+    "url": "static/themetypeui/monster2_vocabulary.json"
+  },
+  {
+    "name": "indexMonster3_json",
+    "url": "static/themetypeui/monster3_sentences.json"
+  },
+  {
+    "name": "indexMonster4_json",
+    "url": "static/themetypeui/monster4_story.json"
+  },
+  {
+    "name": "indexMonster5_json",
+    "url": "static/themetypeui/monster5_grammar.json"
+  },
+  {
+    "name": "indexMonster6_json",
+    "url": "static/themetypeui/monster6_text.json"
+  },
+  {
+    "name": "indexMonster7_json",
+    "url": "static/themetypeui/monster7_ketpet.json"
+  },
+  {
+    "name": "tablebar1",
+    "url": "static/img/indexpage/tablebar1.png"
+  },
+  {
+    "name": "tablebar2_png",
+    "url": "static/img/tablebar2.png"
+  },
+  {
+    "name": "ufoPlate",
+    "url": "static/img/indexpage/table.png"
+  },
+  {
+    "name": "lessonTitleAtlas",
+    "url": "static/img/indexpage/lessontitles.json"
+  },
+  {
+    "name":"monsterStartPage_json",
+    "url":"static/img/monster_start.json"
+  },
+  {
+    "name":"starflash_json",
+    "url":"static/img/starflash.json"
+  },
+
+  {
+    "name": "practiceBox_skeleton",
+    "url": "static/img/choicepage/boxskeleton/skeleton.json"
+  },
+
+
+  {
+    "name": "bookAnime_skeleton",
+    "url": "static/img/menus/bookanime/book.json"
+  },
+  {
+    "name": "boxAnime_skeleton",
+    "url": "static/img/menus/boxanime/skeleton.json"
+  },
+  {
+    "name": "energyAnime_skeleton",
+    "url": "static/img/menus/energyanime/skeleton.json"
+  },
+  {
+    "name": "continue_btn",
+    "url": "static/img/menus/energyanime/continue_btn.png"
+  },
+  {
+    "name": "gohome_btn",
+    "url": "static/img/menus/energyanime/gohome_btn.png"
+  },
+  {
+    "name": "open_btn",
+    "url": "static/img/menus/energyanime/open_btn.png"
+  },
+  {
+    "name": "text1_info",
+    "url": "static/img/menus/energyanime/text1.png"
+  },
+  {
+    "name": "text2_info",
+    "url": "static/img/menus/energyanime/text2.png"
+  },
+  {
+    "name": "texttable_png",
+    "url": "static/img/menus/energyanime/texttable.png"
+  },
+  {
+    "name":"table_png",
+    "url":"static/themetypeui/table.png"
+  },
+  {
+    "name":"tablebar_png",
+    "url":"static/themetypeui/table1.png"
+  },
+  {
+    "name":"choiceDesk_png",
+    "url":"static/themetypeui/back2ground.png"
+  },
+  {
+    "name": "congracard_png",
+    "url": "static/img/menus/energyanime/congracard.png"
+  },
+  {
+    "name":"practiceSoundPlay_png",
+    "url":"static/img/menus/sound-b.png"
+  },
+
+
+  {
+    "name":"powerstar_png",
+    "url":"static/img/powerstar.png"
+  },
+
+
+  {
+    "name":"menubtnKey_png",
+    "url":"static/themetypeui/key.png"
+  },
+  {
+    "name":"menubtnBack_png",
+    "url":"static/themetypeui/back.png"
+  },
+
+  {
+    "name":"menubtnBook_png",
+    "url":"static/themetypeui/book.png"
+  },
+
+  {
+    "name":"menubtnClose_png",
+    "url":"static/themetypeui/close.png"
+  },
+
+  {
+    "name":"menubtnSound_atlas",
+    "url":"static/themetypeui/menusTrumpet.json"
+  },
+  {
+    "name":"gamebtnSound_atlas",
+    "url":"static/themetypeui/practiceTrumpet.json"
+  },
+  {
+    "name":"menubtnHome_png",
+    "url":"static/themetypeui/home.png"
+  },
+
+  {
+    "name":"menuBtnKeyline_png",
+    "url":"static/themetypeui/keyborder.png"
+  },
+  {
+    "name":"menuBtnKeylight_png",
+    "url":"static/themetypeui/keylight.png"
+  },
+
+  {
+    "name":"menuBtn_Energy",
+    "url":"static/img/menus/energybar.png"
+  },
+
+
+
+  {
+    "name":"choicebg_jpg",
+    "url":"static/themetypeui/choicebg.jpg"
+  },
+
+  {
+    "name":"bgGround_jpg",
+    "url":"static/themetypeui/ground.jpg"
+  },
+
+  {
+    "name":"indexback1_jpg",
+    "url":"static/themetypeui/indexback1.png"
+  },
+  {
+    "name":"backbg_jpg",
+    "url":"static/themetypeui/backbg.jpg"
+  },
+  {
+    "name":"practicebg_jpg",
+    "url":"static/themetypeui/practicebg.jpg"
+  }
+
+]

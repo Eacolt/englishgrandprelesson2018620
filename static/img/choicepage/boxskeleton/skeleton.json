@@ -1,0 +1,214 @@
+{
+"skeleton": { "hash": "BibhTKSvW+zvXf3l1g23Flz/Tgc", "spine": "3.6.52", "width": 809, "height": 602, "images": "./stuffs/" },
+"bones": [
+	{ "name": "root" }
+],
+"slots": [
+	{ "name": "dropbox1", "bone": "root", "attachment": "dropbox" },
+	{ "name": "dropbox2", "bone": "root", "attachment": "dropbox" },
+	{ "name": "boxlight1", "bone": "root", "attachment": "boxlight1" },
+	{ "name": "boxlight2", "bone": "root", "attachment": "boxlight2" },
+	{ "name": "text1", "bone": "root", "attachment": "Learning1" },
+	{ "name": "text2", "bone": "root", "attachment": "Practice1" }
+],
+"skins": {
+	"default": {
+		"boxlight1": {
+			"boxlight1": { "x": -65.44, "y": 68.63, "width": 809, "height": 602 }
+		},
+		"boxlight2": {
+			"boxlight2": { "x": -29.96, "y": -105.1, "width": 238, "height": 121 }
+		},
+		"text1": {
+			"Learning1": { "x": -112.4, "y": 40.15, "width": 217, "height": 84 },
+			"Learning2": { "x": -112.4, "y": 40.15, "width": 217, "height": 84 }
+		},
+		"text2": {
+			"Practice1": { "x": -108.9, "y": 40.18, "width": 224, "height": 78 },
+			"Practice2": { "x": -108.9, "y": 40.15, "width": 224, "height": 78 }
+		}
+	},
+	"dorpbox1": {
+		"dropbox1": {
+			"dropbox": { "name": "dropbox1_1", "width": 541, "height": 393 }
+		},
+		"dropbox2": {
+			"dropbox": { "name": "dropbox1_2", "width": 536, "height": 392 }
+		}
+	},
+	"dorpbox2": {
+		"dropbox1": {
+			"dropbox": { "name": "dropbox2_1", "width": 541, "height": 393 }
+		},
+		"dropbox2": {
+			"dropbox": { "name": "dropbox2_2", "width": 537, "height": 392 }
+		}
+	},
+	"dorpbox3": {
+		"dropbox1": {
+			"dropbox": { "name": "dropbox3_1", "width": 541, "height": 393 }
+		},
+		"dropbox2": {
+			"dropbox": { "name": "dropbox3_2", "width": 536, "height": 392 }
+		}
+	},
+	"dorpbox4": {
+		"dropbox1": {
+			"dropbox": { "name": "dropbox4_1", "width": 541, "height": 393 }
+		},
+		"dropbox2": {
+			"dropbox": { "name": "dropbox4_2", "width": 536, "height": 392 }
+		}
+	},
+	"dorpbox5": {
+		"dropbox1": {
+			"dropbox": { "name": "dropbox5_1", "width": 541, "height": 393 }
+		},
+		"dropbox2": {
+			"dropbox": { "name": "dropbox5_2", "width": 536, "height": 392 }
+		}
+	}
+},
+"animations": {
+	"learning_select": {
+		"slots": {
+			"boxlight1": {
+				"color": [
+					{ "time": 0, "color": "ffffffff" },
+					{ "time": 0.6667, "color": "ffffff4b" },
+					{ "time": 1, "color": "ffffffff" }
+				]
+			},
+			"boxlight2": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.3333, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 1, "color": "ffffffff" },
+					{ "time": 1.3333, "color": "ffffff00" }
+				]
+			},
+			"dropbox1": {
+				"attachment": [
+					{ "time": 0, "name": "dropbox" }
+				]
+			},
+			"dropbox2": {
+				"attachment": [
+					{ "time": 0, "name": null }
+				]
+			},
+			"text1": {
+				"attachment": [
+					{ "time": 0, "name": "Learning2" }
+				]
+			},
+			"text2": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" }
+				]
+			}
+		}
+	},
+	"learning_warming": {
+		"slots": {
+			"boxlight1": {
+				"color": [
+					{ "time": 0, "color": "ffffff49" },
+					{ "time": 0.6667, "color": "ffffff11" },
+					{ "time": 1.3333, "color": "ffffff49" }
+				]
+			},
+			"boxlight2": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" }
+				]
+			},
+			"dropbox1": {
+				"attachment": [
+					{ "time": 0, "name": "dropbox" }
+				]
+			},
+			"dropbox2": {
+				"attachment": [
+					{ "time": 0, "name": null }
+				]
+			},
+			"text2": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" }
+				]
+			}
+		}
+	},
+	"practice_select": {
+		"slots": {
+			"boxlight1": {
+				"color": [
+					{ "time": 0, "color": "ffffffff" },
+					{ "time": 0.6667, "color": "ffffff4b" },
+					{ "time": 1, "color": "ffffffff" }
+				]
+			},
+			"boxlight2": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.3333, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 1, "color": "ffffffff" },
+					{ "time": 1.3333, "color": "ffffff00" }
+				]
+			},
+			"dropbox1": {
+				"attachment": [
+					{ "time": 0, "name": null }
+				]
+			},
+			"dropbox2": {
+				"attachment": [
+					{ "time": 0, "name": "dropbox" }
+				]
+			},
+			"text1": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" }
+				]
+			},
+			"text2": {
+				"attachment": [
+					{ "time": 0, "name": "Practice2" }
+				]
+			}
+		}
+	},
+	"practice_warming": {
+		"slots": {
+			"boxlight1": {
+				"color": [
+					{ "time": 0, "color": "ffffff49" },
+					{ "time": 0.6667, "color": "ffffff11" },
+					{ "time": 1.3333, "color": "ffffff49" }
+				]
+			},
+			"boxlight2": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" }
+				]
+			},
+			"dropbox1": {
+				"attachment": [
+					{ "time": 0, "name": null }
+				]
+			},
+			"dropbox2": {
+				"attachment": [
+					{ "time": 0, "name": "dropbox" }
+				]
+			},
+			"text1": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" }
+				]
+			}
+		}
+	}
+}
+}

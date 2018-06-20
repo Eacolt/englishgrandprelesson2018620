@@ -1,0 +1,122 @@
+[
+
+  {
+    "name":"module2",
+
+    "moduleConfig":{
+      "assets":[
+        {
+          "name":"topTextUrl",
+          "url":"static/module2/img/top_text.png"
+        },
+        {
+          "name":"card1",
+          "url":"static/module2/img/ans1-01.png"
+        },
+        {
+          "name":"card2",
+          "url":"static/module2/img/ans1-02.png"
+        },
+        {
+          "name":"card3",
+          "url":"static/module2/img/ans1-03.png"
+        }
+      ],
+
+      "questionList":[
+        {
+          "cardList":[
+            {
+             "name":"card1"
+            },
+            {
+              "name":"card2"
+            },
+            {
+              "name":"card3"
+            }
+          ]
+        },
+
+
+        {
+          "cardList":[
+            {
+              "name":"card3"
+            },
+            {
+              "name":"card2"
+            },
+            {
+              "name":"card1"
+            }
+          ]
+        }
+
+      ]
+    }
+  },
+  {
+    "name":"module1",
+
+
+    "moduleConfig":{
+      "questions":[
+        {
+          "rightAnswer":1,
+          "cards":[
+            {
+              "url":"static/module1/images/1-001.png"
+            },
+            {
+              "url":"static/module1/images/1-002.png"
+            },
+            {
+              "url":"static/module1/images/1-003.png"
+            }
+          ]
+
+        },
+        {
+          "rightAnswer":0,
+          "cards":[
+            {
+
+              "url":"static/module1/images/1-003.png"
+            },
+            {
+
+              "url":"static/module1/images/1-001.png"
+            },
+            {
+
+              "url":"static/module1/images/1-002.png"
+            }
+          ]
+
+        }
+      ]
+    }
+  },
+
+  {
+    "name":"module3",
+    "moduleConfig":{
+      "bgUrl":"static/module3/img/monsterground1.jpg",
+      "skeletonUrl":"static/module3/img/skeleton.json"
+    }
+  },
+  {
+    "name":"module4",
+
+    "moduleConfig":{
+      "assets":{
+        "skeletonUrl":"static/module4/img/skeleton.json",
+        "handspriteUrl":"static/module4/img/handsprite.json",
+        "lights":"static/module4/img/light_1.png"
+      }
+    }
+  },
+
+
+]

@@ -1,0 +1,55 @@
+{
+  "version": "0.0.1",
+  "list": [
+    {
+      "id": 0,
+      "ext": "mp4",
+      "name": "001",
+      "host": "http://localhost:8080",
+      "src": "static/moviemodule/001.mp4"
+    },
+    {
+      "id": 1,
+      "ext": "png",
+      "name": "playbtn",
+      "host": "http://localhost:8080",
+      "src": "static/moviemodule/playbtn.png"
+    },
+    {
+      "id": 2,
+      "ext": "png",
+      "name": "headbtn",
+      "host": "http://localhost:8080",
+      "src": "static/moviemodule/headbtn.png"
+    },
+    {
+      "id": 3,
+      "ext": "png",
+      "name": "pausebtn",
+      "host": "http://localhost:8080",
+      "src": "static/moviemodule/pausebtn.png"
+    },
+    {
+      "id": 4,
+      "ext": "png",
+      "name": "progressbar",
+      "host": "http://localhost:8080",
+      "src": "static/moviemodule/progressbar.png"
+    },
+    {
+      "id": 5,
+      "ext": "png",
+      "name": "videobg",
+      "host": "http://localhost:8080",
+      "src": "static/moviemodule/videobg.png"
+    },
+    {
+      "id": 6,
+      "ext": "png",
+      "name": "goplaybtn",
+      "host": "http://localhost:8080",
+      "src": "static/moviemodule/goplaybtn.png"
+    }
+  ]
+}
+

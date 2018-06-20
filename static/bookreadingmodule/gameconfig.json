@@ -1,0 +1,75 @@
+
+
+{
+  "assets":[
+    {
+      "name":"pagefengmian",
+      "url":"static/bookreadingmodule/fengmian.png"
+    },
+    {
+      "name":"pagebeimian",
+      "url":"static/bookreadingmodule/beimian2.png"
+    },
+    {
+      "name":"page0",
+      "url":"static/bookreadingmodule/page0.png"
+    },
+    {
+      "name":"page1",
+      "url":"static/bookreadingmodule/page1.png"
+    },
+    {
+      "name":"page2",
+      "url":"static/bookreadingmodule/page2.png"
+    },
+    {
+      "name":"page3",
+      "url":"static/bookreadingmodule/page3.png"
+    },
+    {
+      "name":"page4",
+      "url":"static/bookreadingmodule/page4.png"
+    },
+    {
+      "name":"leftbtn_png",
+      "url":"static/bookreadingmodule/leftbtn.png"
+    },
+    {
+      "name":"rightbtn_png",
+      "url":"static/bookreadingmodule/rightbtn.png"
+    },
+    {
+      "name":"mybooks_png",
+      "url":"static/bookreadingmodule/mybooks.png"
+    },
+    {
+      "name":"pageturns_atlas",
+      "url":"static/bookreadingmodule/pageturns.json"
+    },
+    {
+      "name":"pageturn2_png",
+      "url":"static/bookreadingmodule/pageturn2.png"
+    }
+  ],
+  "gameData":{
+    "levels":[{
+      "picture":"page0",
+      "audioSrc":"sound001.mp3"
+    },{
+      "picture":"page1",
+      "audioSrc":"sound002.mp3"
+    },{
+      "picture":"page2",
+      "audioSrc":"sound003.mp3"
+    },{
+      "picture":"page3",
+      "audioSrc":"sound004.mp3"
+    },{
+      "picture":"page4",
+      "audioSrc":"sound005.mp3"
+    }],
+    "showCoverpage":true
+
+
+  }
+}

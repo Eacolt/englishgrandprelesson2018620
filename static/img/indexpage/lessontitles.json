@@ -1,0 +1,76 @@
+{"frames": {
+
+"grammar.png":
+{
+	"frame": {"x":1070,"y":1,"w":206,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":9,"w":206,"h":40},
+	"sourceSize": {"w":260,"h":60}
+},
+"ketpet.png":
+{
+	"frame": {"x":237,"y":1,"w":168,"h":46},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":41,"y":9,"w":168,"h":46},
+	"sourceSize": {"w":260,"h":60}
+},
+"reading.png":
+{
+	"frame": {"x":639,"y":1,"w":214,"h":45},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":7,"w":214,"h":45},
+	"sourceSize": {"w":260,"h":60}
+},
+"sentences.png":
+{
+	"frame": {"x":855,"y":1,"w":213,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":21,"y":8,"w":213,"h":40},
+	"sourceSize": {"w":260,"h":60}
+},
+"song.png":
+{
+	"frame": {"x":524,"y":1,"w":113,"h":46},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":68,"y":9,"w":113,"h":46},
+	"sourceSize": {"w":260,"h":60}
+},
+"story.png":
+{
+	"frame": {"x":407,"y":1,"w":115,"h":46},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":68,"y":9,"w":115,"h":46},
+	"sourceSize": {"w":260,"h":60}
+},
+"text.png":
+{
+	"frame": {"x":1278,"y":1,"w":91,"h":37},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":80,"y":12,"w":91,"h":37},
+	"sourceSize": {"w":260,"h":60}
+},
+"vocabulary.png":
+{
+	"frame": {"x":1,"y":1,"w":234,"h":46},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":5,"w":234,"h":46},
+	"sourceSize": {"w":260,"h":60}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "lessontitles.png",
+	"format": "RGBA8888",
+	"size": {"w":1370,"h":48},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:40737c085f99dee0aeb54f9f7058a0cf:371030d1636da4925734e44d8d71c459:7fa3948c5d974cb7f784a94ead09988e$"
+}
+}

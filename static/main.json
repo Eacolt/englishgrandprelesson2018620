@@ -1,0 +1,248 @@
+{
+
+  "version": "0.0.1",
+  "pages": [
+    {
+
+      "modelId": "int",
+
+      "width": "int",
+      "height": "int",
+      "id": 0,
+
+      "animationList": [
+        {
+
+          "sourceId": "int",
+
+          "eventType": "int",
+
+          "animations": [
+            {
+              "targetId": "int",
+              "animationType": "int"
+            }
+          ]
+        }
+      ],
+
+      "actionList": [
+        {
+
+          "sourceId": "int",
+
+          "eventType": "int",
+
+          "actions": [
+            {
+              "targetId": "int",
+
+              "actionType": "int",
+              "actionProps": {
+                "order": "int"
+
+              }
+            }
+          ]
+        }
+      ],
+      //子对象
+      "children": [
+        {
+
+          "id": "int",
+
+          "name": "btnsContainer",
+
+          "visible": "boolean",
+          "alpha": 1,
+
+          "rectangle": [
+            "left",
+            "top",
+            "width",
+            "height"
+          ],
+
+          "transform": [
+            "x",
+            "y",
+            "scaleX",
+            "scaleY",
+            "rotation",
+            "skewX",
+            "skewY",
+            "regX",
+            "regY"
+          ],
+
+          "children": [
+
+            {
+
+              "id": "int",
+
+              "name": "string",
+
+              "visible": "boolean",
+              "alpha": 1,
+
+              "rectangle": [
+                "left",
+                "top",
+                "width",
+                "height"
+              ],
+
+              "transform": [
+                "x",
+                "y",
+                "scaleX",
+                "scaleY",
+                "rotation",
+                "skewX",
+                "skewY",
+                "regX",
+                "regY"
+              ],
+
+              "children": [
+
+
+
+
+              ],
+
+              "texture": {
+
+                "content": null,
+
+                "type": 4
+              },
+
+              "edit": {
+                "layer": {
+
+                  "lock": "boolean",
+
+                  "hide": "boolean"
+                },
+
+                "control": {
+
+                  "permission": [
+
+                    "deletable",
+
+                    "moveable",
+
+                    "scalable",
+
+                    "rotatable"
+                  ]
+                }
+              }
+            },
+            {
+
+              "id": "int",
+
+              "name": "string",
+
+              "visible": "boolean",
+              "alpha": 1,
+
+              "rectangle": [
+                "left",
+                "top",
+                "width",
+                "height"
+              ],
+
+              "transform": [
+                "x",
+                "y",
+                "scaleX",
+                "scaleY",
+                "rotation",
+                "skewX",
+                "skewY",
+                "regX",
+                "regY"
+              ],
+
+              "children": [
+
+
+
+
+              ],
+
+              "texture": {
+
+                "content": null,
+
+                "type": 4
+              },
+
+              "edit": {
+                "layer": {
+
+                  "lock": "boolean",
+
+                  "hide": "boolean"
+                },
+
+                "control": {
+
+                  "permission": [
+
+                    "deletable",
+
+                    "moveable",
+
+                    "scalable",
+
+                    "rotatable"
+                  ]
+                }
+              }
+            }
+
+
+          ],
+
+          "texture": {
+
+            "content": null,
+
+            "type": 4
+          },
+
+          "edit": {
+            "layer": {
+
+              "lock": "boolean",
+
+              "hide": "boolean"
+            },
+
+            "control": {
+
+              "permission": [
+
+                "deletable",
+
+                "moveable",
+
+                "scalable",
+
+                "rotatable"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

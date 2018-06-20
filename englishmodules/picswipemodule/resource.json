@@ -1,0 +1,70 @@
+{
+
+  "version": "0.0.1",
+  "list": [
+    {
+
+      "id": 0,
+
+      "ext": "jpg",
+
+      "name": "backbg",
+
+      "host": "http://localhost:8080",
+
+      "src": "static/picswipemodule/backgd.jpg"
+    },
+
+    {
+
+      "id": 1,
+
+      "ext": "png",
+
+      "name": "pagination",
+
+      "host": "http://localhost:8080",
+
+      "src": "static/picswipemodule/pagination.png"
+    },
+
+
+    {
+
+      "id": 2,
+
+      "ext": "png",
+
+      "name": "slidepic001",
+
+      "host": "http://localhost:8080",
+
+      "src": "static/picswipemodule/slidepic001.png"
+    },
+    {
+
+      "id": 3,
+
+      "ext": "png",
+
+      "name": "slidepic002",
+
+      "host": "http://localhost:8080",
+
+      "src": "static/picswipemodule/slidepic002.png"
+    },
+    {
+
+      "id": 4,
+
+      "ext": "png",
+
+      "name": "slidepic003",
+
+      "host": "http://localhost:8080",
+
+      "src": "static/picswipemodule/slidepic003.png"
+    }
+  ]
+}
+
