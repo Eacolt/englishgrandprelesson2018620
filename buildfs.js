@@ -191,8 +191,7 @@ function copyTheme() {
 
 
       let files = [
-        'menusbars_pink.json',
-        'menusbars_pink.png',
+
         'menusTrumpet_pink.json',
         'menusTrumpet_pink.png',
         'practiceTrumpet_pink.json',
@@ -255,8 +254,7 @@ function copyTheme() {
     }
     else if(mtype==2){
       let files = [
-        'menusbars_yellow.json',
-        'menusbars_yellow.png',
+
         'menusTrumpet_yellow.json',
         'menusTrumpet_yellow.png',
         'practiceTrumpet_yellow.json',
@@ -382,8 +380,7 @@ function copyTheme() {
   }
     else if(mtype==4){
       let files = [
-        'menusbars_blue.json',
-        'menusbars_blue.png',
+
         'menusTrumpet_blue.json',
         'menusTrumpet_blue.png',
         'practiceTrumpet_blue.json',
@@ -448,8 +445,7 @@ function copyTheme() {
     }
     else if(mtype==5){
       let files = [
-        'menusbars_purple.json',
-        'menusbars_purple.png',
+
         'menusTrumpet_purple.json',
         'menusTrumpet_purple.png',
         'practiceTrumpet_purple.json',

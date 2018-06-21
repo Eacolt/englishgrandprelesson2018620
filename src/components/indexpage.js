@@ -137,19 +137,26 @@ class PixiScene1 extends PIXI.Container {
     boy.skeleton.setSlotsToSetupPose();
     boy.state.setAnimation(0, 'hello1', true);
     boy.x = 1920 / 2 + 300;
-    boy.y = 640;
+    boy.y = 680;
     boy.scale.x = boy.scale.y = 0.36;
 
 
     switch (this.THEME_TYPE){
       case 1:
-        boy.tint = 0xf4c17f;
+        boy.tint = 0xffbec4;
+        break;
+      case 2:
+        boy.tint = 0xffd8a0;
+        break;
+      case 3:
+        boy.tint = 0xdbff84;
+        break;
+      case 5:
+        boy.tint = 0xe7c4ff;
         break;
       default:
         break;
     }
-
-
     //
     self.addChild(ground);
     self.addChild(boy)
@@ -190,7 +197,7 @@ class PixiScene1 extends PIXI.Container {
       let monsters = new PIXI.spine.Spine(monsterData);
       monsters.state.setAnimation(0, 'standing', true)
 
-      monsters.x = 325;
+      monsters.x = 308;
       monsters.y = -10;
 
 
@@ -216,7 +223,7 @@ class PixiScene1 extends PIXI.Container {
       tablebarStart.mask = progressMask;
       progressBar.pivot.x = progressBar.width / 2;
       progressBar.pivot.y = progressBar.height / 2;
-      progressBar.x = plate.width / 2 + 34;
+      progressBar.x = plate.width / 2 + 20;
       progressBar.y = 388;
 
       //得到各个课程的完成度情况，遍历meta.completed知道。
@@ -231,14 +238,12 @@ class PixiScene1 extends PIXI.Container {
         });
         return _arrPlus
       }
-
       progressMask.width = getPlusByCompleted() / self.vueInstance.allLessonCompleteStat[i].length * tablebarStart.width;
       slideUfo.addChild(progressBar);
-      var text = new PIXI.Sprite(self.resource['lessonTitleAtlas'].textures[self.vueInstance.allPartNames[i] + '.png']);
-
+      var  text = new PIXI.Sprite(self.resource['tabletext_atlas'].textures[self.vueInstance.allPartNames[i] + '.png']);
 
       text.pivot.x = text.width / 2;
-      text.x = plate.width / 2 + 36;
+      text.x = plate.width / 2 + 26;
       text.y = 320;
 
       slideUfo.addChild(text)
@@ -408,16 +413,12 @@ class PixiScene1 extends PIXI.Container {
   ufoSlidePointerDown(event) {
     const self = this;
 
-    if (  self.swiperHammer.swiperMovedX == 0) {
+    if (self.swiperHammer &&  self.swiperHammer.swiperMovedX == 0) {
       const myIndex = event.currentTarget.myIndex;
-
-
       self.leftTouchBtn.interactive = self.rightTouchBtn.interactive = false;
-
       self.swiperHammer.removeAllSwiperListener();
-      event.currentTarget.removeListener('pointertap', this.ufoSlidePointerDown, this)
       self.swiperHammer = null;
-
+      event.currentTarget.removeListener('pointertap', this.ufoSlidePointerDown, this)
 
       event.currentTarget.getChildAt(1).state.setAnimation(0, 'catching1', false);
       event.currentTarget.getChildAt(1).state.addListener({

@@ -1,6 +1,7 @@
 import {TweenMax} from 'gsap'
 import BookScene from './BookScene.js'
-import {SoundTrumpet} from '../EasyPIXI.js'
+import {SoundTrumpet,PIXIAudio} from '../EasyPIXI.js'
+
 class GameMenuBars extends PIXI.Container {
   static instancement = null;
   static vueInstance= null;
@@ -103,19 +104,13 @@ class GameMenuBars extends PIXI.Container {
     function init_energyBar() {
       this.energyBar = new PIXI.Container();
       let keybg = null;
-
       let keyborder =null;
       let keyLight = null;
       let energy = null;
-
       keybg = this.createSprite('menubtnKey_png');
-
       keyborder = this.createSprite('menuBtnKeyline_png');
       keyLight = this.createSprite('menuBtnKeylight_png');
       energy = this.createSprite('menuBtn_Energy');
-
-
-
       keybg.y = 11;
       keybg.x = 11;
       this.energyMask = new PIXI.Graphics();
@@ -128,9 +123,6 @@ class GameMenuBars extends PIXI.Container {
       this.energyBar.addChild(keyborder);
       this.energyBar.addChild(keyLight);
       energy.mask = this.energyMask;
-
-
-
       this.barCtn.addChild(this.energyBar)
 
       this.energyBar.pivot.x = this.energyBar.width;
@@ -226,7 +218,6 @@ class GameMenuBars extends PIXI.Container {
     this.backBtnShow = true;
     this.homeBtnShow = false;
     this.energyBtnShow = true;
-
     this.bookBtnShow = true;
 
 
@@ -244,15 +235,8 @@ class GameMenuBars extends PIXI.Container {
 
     this.starsLight.y = 100;
     this.starsLight.x = 1400;
-
-    // this.starsLight.state.timeScale = 0 ;
-   // this.starsLight.state.tracks[0].trackTime = 0;
     this.starsLight.alpha = 0;
-
-
-
   }
-
 
    setBookPos($num){
     this.bookBtn.x = $num;
@@ -470,6 +454,9 @@ class GameMenuBars extends PIXI.Container {
     this.starsLight.state.setAnimation(0,'star',false);
     this.starsLight.state.tracks[0].trackTime = 0;
     this.starsLight.alpha = 1;
+
+
+    PIXIAudio.audios['power_gain'].play();
 
 
   }

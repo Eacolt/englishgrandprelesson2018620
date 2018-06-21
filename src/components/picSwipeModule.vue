@@ -34,6 +34,10 @@
       </div>
     </div>
     <div ref="boyBtnArea" class="boyBtnArea" @click="boyBtnAreaClicked"></div>
+    <div :style="canvas2Style" class="canvas2">
+      <pixi-canvas :style="canvas2Style"  @startGame="gameStart2"></pixi-canvas>
+    </div>
+
     <transition  @before-enter="beforeEnter"
                  @enter="enter"
                  @leave="leave">
@@ -51,10 +55,12 @@
   import {ResourceMent,myVueMixin,checkForJumpRoute,myVueMixin_Popup,loaderAssetsByValided} from './Utils.js'
   import {mapActions, mapState} from 'vuex'
   import PixiScene1 from './picSwipeModule.js'
+  import GameMenuBars from './gameui/GameMenuBar.js'
 
   import $ from 'jquery'
   import GameHand from './gameui/Gamehand.js'
   import {LoadingAnimation} from "./gameui/GameManager";
+  import Masker from './gameui/Masker.js'
 
 
   import congraPopup from './gameui/congraPopup.vue'
@@ -79,6 +85,10 @@
         slideLists: [],
         paginationLists: [],
         paginationPicture: {},
+        openEnergyed:{
+          type:false,
+          opened:false
+        },
 
         popupType:'popup2',
         paginationballs_style:{},
@@ -97,6 +107,9 @@
         rightTriangle_style:{},
 
         currentPaginationPages:-1,
+        canvas2Style:{
+          pointerEvents:'none'
+        }
 
       }
     },
@@ -154,7 +167,12 @@
           let isQingsuan = self.$route.name==self.restArrangementStat[self.restArrangementStat.length-1];//开始清算;
           if(isQingsuan && !self.gameHasBeenCompleted ){
             setTimeout(()=>{
-              pixiScene.gameMenuBar.bookScene.openEnergyCan(false);
+           //   pixiScene.gameMenuBar.bookScene.openEnergyCan(false);
+
+              self.openEnergyed = {
+                type:false,
+                opened:true
+              }
             },self.showPopupDelay);
           }
           setTimeout(()=>{
@@ -166,7 +184,12 @@
               return;
             }
             if(self.gameHasBeenCompleted && !self.alreadyHasOneCard){
-              pixiScene.gameMenuBar.bookScene.openEnergyCan(true);
+             // pixiScene.gameMenuBar.bookScene.openEnergyCan(true);
+
+              self.openEnergyed = {
+                type:true,
+                opened:true
+              }
             }
             if(!self.gameHasBeenCompleted && isQingsuan==false ){
               self.showCongra = true;
@@ -264,11 +287,49 @@
         }
 
       },
+      gameStart2(app){
+        const self = this;
+
+
+        var gameMenuBar = new GameMenuBars();
+        var maskerBg = new Masker();
+
+        //
+         app.stage.addChild(gameMenuBar);
+        gameMenuBar.backBtnShow = false;
+        gameMenuBar.homeBtnShow = false;
+        gameMenuBar.bookBtnShow = false;
+        gameMenuBar.soundBtnShow = false;
+        gameMenuBar.updateGameMenu();
+        gameMenuBar.energyBar.alpha = 0;
+        gameMenuBar.soundBtn.alpha = 0;
+        self.$watch(()=>{
+          return self.openEnergyed
+        },(newval)=>{
+
+             if(newval.opened==true && newval.type == true){
+               gameMenuBar.bookScene.openEnergyCan(true);
+               self.canvas2Style = {
+                 pointerEvents:'auto'
+               }
+             }else if(newval.opened==true && newval.type == false){
+               gameMenuBar.bookScene.openEnergyCan(false);
+               self.canvas2Style = {
+                 pointerEvents:'auto'
+               }
+             }
+        },{deep:true});
+
+        // app.stage.addChild(maskerBg)
+        //  app.stage.addChild(maskerBg);
+
+      },
 
       gameStart(app) {
         const self = this;
          modulesUrl = this.$route.meta.assetsUrl;
          self.globalStatic = 'static/' + modulesUrl;
+
 
         self.axios.get(self.globalStatic + '/gameconfig.json').then((gameConfigData) => {
           var assets = gameConfigData.data.assets.map((item, index) => {
@@ -460,10 +521,9 @@
                       },20)
                       GameHand.locked = false;
 
-                      // setTimeout(()=>{
-                      //   pixiScene.playAudios();
-                      // },300)
-
+                      setTimeout(()=>{
+                        pixiScene.playAudios();
+                      },300)
                       this.update();
 
                     }
@@ -471,12 +531,11 @@
                 });
 
 
-
               let audioManifest = [];
               for(let i=0;i<gameConfigData.gameData.pictureList.length;i++){
                 let audioSrc = gameConfigData.gameData.pictureList[i].audioSrc;
+                let audioName = modulesUrl+'_'+audioSrc.replace(/\./g,'_');
 
-                let audioName = modulesUrl+'_'+audioSrc.match(/sound[0-9]+/g,'');
 
                 audioManifest.push({
                   id:audioName,
@@ -508,12 +567,6 @@
 
                 LoadingAnimation.setMaskShow(false)
               }
-
-
-
-
-
-
 
               //END
             }
@@ -593,11 +646,9 @@
     cursor:none;
 
   }
-
   .swiper-slide-active, .swiper-slide-duplicate-active {
     transform-origin: center center;
     transform: scale(1) !important;
-
   }
   .swiper-slide-active.none-effect {
     /*color: green;*/
@@ -720,6 +771,14 @@
 
   [v-cloak] {
     display: none;
+  }
+  .canvas2{
+    position: absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    z-index: 111;
   }
 
 </style>

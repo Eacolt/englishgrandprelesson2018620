@@ -23,16 +23,23 @@ class ChoiceInterface extends PIXI.Container {
     this.monster = null;
 
     this.monsterFirstEntry = null;
+    this.canDragDown = false;
 
     this.THEME_TYPE = GameMenuBars.vueInstance.gameThemeType;
 
 
     this.once('added', this.addedToStage, this)
   }
-  createCommonAtlas($texturename){
+  //返回一个纯净的字母
+  killAlias($str){
+    return $str.replace(/[0-9]+/g,'');
+  }
+
+  createCommonAtlas($texturename) {
     let sprite = new PIXI.Sprite(PIXI.loader.resources['commons_atlas'].textures[$texturename]);
     return sprite;
   }
+
   getSlotRegionByName($animation, $name) {
     for (let i = 0; i < $animation.slotContainers.length; i++) {
       for (let k = 0; k < $animation.slotContainers[i].children.length; k++) {
@@ -45,7 +52,9 @@ class ChoiceInterface extends PIXI.Container {
 
   clickBoxHandler(i = 0, $timespeed = 1, event) {
     const self = this;
+    if (this.canDragDown == false) return;
     if (this.monsterHasDroped == true) return;
+
     this.monsterHasDroped = true;
 
     GameMenuBars.freeze = true;
@@ -55,7 +64,7 @@ class ChoiceInterface extends PIXI.Container {
 
 
     if (i == 0) {
-      if (event.currentTarget.boxName == 'learning') {
+      if (self.killAlias(event.currentTarget.boxName) == 'learning') {
 
         event.currentTarget.state.setAnimation(0, 'learning_select', true);
 
@@ -100,7 +109,7 @@ class ChoiceInterface extends PIXI.Container {
 
     } else if (i == 1) {
 
-      if (event.currentTarget.boxName == 'learning') {
+      if (self.killAlias(event.currentTarget.boxName) == 'learning') {
 
         event.currentTarget.state.setAnimation(0, 'learning_select', true);
       } else {
@@ -151,8 +160,13 @@ class ChoiceInterface extends PIXI.Container {
 
   addedToStage() {
     const self = this;
-    let desk = new PIXI.Sprite(self.resources['choiceDesk_png'].texture);;
-     let gameBg  = new PIXI.Sprite(self.resources['choicebg_jpg'].texture);
+    setTimeout(()=>{
+      self.canDragDown = true;
+    },400)
+
+    let desk = new PIXI.Sprite(self.resources['choiceDesk_png'].texture);
+
+    let gameBg = new PIXI.Sprite(self.resources['choicebg_jpg'].texture);
 
     this.addChild(gameBg)
 
@@ -166,7 +180,24 @@ class ChoiceInterface extends PIXI.Container {
     boy.skeleton.setSkinByName('boy2');
     boy.skeleton.setSlotsToSetupPose();
     boy.state.setAnimation(0, 'hello2', true);
-    self.addChild(boy)
+    self.addChild(boy);
+
+    switch (this.THEME_TYPE) {
+      case 1:
+        boy.tint = 0xffbec4;
+        break;
+      case 2:
+        boy.tint = 0xffd8a0;
+        break;
+      case 3:
+        boy.tint = 0xdbff84;
+        break;
+      case 5:
+        boy.tint = 0xe7c4ff;
+        break;
+      default:
+        break;
+    }
 
 
     this.addChild(desk)
@@ -177,6 +208,7 @@ class ChoiceInterface extends PIXI.Container {
     for (let i = 0; i < _menus.length; i++) {
       let box_practice = new PIXI.spine.Spine(ske);
       //TODO:设置主题皮肤;
+
       switch (self.THEME_TYPE) {
         case 1:
           box_practice.skeleton.setSkinByName('dorpbox1');
@@ -214,8 +246,8 @@ class ChoiceInterface extends PIXI.Container {
       self.practiceBoxes[0].scale.x = self.practiceBoxes[0].scale.y = 0.86;
 
 
-      self.practiceBoxes[0].state.setAnimation(0, _menus[0].name + '_warming', true);
-      self.practiceBoxes[0].boxName = _menus[0].name;
+      self.practiceBoxes[0].state.setAnimation(0, self.killAlias(_menus[0].name) + '_warming', true);
+      self.practiceBoxes[0].boxName = self.killAlias(_menus[0].name);
       self.practiceBoxes[0].on('pointerdown', self.clickBoxHandler.bind(self, 0, 0), self);
 
     } else {
@@ -228,13 +260,13 @@ class ChoiceInterface extends PIXI.Container {
       self.practiceBoxes.forEach((item, index) => {
         item.scale.x = item.scale.y = 0.86;
         item.interactive = true;
-        item.boxName = _menus[index].name;
+        item.boxName = self.killAlias(_menus[index].name);
         item.on('pointerdown', self.clickBoxHandler.bind(self, index, 1), self);
       });
 
 
-      self.practiceBoxes[0].state.setAnimation(0, _menus[0].name + '_warming', true);
-      self.practiceBoxes[1].state.setAnimation(0, _menus[1].name + '_warming', true);
+      self.practiceBoxes[0].state.setAnimation(0, self.killAlias(_menus[0].name) + '_warming', true);
+      self.practiceBoxes[1].state.setAnimation(0, self.killAlias(_menus[1].name) + '_warming', true);
 
     }
 
@@ -292,14 +324,12 @@ class ChoiceInterface extends PIXI.Container {
       LoadingAnimation.setMaskShow(true)
     });
 
-    this.vueInstance.$watch(()=>{
+    this.vueInstance.$watch(() => {
       return self.vueInstance.energyCurrentNum
-    },(newval)=>{
+    }, (newval) => {
       this.gameMenuBars.energy = newval;
     });
     this.gameMenuBars.energyOnce = self.vueInstance.energyCurrentNum;
-
-
 
 
   }

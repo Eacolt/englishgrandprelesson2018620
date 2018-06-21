@@ -125,7 +125,7 @@
             let audioSrc = gameConfigData.gameData.levels[i].audioSrc;
             let audioSrcTrim = _.trim(audioSrc);
             if(audioSrcTrim!=''){
-              let audioName = modulesUrl+'_'+audioSrcTrim.match(/sound[0-9]+/g,'');
+              let audioName = modulesUrl+'_'+audioSrcTrim.replace(/\./g,'_');
 
               audioManifest.push({
                 id:audioName,
@@ -179,12 +179,10 @@
    //   this.$parent.$parent.$refs.gameMenu.$off();
     },
     destroyed(){
-      // if(pixiScene){
-      //   pixiScene.destroyed();
-      //   pixiScene.destroy();
-      //   pixiScene = null;
-      // }
-
+      if(pixiScene){
+        pixiScene.destroyed();
+        pixiScene.destroy();
+      }
     },
     mounted() {
       const self = this;

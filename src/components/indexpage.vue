@@ -136,7 +136,7 @@
           self.SET_ALLPARTNAMES(self.slideLists);
           if (self.completedLessonNum >= self.allLessonsNum) {
             self.SET_GAMEHASBEENCOMPLETED(true);
-            console.log("初始化课程全部完成")
+          //  console.log("初始化课程全部完成")
           }
           if (self.alreadyHasOneCard) {
             self.SET_GAMECARDS(Number(getId_response.card) + 1);
@@ -162,14 +162,14 @@
           window.addEventListener('message', function (e) {
             if (e.data.type === 'getId') {
               resolve(e.data.stuAnswer);
-              console.log('后台卡片数量：',e.data.stuAnswer.card,'是否开启宝箱：',e.data.stuAnswer.opened)
+              //console.log('后台卡片数量：',e.data.stuAnswer.card,'是否开启宝箱：',e.data.stuAnswer.opened)
             } else {
               //  reject('getId异步发生错误');
+              resolve({detail: [], card: 2, opened: 0});
             }
           });
-          //TODO:本地测试；
-         // resolve({detail: [0,1,2,3,4,5], card: 2, opened: 1});
-        })
+
+        });
       },
       //接口
       /**
@@ -187,8 +187,6 @@
       gameStart(app) {
         const self = this;
         LoadingAnimation.loading = self.$parent.$refs.masker;
-
-
 
         if (self.assetsPages.indexPage == 1) {
           var scene1 = new IndexPage({

@@ -501,7 +501,7 @@ class ChoicePicModule extends PIXI.Container {
   playSpeakSound() {
     const self = this;
     if (_.trim(self.gameConfig.levels[self.gameLevel].audioSrc) != "") {
-      let soundName =  'choicepicmodule_'+self.gameConfig.levels[self.gameLevel].audioSrc.match(/sound[0-9]+/g);
+      let soundName =  this.vueInstance.$route.meta.assetsUrl+'_'+self.gameConfig.levels[self.gameLevel].audioSrc.replace(/\./g,'_');
 
 
       self.gameAudio = PIXIAudio.audios[soundName];

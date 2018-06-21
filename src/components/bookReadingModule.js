@@ -187,7 +187,8 @@ class BookReadingModule extends PIXI.Container {
       var tl = new TimelineMax({
         onComplete: () => {
           //coverPageCtn.alpha = 0;
-
+         // self.isCoverPageTime = false;
+        //  self.playAudios()
 
         }
       });
@@ -207,8 +208,10 @@ class BookReadingModule extends PIXI.Container {
             coverPage.texture = PIXI.Texture.from('pagefengmian');
             self.isCoverPageTime = false;
             self.isCoverPageTime_reserve = true;
+            self.playAudios()
           }}), TweenMax.to(coverPage, allTime*0.28, {
           width: coverPage.width * 0.5, onComplete: function () {
+
             TweenMax.to(coverPage, allTime*0.1, {width: coverPage.width * 1});
             coverPage.texture = PIXI.Texture.from('pagebeimian')
           },onStart:function(){
@@ -217,6 +220,7 @@ class BookReadingModule extends PIXI.Container {
         })]);
         tl.add(TweenMax.to(coverPageCtn,allTime*0.3,{alpha:0,onComplete:function(){
             coverPage.texture = PIXI.Texture.from('pagebeimian')
+            self.isCoverPageTime = false;
 
           }}),'-=.4');
       }else{
@@ -235,6 +239,8 @@ class BookReadingModule extends PIXI.Container {
           TweenMax.from(coverPageCtn.skew, allTime, {y: -3.16,onStart:function(){
             coverPage.texture = PIXI.Texture.from('pagebeimian');
             self.isCoverPageTime_reserve = false;
+              self.isCoverPageTime = true;
+              self.playAudios()
           },onComplete:function(){
 
           }}),
@@ -281,14 +287,10 @@ class BookReadingModule extends PIXI.Container {
     this.addChild(book)
     this.addChild(bookmask);
 
-    this.gameConfig.showCoverpage = false;
-
-
     if(this.gameConfig.showCoverpage){
        this.coverPageTl = createCoverPage.call(self,true);
        this.coverPageTl_reserve = createCoverPage.call(self,false);
     }
-
 
 
     //reversement.play();
@@ -570,12 +572,21 @@ class BookReadingModule extends PIXI.Container {
   //音频控制;
   playAudios($num=null) {
     const self = this;
-    if (this.currentAudioPlaying) return;
+    self.stopAudios()
+   // if (this.currentAudioPlaying) return;
 
     let myIndex = $num || this.currentPage;
 
-    let soundName = 'bookreadingmodule_'+this.gameConfig.levels[myIndex].audioSrc.match(/sound[0-9]+/g);
+    let soundName;
+    if(this.gameConfig.showCoverpage==true  && this.isCoverPageTime){
+      soundName = this.vueInstance.$route.meta.assetsUrl+'_'+this.gameConfig.coverpageAudio.replace(/\./g,'_');
+    }else{
+      soundName = this.vueInstance.$route.meta.assetsUrl+'_'+this.gameConfig.levels[myIndex].audioSrc.replace(/\./g,'_');
+    }
+
+
     this.gameAudio = PIXIAudio.audios[soundName];
+
 
     this.gameAudio.play();
     this.gameAudio.position = 0;

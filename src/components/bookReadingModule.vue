@@ -79,7 +79,7 @@
         let arr = this.$route.fullPath.split('/');
         let index = self.allPartNames.indexOf(arr[1]);
         self.SET_INDEXPAGEINITIALSLIDE(Number(index));
-        console.log(arr[1],index);
+
 
       },
       continueGame(){
@@ -115,13 +115,19 @@
           let audioManifest = [];
           for(let i=0;i<gameConfigData.gameData.levels.length;i++){
             let audioSrc = gameConfigData.gameData.levels[i].audioSrc;
-            let audioName = modulesUrl+'_'+audioSrc.match(/sound[0-9]+/g,'');
+            let audioName = modulesUrl+'_'+audioSrc.replace(/\./g,'_');
 
             audioManifest.push({
               id:audioName,
               src:audioSrc
             });
 
+          }
+          if(gameConfigData.gameData.showCoverpage==true){
+            audioManifest.push({
+              id: modulesUrl+'_'+gameConfigData.gameData.coverpageAudio.replace(/\./g,'_'),
+              src:gameConfigData.gameData.coverpageAudio,
+            });
           }
           if(PIXIAudio.loadedStatus[modulesUrl]==undefined){
             PIXIAudio.addAudio(audioManifest, 'static/' + modulesUrl+'/', ()=>{

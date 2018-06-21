@@ -1,46 +1,7 @@
 {
   "assets":[
 
-    {
-      "name":"slidepic001",
-      "url":"static/picswipemodule/slidepic001.jpg"
-    },
-    {
-      "name":"slidepic002",
-      "url":"static/picswipemodule/slidepic002.jpg"
-    },
-    {
-      "name":"slidepic003",
-      "url":"static/picswipemodule/slidepic003.jpg"
-    },
-    {
-      "name":"slidepic004",
-      "url":"static/picswipemodule/slidepic004.jpg"
-    },
-    {
-      "name":"slidepic005",
-      "url":"static/picswipemodule/slidepic005.jpg"
-    },
-    {
-      "name":"slidepic006",
-      "url":"static/picswipemodule/slidepic006.pjpg"
-    },
-    {
-      "name":"slidepic007",
-      "url":"static/picswipemodule/slidepic007.jpg"
-    },
-    {
-      "name":"slidepic008",
-      "url":"static/picswipemodule/slidepic008.jpg"
-    },
-    {
-      "name":"slidepic009",
-      "url":"static/picswipemodule/slidepic009.jpg"
-    },
-    {
-      "name":"slidepic010",
-      "url":"static/picswipemodule/slidepic010.jpg"
-    }
+
   ],
   "gameData":{
     "pictureList":[

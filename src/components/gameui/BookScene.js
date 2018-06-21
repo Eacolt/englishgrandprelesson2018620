@@ -349,13 +349,14 @@ class BookScene extends PIXI.Container{
          if (e.data.type === 'getCard') {
            resolve(Number(e.data.getCard));
 
+         }else{
+           resolve(1)
          }
        });
        //看看得到卡片的结果是什么;
       // resolve(Math.floor(Math.random()*2));
       // resolve(0)
        //设置得到卡片，表示课程完成;
-
      });
 
     promise.then((value)=>{
@@ -380,14 +381,30 @@ class BookScene extends PIXI.Container{
                TweenMax.to(self.treasureBoxUI,1,{alpha:1});
                //todo:打开魔法书后，页面及时跳转到主界面;
                setTimeout(()=>{
+
+                 let isGo = null;
+                 if(GameMenuBars.vueInstance.$route.fullPath=='/'){
+                   isGo = true;
+                 }else{
+                   isGo = false;
+                 }
                  GameMenuBars.vueInstance.$router.push('/')
                  TweenMax.to(self.treasureBoxUI,.5,{alpha:0});
                  TweenMax.to(EventTarget,.5,{alpha:0});
-              //   GameMenuBars.vueInstance.SET_SHOWMAGICBOOK(true);
-                 self.openBook();
-                 self.parent.parent.swiperHammer.lock = false;
+                 if(isGo){
+                   self.openBook();
+                 }else{
+                   GameMenuBars.vueInstance.SET_SHOWMAGICBOOK(true);
+                 }
+
+
+                 if(self.parent.parent.swiperHammer){
+                   self.parent.parent.swiperHammer.lock = true;
+                 }
 
                },1000);
+
+
              },1400);
            }})
        }else if(value==0){
@@ -410,7 +427,9 @@ class BookScene extends PIXI.Container{
 
                //  self.vueInstance.hideMaskBg();
                  self.hideBlackMask();
-                 self.parent.parent.swiperHammer.lock = false;
+                 if(self.parent.parent.swiperHammer){
+                   self.parent.parent.swiperHammer.lock = true;
+                 }
                },1000);
              },1400);
            }})
@@ -436,6 +455,9 @@ class BookScene extends PIXI.Container{
               $callback();
               self.hideBlackMask()
               self.backGroundMask.interactive = false;
+              if(self.parent.parent.swiperHammer){
+                self.parent.parent.swiperHammer.lock = false;
+              }
             }
           }
       }else{
@@ -446,6 +468,9 @@ class BookScene extends PIXI.Container{
              $callback();
              self.hideBlackMask()
              self.backGroundMask.interactive = false;
+             if(self.parent.parent.swiperHammer){
+               self.parent.parent.swiperHammer.lock = false;
+             }
            }
          }
 
@@ -521,7 +546,9 @@ class BookScene extends PIXI.Container{
       self.menuCloseBtn.removeListener('pointertap',self.menuCloseBtn_tapHandler,self);
 
 
-      self.parent.parent.swiperHammer.lock = false;
+      if(self.parent.parent.swiperHammer){
+        self.parent.parent.swiperHammer.lock = true;
+      }
 
     });
   }
@@ -544,11 +571,19 @@ class BookScene extends PIXI.Container{
     this.boxes.forEach((item)=>{
       item.alpha = 0;
     });
-    self.parent.parent.swiperHammer.lock = true;
+    if(self.parent.parent.swiperHammer){
+      self.parent.parent.swiperHammer.lock = true;
+    }
+
+
     self.showBlackMask();
     this.energyCan.alpha = 1;
     const MAX_TIME = 3.5;
+
+
+
     let currentTime = (GameMenuBars.vueInstance.$parent.completedLessonNum/GameMenuBars.vueInstance.$parent.allLessonsNum)*MAX_TIME;
+
     var track = this.energyCan.state.setAnimation(0,'power',false);
     let ticker = new PIXI.ticker.Ticker();
     self.energyCan.state.tracks[0].timeScale = 1;
@@ -559,6 +594,7 @@ class BookScene extends PIXI.Container{
         ticker.destroy();
 
         self.energyCan.state.tracks[0].timeScale  = 0;
+
       }
     });
     let sound = new Audio('static/sound/power_over.mp3');

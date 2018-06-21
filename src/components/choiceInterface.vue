@@ -36,7 +36,6 @@
       if(pixiScene){
         pixiScene.destroyed();
         pixiScene.destroy();
-        pixiScene = null;
       }
 
     },

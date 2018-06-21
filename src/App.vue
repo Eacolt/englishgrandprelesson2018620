@@ -41,19 +41,8 @@
           return false;
         }
       };
-
-      document.onkeydown = function () {
-        if (window.event && window.event.keyCode == 123) {
-          event.keyCode = 0;
-          event.returnValue = false;
-          return false;
-        }
-      };
-
     },
-
     mounted() {
-
       const self = this;
       this.SET_CURRENTPAGE(1);
       GameHand.init();

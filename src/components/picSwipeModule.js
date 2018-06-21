@@ -75,6 +75,7 @@ class PixiScene3 extends PIXI.Container {
     self.gameMenuBar = new GameMenuBars();
 
 
+
     self.addChild(self.gameMenuBar);
     self.gameMenuBar.setBackBtn_tapHandler(() => {
 
@@ -160,10 +161,7 @@ class PixiScene3 extends PIXI.Container {
     const self = this;
     if (this.currentAudioPlaying) return;
 
-
-
-
-    let soundName = 'picswipemodule_' + this.gameConfig.pictureList[this.vueInstance.currentPage].audioSrc.match(/sound[0-9]+/g);
+    let soundName =  this.vueInstance.$route.meta.assetsUrl+'_' + this.gameConfig.pictureList[this.vueInstance.currentPage].audioSrc.replace(/\./g,'_');
    this.gameAudio = PIXIAudio.audios[soundName];
 
     this.gameAudio.play();

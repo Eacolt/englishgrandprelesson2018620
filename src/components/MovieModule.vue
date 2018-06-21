@@ -50,7 +50,7 @@
           if(this.alreadyHasOneCard){
             checkForJumpRoute.call(this,false);
 
-            console.log('ffffk')
+
           }else{
             checkForJumpRoute.call(this,true);
           }
