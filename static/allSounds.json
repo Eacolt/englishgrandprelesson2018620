@@ -23,11 +23,8 @@
   {"src":"power_gain.mp3", "id":"power_gain"},
 
   {"src":"power_over.mp3", "id":"power_over"},
-
   {"src":"select_right.mp3", "id":"select_right"},
-
   {"src":"select_wrong.mp3", "id":"select_wrong"},
-
 
   {"src":"win_jump.mp3", "id":"win_jump"}
 ]

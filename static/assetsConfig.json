@@ -38,22 +38,17 @@
     "name": "indexMonster7_json",
     "url": "static/themetypeui/monster7_ketpet.json"
   },
-  {
-    "name": "tablebar1",
-    "url": "static/img/indexpage/tablebar1.png"
-  },
+
   {
     "name": "tablebar2_png",
     "url": "static/img/tablebar2.png"
   },
+
   {
-    "name": "ufoPlate",
-    "url": "static/img/indexpage/table.png"
+    "name": "tabletext_atlas",
+    "url": "static/themetypeui/tabletext.json"
   },
-  {
-    "name": "lessonTitleAtlas",
-    "url": "static/img/indexpage/lessontitles.json"
-  },
+
   {
     "name":"monsterStartPage_json",
     "url":"static/img/monster_start.json"

@@ -1,6 +1,6 @@
 {
   "menuModuleId": "string",
-  "themeType":5,
+  "themeType":4,
   "menus": [
     {
       "name": "song",
@@ -39,11 +39,6 @@
       "menus": [
 
         {
-          "name": "learning",
-          "pageModuleId": "picSwipeModule",
-          "pageResourceId": "picswipemodule2"
-        },
-        {
           "name": "practice",
           "pageModuleId": "choicePicModule",
           "pageResourceId": "choicepicmodule"
@@ -59,6 +54,11 @@
           "name": "learning",
           "pageModuleId": "bookReadingModule",
           "pageResourceId": "bookreadingmodule"
+        },
+        {
+          "name": "learning2",
+          "pageModuleId": "picSwipeModule",
+          "pageResourceId": "picswipemodule2"
         }
       ]
     }

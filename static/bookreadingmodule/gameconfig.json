@@ -68,7 +68,8 @@
       "picture":"page4",
       "audioSrc":"sound005.mp3"
     }],
-    "showCoverpage":true
+    "showCoverpage":false,
+    "coverpageAudio":"sound111.mp3"
 
 
   }

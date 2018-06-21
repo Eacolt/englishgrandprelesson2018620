@@ -141,19 +141,19 @@ function copyTheme() {
     fs.mkdirSync('./static/themetypeui');
   //复制小怪物；
   preparation.menus.forEach((item)=>{
-    console.log('是什么：',item.name)
+    //console.log('是什么：',item.name)
     switch (item.name){
       case 'song':
         copyIt('./englishmodules/themetypeui/monster1_song.atlas','./static/themetypeui/monster1_song.atlas');
         copyIt('./englishmodules/themetypeui/monster1_song.json','./static/themetypeui/monster1_song.json');
         copyIt('./englishmodules/themetypeui/monster1_song.png','./static/themetypeui/monster1_song.png')
-        console.log('复制了song')
+
         break;
       case 'vocabulary':
         copyIt('./englishmodules/themetypeui/monster2_vocabulary.atlas','./static/themetypeui/monster2_vocabulary.atlas');
         copyIt('./englishmodules/themetypeui/monster2_vocabulary.json','./static/themetypeui/monster2_vocabulary.json');
         copyIt('./englishmodules/themetypeui/monster2_vocabulary.png','./static/themetypeui/monster2_vocabulary.png')
-        console.log('复制了vocabluary')
+
         break;
       case 'sentences':
         copyIt('./englishmodules/themetypeui/monster3_sentences.atlas','./static/themetypeui/monster3_sentences.atlas');
@@ -509,6 +509,34 @@ function copyTheme() {
 
     }
 
+    if(mtype==2){
+    let files = [
+      'tabletext_yellow.json',
+      'tabletext_yellow.png'
+
+    ]
+
+      files.forEach((item,index)=>{
+        let aftername = '.'+item.split('.')[1];
+        let newname = item.replace(getPureStr(item),'');
+        copyIt('./englishmodules/themetypeui/'+item,'./static/themetypeui/'+newname)
+      });
+    }else{
+      let files = [
+        'tabletext_normal.json',
+        'tabletext_normal.png'
+
+      ]
+
+      files.forEach((item,index)=>{
+        let aftername = '.'+item.split('.')[1];
+        let newname = item.replace(getPureStr(item),'');
+        copyIt('./englishmodules/themetypeui/'+item,'./static/themetypeui/'+newname)
+      });
+    }
+    console.log('node buildfs.....');
+    console.log('预习编译成功…^_^');
+
 }
 
 fs.writeFile('./src/router/index.js', routerStructor, function (err) {
@@ -519,7 +547,7 @@ fs.writeFile('./src/router/index.js', routerStructor, function (err) {
     if (err) {
       return console.error(err);
     }
-    console.log("异步读取文件数据: " + data.toString());
+
   });
 });
 
