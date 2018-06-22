@@ -1,6 +1,4 @@
 [
-
-
   {
     "name": "timepoint_png",
     "url": "static/img/timepoint.png"
@@ -9,7 +7,6 @@
     "name": "boyskeleton",
     "url": "static/img/choicepage/boyskeleton/boy.json"
   },
-
   {
     "name": "indexMonster1_json",
     "url": "static/themetypeui/monster1_song.json"
@@ -62,8 +59,6 @@
     "name": "practiceBox_skeleton",
     "url": "static/img/choicepage/boxskeleton/skeleton.json"
   },
-
-
   {
     "name": "bookAnime_skeleton",
     "url": "static/img/menus/bookanime/book.json"
@@ -120,13 +115,10 @@
     "name":"practiceSoundPlay_png",
     "url":"static/img/menus/sound-b.png"
   },
-
-
   {
     "name":"powerstar_png",
     "url":"static/img/powerstar.png"
   },
-
 
   {
     "name":"menubtnKey_png",

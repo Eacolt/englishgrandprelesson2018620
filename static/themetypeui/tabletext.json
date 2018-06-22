@@ -2,58 +2,58 @@
 
 "grammar.png":
 {
-	"frame": {"x":1070,"y":1,"w":206,"h":40},
+	"frame": {"x":1069,"y":1,"w":206,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":27,"y":9,"w":206,"h":40},
+	"spriteSourceSize": {"x":34,"y":13,"w":206,"h":40},
 	"sourceSize": {"w":260,"h":60}
 },
 "ketpet.png":
 {
-	"frame": {"x":237,"y":1,"w":168,"h":46},
+	"frame": {"x":237,"y":1,"w":167,"h":46},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":41,"y":9,"w":168,"h":46},
+	"spriteSourceSize": {"x":47,"y":13,"w":167,"h":46},
 	"sourceSize": {"w":260,"h":60}
 },
 "reading.png":
 {
-	"frame": {"x":639,"y":1,"w":214,"h":45},
+	"frame": {"x":638,"y":1,"w":214,"h":41},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":23,"y":7,"w":214,"h":45},
+	"spriteSourceSize": {"x":43,"y":13,"w":214,"h":41},
 	"sourceSize": {"w":260,"h":60}
 },
 "sentences.png":
 {
-	"frame": {"x":855,"y":1,"w":213,"h":40},
+	"frame": {"x":854,"y":1,"w":213,"h":40},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":21,"y":8,"w":213,"h":40},
+	"spriteSourceSize": {"x":26,"y":12,"w":213,"h":40},
 	"sourceSize": {"w":260,"h":60}
 },
 "song.png":
 {
-	"frame": {"x":524,"y":1,"w":113,"h":46},
+	"frame": {"x":406,"y":1,"w":113,"h":46},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":68,"y":9,"w":113,"h":46},
+	"spriteSourceSize": {"x":73,"y":13,"w":113,"h":46},
 	"sourceSize": {"w":260,"h":60}
 },
 "story.png":
 {
-	"frame": {"x":407,"y":1,"w":115,"h":46},
+	"frame": {"x":521,"y":1,"w":115,"h":45},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":68,"y":9,"w":115,"h":46},
+	"spriteSourceSize": {"x":73,"y":15,"w":115,"h":45},
 	"sourceSize": {"w":260,"h":60}
 },
 "text.png":
 {
-	"frame": {"x":1278,"y":1,"w":91,"h":37},
+	"frame": {"x":1277,"y":1,"w":91,"h":37},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":80,"y":12,"w":91,"h":37},
+	"spriteSourceSize": {"x":78,"y":16,"w":91,"h":37},
 	"sourceSize": {"w":260,"h":60}
 },
 "vocabulary.png":
@@ -61,7 +61,7 @@
 	"frame": {"x":1,"y":1,"w":234,"h":46},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":8,"y":5,"w":234,"h":46},
+	"spriteSourceSize": {"x":13,"y":9,"w":234,"h":46},
 	"sourceSize": {"w":260,"h":60}
 }},
 "meta": {
@@ -69,8 +69,8 @@
 	"version": "1.0",
 	"image": "tabletext.png",
 	"format": "RGBA8888",
-	"size": {"w":1370,"h":48},
+	"size": {"w":1369,"h":48},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:62e710babc6ea50604d2c84030e6c74d:062b97cc1b03c75e5b70e20c942796f3:de411124a21d076066e8a3bf2727cdd3$"
+	"smartupdate": "$TexturePacker:SmartUpdate:e4d8528da3d73ab7711855a2514dd1e8:4bbbf0a608e6da60cd60185940805142:de411124a21d076066e8a3bf2727cdd3$"
 }
 }

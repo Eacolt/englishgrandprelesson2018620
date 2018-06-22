@@ -1,6 +1,6 @@
 {
   "menuModuleId": "string",
-  "themeType":4,
+  "themeType":2,
   "menus": [
     {
       "name": "song",
