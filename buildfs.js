@@ -84,7 +84,7 @@ var routerStructor = baseImports + newRouters;
 
 assetsModules.forEach((mainItem) => {
 
-  //创建新的目录;
+  //移除模板;
   if (fs.existsSync('./static/' + mainItem)) {
     var subfilesCopyed = fs.readdirSync('./static/' + mainItem);
     if (subfilesCopyed.length > 0) {
