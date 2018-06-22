@@ -68,18 +68,9 @@ class ProgressBar extends PIXI.Container{
     this.points = $option.points || 3;
     let pointsNum = this.points;
     this.barWidth = _width*pointsNum;
-
     this.bgBar = new PIXI.Sprite(PIXI.Texture.from('timeback_png'));
-    // this.bgBar.beginFill(0xacacac);
-    // this.bgBar.drawRoundedRect(0,0,this.barWidth+(_width/1.5),150,50);
-    // this.bgBar.endFill();
     this.bgBar.pivot.x = this.bgBar.width/2;
     this.bgBar.pivot.y = this.bgBar.height/2;
-
-
-  //  this.bar = new PIXI.Sprite(TextureCache['timeline_png']);
-   // this.bar.width = this.barWidth;
-   // alert(this.bar.width)
     this.bar = new PIXI.Graphics()
     this.bar.beginFill(0x535353,0);
     this.bar.drawRoundedRect(0,-12,this.barWidth,30,15);

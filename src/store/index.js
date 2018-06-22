@@ -17,6 +17,10 @@ const store = new Vuex.Store({
 
     alreadyHasOneCard:false,//获得了一张卡片;
 
+    openMagicBookByGameIndex:false,//从游戏返回翻开魔法书;
+
+    bookOpened:-1,//是否打开宝箱后就退出页面了？
+
     showMagicBook:false,//展示魔法书，仅仅从最后获得卡片回到主页的时候展现，并且只能有一次
 
 
@@ -78,6 +82,14 @@ const store = new Vuex.Store({
   },
   getters: {},
   actions: {
+
+    SET_MAGICBOOKBYGAMEINDEX({commit},payload){
+      commit('setMagicBookByGameIndex',payload)
+    },
+
+    SET_BOOKOPENED({commit},payload){
+      commit('setBookOpened',payload);
+    },
 
 
     //当获得卡片的时候触发;
@@ -209,6 +221,12 @@ const store = new Vuex.Store({
   mutations: {
     setEnergy(state, payload) {
       state.energyCurrentNum = payload;
+    },
+    setBookOpened(state,payload){
+      state.bookOpened = payload;
+    },
+    setMagicBookByGameIndex(state,payload){
+      state.openMagicBookByGameIndex = payload;
     },
     setShowMagicBook(state,payload){
       state.showMagicBook = payload;

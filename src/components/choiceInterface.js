@@ -318,7 +318,7 @@ class ChoiceInterface extends PIXI.Container {
     this.gameMenuBars.updateGameMenu();
     this.gameMenuBars.setBackBtn_tapHandler(() => {
       setTimeout(() => {
-        self.vueInstance.$router.push('/')
+        self.vueInstance.$router.push('/index/')
       }, 1000);
 
       LoadingAnimation.setMaskShow(true)

@@ -90,7 +90,7 @@ class PixiScene3 extends PIXI.Container {
         self.vueInstance.showCongra = true;
       } else {
         setTimeout(() => {
-          self.vueInstance.$router.push('/')
+          self.vueInstance.$router.push('/index/')
         }, 1000);
 
 
@@ -99,7 +99,7 @@ class PixiScene3 extends PIXI.Container {
 
         self.maskerBg.showMakser()
         let arr = self.vueInstance.$route.fullPath.split('/');
-        let index = self.vueInstance.allPartNames.indexOf(arr[1]);
+        let index = self.vueInstance.allPartNames.indexOf(arr[2]);
         self.vueInstance.SET_INDEXPAGEINITIALSLIDE(Number(index));
       }
     });
@@ -244,8 +244,11 @@ class PixiScene3 extends PIXI.Container {
 
   destroyed() {
     this.stopAudios();
-    this.gameMenuBar.clearGameMenuEvents();
-    this.gameMenuBar.destroy();
+    if(this.gameMenuBar){
+      this.gameMenuBar.clearGameMenuEvents();
+      this.gameMenuBar.destroy();
+    }
+
   }
 }
 

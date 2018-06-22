@@ -238,7 +238,8 @@ class PixiScene1 extends PIXI.Container {
         });
         return _arrPlus
       }
-      progressMask.width = getPlusByCompleted() / self.vueInstance.allLessonCompleteStat[i].length * tablebarStart.width;
+
+      progressMask.width =  getPlusByCompleted() / self.vueInstance.allLessonCompleteStat[i].length * tablebarStart.width;
       slideUfo.addChild(progressBar);
       var  text = new PIXI.Sprite(self.resource['tabletext_atlas'].textures[self.vueInstance.allPartNames[i] + '.png']);
 
@@ -252,9 +253,7 @@ class PixiScene1 extends PIXI.Container {
       slideUfo.interactive = true;
       slideUfo.on('pointertap', this.ufoSlidePointerDown, this)
       slideUfo.y = 600;
-
     }
-
 
     this.ufoSlides.forEach((item, index) => {
       item.x = index * 650;
@@ -328,18 +327,24 @@ class PixiScene1 extends PIXI.Container {
         self.swiperHammer.lock = true;
         self.gameMenuBar.bookScene.openBook()
       };
-      //从游戏回来的逻辑>>
-      if(self.vueInstance.boxOpened == 0 && self.vueInstance.gameHasBeenCompleted){
+
+      if(self.vueInstance.bookOpened == 0 && self.vueInstance.gameHasBeenCompleted){
         self.gameMenuBar.bookScene.openEnergyCan(true);
       };
+
+      //从游戏回来的逻辑>>
+      if(Number(self.vueInstance.openMagicBookByGameIndex)>=1){
+        self.gameMenuBar.bookScene.openBook();
+        self.swiperHammer.lock = true;
+        console.log(Number(false))
+      }
     },300)
-
-
     this.gameMenuBar.setBackBtn_tapHandler(() => {
       //返回主目录;
-      window.parent.postMessage({
-        "type": "preparationClose"
-      }, "*");
+      console.log('返回主页')
+        window.parent.postMessage({
+          "type": "preparationClose"
+        }, "*");
     });
     this.gameMenuBar.setBookBtn_tapHandler(() => {
       if (GameMenuBars.freeze) return;
@@ -363,37 +368,7 @@ class PixiScene1 extends PIXI.Container {
     this.leftTouchBtn.interactive = true;
     this.rightTouchBtn.on('pointertap', this.rightAreaPointerTap, this);
     this.leftTouchBtn.on('pointertap', this.leftAreaPointerTap, this);
-    if(self.vueInstance.assetsPages.indexPage == null){
-      var gameStartPage = new PIXI.spine.Spine(PIXI.loader.resources['monsterStartPage_json'].spineData);
-      gameStartPage.x = 1920/2;
-      gameStartPage.y = 1080/2;
-      let gameBg = new PIXI.Graphics();
-      gameBg.beginFill(0xffffff);
-      gameBg.drawRect(0,0,1920,1080);
-      gameBg.endFill();
-      gameBg.interactive = true;
-      gameStartPage.state.setAnimation(0,'animation',true);
-      let gameStartBtn = new PIXI.Graphics();
-      gameStartBtn.beginFill(0xffffff,0);
-      gameStartBtn.drawRect(0,0,400,200);
-      gameStartBtn.endFill();
-      gameStartBtn.x = 1920/2-200;
-      gameStartBtn.y = 820;
-      gameStartBtn.interactive = true;
-      this.addChild(gameBg);
-      this.addChild(gameStartPage);
-      this.addChild(gameStartBtn);
-      self.swiperHammer.lock = true;
-      gameStartBtn.on('pointertap',()=>{
-        gameStartBtn.destroy();
-        gameStartPage.destroy(true);
-        gameBg.destroy();
-        self.swiperHammer.lock = false;
-        PIXIAudio.audios.bgSound.play();
-        PIXIAudio.audios.bgSound.loop = -1;
-        PIXIAudio.audios.bgSound.volume = 1;
-      })
-    }
+
   }
   //End Added
   swiperSlideTo($n, $callback = function () {
@@ -427,7 +402,7 @@ class PixiScene1 extends PIXI.Container {
 
             LoadingAnimation.setMaskShow(true)
             setTimeout(() => {
-              self.vueInstance.$router.push('/' + self.vueInstance.lessonPartsList[myIndex].name);
+              self.vueInstance.$router.push('/index/' + self.vueInstance.lessonPartsList[myIndex].name);
               self.vueInstance.SET_LESSONPARTSINDEX(myIndex);
               self.vueInstance.SET_INDEXPAGEINITIALSLIDE(myIndex);
             }, 1000);

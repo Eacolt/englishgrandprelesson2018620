@@ -635,12 +635,12 @@ class BookReadingModule extends PIXI.Container {
     } else {
 
       setTimeout(() => {
-        self.vueInstance.$router.push('/')
+        self.vueInstance.$router.push('/index/')
       }, 1000);
       LoadingAnimation.setMaskShow(true);
 
       let arr = self.vueInstance.$route.fullPath.split('/');
-      let index = self.vueInstance.allPartNames.indexOf(arr[1]);
+      let index = self.vueInstance.allPartNames.indexOf(arr[2]);
       self.vueInstance.SET_INDEXPAGEINITIALSLIDE(Number(index));
 
 

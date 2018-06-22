@@ -76,12 +76,12 @@
       quitGame(){
         const self = this;
         setTimeout(() => {
-          self.$router.push('/')
+          self.$router.push('/index/')
         }, 1000);
          LoadingAnimation.setMaskShow(true);
 
         let arr = this.$route.fullPath.split('/');
-        let index = self.allPartNames.indexOf(arr[1]);
+        let index = self.allPartNames.indexOf(arr[2]);
         self.SET_INDEXPAGEINITIALSLIDE(Number(index));
 
 
@@ -176,14 +176,13 @@
       }
     },
     beforeDestroy() {
-   //   this.$parent.$parent.$refs.gameMenu.$off();
-    },
-    destroyed(){
       if(pixiScene){
+
         pixiScene.destroyed();
         pixiScene.destroy();
       }
     },
+
     mounted() {
       const self = this;
       self.SET_LESSONCURRENTPAGEINDEX(Number(self.allLessonComponentsNames.indexOf(self.$route.name)))

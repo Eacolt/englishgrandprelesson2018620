@@ -4,8 +4,10 @@ var preparation = require('./static/preparation.json');
 var routerList = [];
 var importContent = [];
 var assetsModules = [];//所有需要的资源路径目录;
+importContent.push('import boot from "@/components/boot.vue";');
 importContent.push('import indexpage from "@/components/indexpage.vue";');
-routerList.push('{path:"/",name:"index",component:indexpage}');
+routerList.push('{path:"/",name:"boot",component:boot}');
+routerList.push('{path:"/index/",name:"index",component:indexpage}');
 
 
 // assetsModules.push('themetypeui');
@@ -14,7 +16,7 @@ for (let i = 0; i < preparation.menus.length; i++) {
   if (preparation.menus[i].menus && preparation.menus[i].name) {
     var routerChildrens = "";
     var router = '{' +
-      'path:' + '\"/' + preparation.menus[i].name + '\",' +
+      'path:' + '\"/index/' + preparation.menus[i].name + '\",' +
 
       'component:' + 'choiceInterfaceRoot' + ',' +
       'meta:{ assetsUrl: \"' + preparation.menus[i].pageResourceId + '\"},children:[';
@@ -55,6 +57,12 @@ for (let i = 0; i < preparation.menus.length; i++) {
      *
      * @引入子路由根模板-choiceInterface
      */
+    // let bootPage = '{' +
+    //   'path:' + '\"/\",' +
+    //   'name:"childs-'+preparation.menus[i].name + '-'  + i + '",' +
+    //   'component:' + preparation.menus[i].pageModuleId + ',' +
+    //   'meta:{ assetsUrl: \"' + preparation.menus[i].pageResourceId + '\"}},';
+
     let first_children = '{' +
       'path:' + '\"/\",' +
       'name:"childs-'+preparation.menus[i].name + '-'  + i + '",' +

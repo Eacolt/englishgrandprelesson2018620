@@ -48,6 +48,7 @@
     },
 
 
+
     computed:{
       ...mapState(['lessonPartsIndex','alreadyHasOneCard','showPopupDelay','allPartNames','lessonPartsList','assetsPages','assetsGameConfig', 'assetsResources','completedLessonNum','allLessonsNum','allLessonComponentsNames','restArrangementStat','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
       gameContainer(){
@@ -79,30 +80,18 @@
       quitGame(){
         const self = this;
         setTimeout(() => {
-          self.$router.push('/')
+          self.$router.push('/index/')
         }, 1000);
         LoadingAnimation.setMaskShow(true);
         let arr = this.$route.fullPath.split('/');
-        let index = self.allPartNames.indexOf(arr[1]);
+        let index = self.allPartNames.indexOf(arr[2]);
         self.SET_INDEXPAGEINITIALSLIDE(Number(index));
 
       },
 
-      gotoHome(){
-        const self= this;
-        setTimeout(()=>{
-          self.$router.push('/')
-        },1000);
-        LoadingAnimation.setMaskShow(true)
 
-      },
       continueGame(){
         this.showCongra = false;
-      },
-      gotoBack(){
-        if(pixiScene){
-          pixiScene.goBackComing();
-        }
       },
 
       gameStart(app) {
@@ -169,15 +158,10 @@
       },
     },
     beforeDestroy() {
-     // this.$parent.$parent.$refs.gameMenu.$off();
-    },
-    destroyed(){
       if(pixiScene){
         pixiScene.destroyed();
         pixiScene.destroy();
       }
-
-
     },
     mounted() {
       const self = this;

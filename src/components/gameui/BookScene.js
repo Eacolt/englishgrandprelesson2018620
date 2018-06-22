@@ -383,12 +383,12 @@ class BookScene extends PIXI.Container{
                setTimeout(()=>{
 
                  let isGo = null;
-                 if(GameMenuBars.vueInstance.$route.fullPath=='/'){
+                 if(GameMenuBars.vueInstance.$route.fullPath=='/index'){
                    isGo = true;
                  }else{
                    isGo = false;
                  }
-                 GameMenuBars.vueInstance.$router.push('/')
+                 GameMenuBars.vueInstance.$router.push('/index')
                  TweenMax.to(self.treasureBoxUI,.5,{alpha:0});
                  TweenMax.to(EventTarget,.5,{alpha:0});
                  if(isGo){
@@ -423,7 +423,7 @@ class BookScene extends PIXI.Container{
                TweenMax.to(EventTarget,.5,{alpha:0});
                //todo:打开魔法书后，页面及时跳转到主界面;
                setTimeout(()=>{
-                 self.vueInstance.$router.push('/');
+                 self.vueInstance.$router.push('/index');
 
                //  self.vueInstance.hideMaskBg();
                  self.hideBlackMask();
@@ -489,19 +489,14 @@ class BookScene extends PIXI.Container{
 
 
     if(this.bookAn && this.openBookAnimating==false){
-
       self.showBlackMask();
-
       self.backGroundMask.interactive = true;
       this.openBookAnimating = true;
       this.bookAn.alpha = 1;
       this.boxes.forEach((item)=>{
         item.alpha = 0;
       });
-     // this.vueInstance.$refs.closeBtn.style.zIndex = 0;
-
-
-
+     //this.vueInstance.$refs.closeBtn.style.zIndex = 0;
       self.getCardPromise.call(self,self.vueInstance.allGameCards);
       self.page2StartBtn.interactive = self.page1StartBtn.interactive = false;
       let track = this.bookAn.state.setAnimation(0,'open',false);
@@ -514,29 +509,19 @@ class BookScene extends PIXI.Container{
         complete:function(){
           self.page1StartBtn.interactive = true;
           self.bookAn.state.setAnimation(0,'stay1',true);
-
           self.menuCloseBtn.alpha = 1;
           self.menuCloseBtn.interactive = true;
           self.menuCloseBtn.on('pointertap',self.menuCloseBtn_tapHandler,self)
-
-
         }
       }
-
-
       PIXIAudio.audios['book_open'].play();
-
-
     }
     setTimeout(()=>{
       self.leftBtn.interactive = self.rightBtn.interactive = true;
-
       $callback();
-
       self.openBookAnimating = false;
     },1500);
   }
-
   menuCloseBtn_tapHandler(event){
     const self = this;
     self.menuCloseBtn.alpha = 0;
@@ -686,7 +671,7 @@ class BookScene extends PIXI.Container{
     this.hideAll_EnergyElement();
   };
   goHomeBtn_pointerDown_handler(){
-    this.vueInstance.$router.push('/')
+    this.vueInstance.$router.push('/index/')
     this.hideAll_EnergyElement();
 
 

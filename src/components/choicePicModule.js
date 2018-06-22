@@ -68,12 +68,12 @@ class ChoicePicModule extends PIXI.Container {
       self.vueInstance.showCongra = true;
     } else {
       setTimeout(() => {
-        self.vueInstance.$router.push('/')
+        self.vueInstance.$router.push('/index/')
       }, 1000);
       LoadingAnimation.setMaskShow(true);
 
       let arr = self.vueInstance.$route.fullPath.split('/');
-      let index = self.vueInstance.allPartNames.indexOf(arr[1]);
+      let index = self.vueInstance.allPartNames.indexOf(arr[2]);
       self.vueInstance.SET_INDEXPAGEINITIALSLIDE(Number(index));
     }
   }
@@ -415,11 +415,11 @@ class ChoicePicModule extends PIXI.Container {
 
     self.soundSpeakText = new PIXI.Text('', {
       fontFamily: 'Microsoft YaHei',
-      fontSize: 52,
+      fontSize: 50,
       fill: 0xffffff,
       align: 'left',
       wordWrap:true,
-      wordWrapWidth:1000
+      wordWrapWidth:1150
     });
 
     self.addChild(self.soundSpeakText);
@@ -530,6 +530,7 @@ class ChoicePicModule extends PIXI.Container {
     }
     this.rightCheck(k)
   }
+
 
   destroyed() {
     if (this.gameAudio) {

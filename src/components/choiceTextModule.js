@@ -68,12 +68,12 @@ class ChoiceTextModule extends PIXI.Container {
       self.vueInstance.showCongra = true;
     } else {
       setTimeout(() => {
-        self.vueInstance.$router.push('/')
+        self.vueInstance.$router.push('/index/')
       }, 1000);
       LoadingAnimation.setMaskShow(true);
 
       let arr = self.vueInstance.$route.fullPath.split('/');
-      let index = self.vueInstance.allPartNames.indexOf(arr[1]);
+      let index = self.vueInstance.allPartNames.indexOf(arr[2]);
       self.vueInstance.SET_INDEXPAGEINITIALSLIDE(Number(index));
     }
   }
@@ -417,43 +417,36 @@ class ChoiceTextModule extends PIXI.Container {
 
     self.soundSpeakText = new PIXI.Text('', {
       fontFamily: 'Microsoft YaHei',
-      fontSize: 52,
+      fontSize: 50,
       fill: 0xffffff,
       align: 'left',
       wordWrap:true,
-      wordWrapWidth:1000
+      wordWrapWidth:1150
 
     });
     self.addChild(self.soundSpeakText);
     self.soundSpeakText.pivot.y = self.soundSpeakText.height / 2;
     self.soundSpeakText.text = self.gameConfig.levels[self.gameLevel].content;
-
     //核心判断垂直逻辑
     if(self.soundSpeakText.height>70){
-      self.soundSpeakText.y = 260
+      self.soundSpeakText.y = 260;
     }else{
-      self.soundSpeakText.y = 290
+      self.soundSpeakText.y = 290;
     }
-
     // self.soundSpeakText.width = 200;
-
     self.soundSpeakText.x = 620;
     self.soundSpeakText.y = 290;
-
     //TODO:顶部导航逻辑-----
     GameMenuBars.freeze = false;
     GameMenuBars.instancement = null;
     self.gameMenuBar = new GameMenuBars();
-
-
     self.addChild(self.gameMenuBar)
     self.gameMenuBar.setBackBtn_tapHandler(()=>{
-
       self.goBackComing();
     });
     self.gameMenuBar.setHomeBtn_tapHandler(()=>{
       self.goToHome();
-    })
+    });
     self.gameMenuBar.backBtnShow = false;
     self.gameMenuBar.homeBtnShow = true;
     self.gameMenuBar.bookBtnShow =false;
@@ -530,11 +523,11 @@ class ChoiceTextModule extends PIXI.Container {
     if (this.gameAudio) {
       this.gameAudio.stop();
     }
-    if(pixiScene){
-      pixiScene.gameMenuBar.clearGameMenuEvents();
-      pixiScene.destroy();
-     // pixiScene = null;
+    if(this.gameMenuBar){
+      this.gameMenuBar.clearGameMenuEvents();
+      this.gameMenuBar.destroy();
     }
+
   }
 };
 
