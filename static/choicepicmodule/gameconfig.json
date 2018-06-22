@@ -121,7 +121,7 @@
   "gameData":{
     "levels":[
       {
-        "rightAnswer":2,
+        "rightAnswer":1,
         "cardlist":["boxcard1_1","boxcard1_2"],
         "audioSrc":"sound001.mp3",
         "content":"When is Teachers' Day？It is inSeptember."
