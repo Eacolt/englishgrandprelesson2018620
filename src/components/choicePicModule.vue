@@ -126,8 +126,6 @@
             };
 
           };
-
-
           if(PIXIAudio.loadedStatus[modulesUrl]==undefined){
 
             PIXIAudio.addAudio(audioManifest, 'static/' + modulesUrl+'/', ()=>{
@@ -166,16 +164,12 @@
     mounted() {
       const self = this;
       self.SET_LESSONCURRENTPAGEINDEX(Number(self.allLessonComponentsNames.indexOf(self.$route.name)))
-
       this.$on('changeGameLevel',function(n){
         self.currentGameLevel = n;
       });
-
-
     }
   }
 </script>
-
 <style scoped>
 .gameContainer{
   position:absolute;

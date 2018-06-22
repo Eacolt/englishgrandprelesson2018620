@@ -282,22 +282,11 @@ class ChoicePicModule extends PIXI.Container {
         self.isAnimating = true;
         self.soundSpeakText.text = self.gameConfig.levels[self.gameLevel].content;
         self.soundSpeakText.pivot.y = self.soundSpeakText.height / 2;
-
-
           self.soundSpeakText.y = 290
-
-
         // self.soundSpeakText.y = 290;
-
         self.checksTiGan.call(self);
         self.arrangePicCards.call(self);
-
-
-
-
       }, onComplete: function () {
-
-
       }
     });
 
@@ -318,7 +307,6 @@ class ChoicePicModule extends PIXI.Container {
 
 
   }
-
   arrangePicCards() {
     if (this.btnsArr.length > 0) {
       this.btnsArr.forEach((item) => {
@@ -326,7 +314,6 @@ class ChoicePicModule extends PIXI.Container {
       })
       this.btnsArr = [];
     }
-
     const cardListNum = this.gameConfig.levels[this.gameLevel].cardlist.length;
     for (let k = 0; k < cardListNum; k++) {
       let pic = new PicCard();

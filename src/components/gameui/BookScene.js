@@ -319,6 +319,10 @@ class BookScene extends PIXI.Container{
   page2StartBtn_tapHandler(){
     if(this.currentPage==1 && this.vueInstance.allGameCards>=8){
       //找你妹;
+      window.parent.postMessage({
+        type: "enterGame",
+        game:2
+      }, "*");
       console.log('换装游戏开启')
     }
   }

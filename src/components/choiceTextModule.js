@@ -352,7 +352,7 @@ class ChoiceTextModule extends PIXI.Container {
     function setRightAnswers() {
       let rightArr = [];
       self.gameConfig.levels.forEach((item) => {
-        rightArr.push(item.rightAnswer)
+        rightArr.push(item.rightAnswer-1)
       })
       self.rightAnswersArr = rightArr;
     };

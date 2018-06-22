@@ -338,7 +338,7 @@ class PixiScene1 extends PIXI.Container {
         self.swiperHammer.lock = true;
         console.log(Number(false))
       }
-    },300)
+    },300);
     this.gameMenuBar.setBackBtn_tapHandler(() => {
       //返回主目录;
       console.log('返回主页')
@@ -350,9 +350,7 @@ class PixiScene1 extends PIXI.Container {
       if (GameMenuBars.freeze) return;
       self.swiperHammer.lock = true;
       self.gameMenuBar.bookScene.openBook();
-
-    })
-
+    });
     self.vueInstance.$watch(()=>{
       return self.vueInstance.energyCurrentNum
     },(newval)=>{
@@ -368,7 +366,6 @@ class PixiScene1 extends PIXI.Container {
     this.leftTouchBtn.interactive = true;
     this.rightTouchBtn.on('pointertap', this.rightAreaPointerTap, this);
     this.leftTouchBtn.on('pointertap', this.leftAreaPointerTap, this);
-
   }
   //End Added
   swiperSlideTo($n, $callback = function () {
