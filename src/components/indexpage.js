@@ -181,6 +181,9 @@ class PixiScene1 extends PIXI.Container {
         case 'story':
           monsterData = self.resource['indexMonster4_json'].spineData;
           break;
+        case 'reading':
+          monsterData = self.resource['indexMonster4_json'].spineData;
+          break;
         case 'grammar':
           monsterData = self.resource['indexMonster5_json'].spineData;
           break;

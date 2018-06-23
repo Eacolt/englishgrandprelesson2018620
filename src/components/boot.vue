@@ -165,7 +165,7 @@
               //console.log('后台卡片数量：',e.data.stuAnswer.card,'是否开启宝箱：',e.data.stuAnswer.opened)
             } else {
               //  reject('getId异步发生错误');
-              resolve({detail: [0], card: 2, opened:1,isOpenBook:0});
+              resolve({detail: [], card: 2, opened:1,isOpenBook:0});
             }
           });
         });

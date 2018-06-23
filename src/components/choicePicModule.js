@@ -406,7 +406,7 @@ class ChoicePicModule extends PIXI.Container {
       fill: 0xffffff,
       align: 'left',
       wordWrap:true,
-      wordWrapWidth:1150
+      wordWrapWidth:2200
     });
 
     self.addChild(self.soundSpeakText);
