@@ -33,7 +33,7 @@
     },
     {
 
-      "name": "reading",
+      "name": "sentences",
       "pageModuleId": "choiceInterface",
       "pageResourceId": "choiceinterface",
       "menus": [

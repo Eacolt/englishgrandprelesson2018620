@@ -82,14 +82,14 @@
           "cardpicture":"cardpicture002",
           "rightAnswer":1,
           "cardlist":["A: Last Tuesday","C：Last Monday"],
-          "audioSrc":"sound002.mp3",
+          "audioSrc":"",
           "content":""
         },
         {
           "cardpicture":"cardpicture003",
           "rightAnswer":1,
           "cardlist":["A: Last Tuesday","C：Last Monday"],
-          "audioSrc":"sound003.mp3",
+          "audioSrc":"",
           "content":""
         }
       ]

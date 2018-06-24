@@ -127,7 +127,7 @@
               src:gameConfigData.gameData.coverpageAudio,
             });
           }
-          if(PIXIAudio.loadedStatus[modulesUrl]==undefined){
+          if(PIXIAudio.loadedStatus[modulesUrl]==undefined && audioManifest.length>0){
             PIXIAudio.addAudio(audioManifest, 'static/' + modulesUrl+'/', ()=>{
               var scene1 = new PixiScene1({
                 json: gameConfigData.gameData,

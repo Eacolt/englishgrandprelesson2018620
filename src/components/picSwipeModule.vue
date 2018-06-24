@@ -544,7 +544,7 @@
 
               }
 
-              if(PIXIAudio.loadedStatus[modulesUrl]==undefined){
+              if(PIXIAudio.loadedStatus[modulesUrl]==undefined && audioManifest.length>0){
                 PIXIAudio.addAudio(audioManifest, self.globalStatic+'/', ()=>{
                   PixiGameStart.call(self)
 
