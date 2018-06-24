@@ -173,6 +173,11 @@ function copyTheme() {
         copyIt('./englishmodules/themetypeui/monster4_story.json','./static/themetypeui/monster4_story.json');
         copyIt('./englishmodules/themetypeui/monster4_story.png','./static/themetypeui/monster4_story.png')
         break;
+      case 'reading':
+        copyIt('./englishmodules/themetypeui/monster4_story.atlas','./static/themetypeui/monster4_story.atlas');
+        copyIt('./englishmodules/themetypeui/monster4_story.json','./static/themetypeui/monster4_story.json');
+        copyIt('./englishmodules/themetypeui/monster4_story.png','./static/themetypeui/monster4_story.png')
+        break;
       case 'grammar':
         copyIt('./englishmodules/themetypeui/monster5_grammar.atlas','./static/themetypeui/monster5_grammar.atlas');
         copyIt('./englishmodules/themetypeui/monster5_grammar.json','./static/themetypeui/monster5_grammar.json');
