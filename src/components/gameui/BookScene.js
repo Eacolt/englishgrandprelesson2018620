@@ -339,6 +339,7 @@ class BookScene extends PIXI.Container{
     EventTarget.removeAllListeners();
 
 
+
   //这个地方立即判断是否中奖;
   //   console.log('当前页面是--book:',self.vueInstance.lessonCurrentPageIndex)
      let promise = new Promise(function(resolve,reject){
@@ -429,8 +430,8 @@ class BookScene extends PIXI.Container{
                setTimeout(()=>{
                  self.vueInstance.$router.push('/index');
 
-               //  self.vueInstance.hideMaskBg();
-                 self.hideBlackMask();
+                      //  self.vueInstance.hideMaskBg();
+                    self.hideBlackMask();
                  if(self.parent.parent.swiperHammer){
                    self.parent.parent.swiperHammer.lock = true;
                  }

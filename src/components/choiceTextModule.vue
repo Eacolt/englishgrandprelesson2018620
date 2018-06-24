@@ -110,14 +110,6 @@
         ///End加载逻辑
 
 
-
-
-
-
-
-
-
-
         function GameStart(resource,gameConfigData){
 
           let audioManifest = [];
@@ -165,13 +157,6 @@
             pixiScene = scene1;
              LoadingAnimation.setMaskShow(false)
           }
-
-
-
-
-
-
-
         }
       }
     },
