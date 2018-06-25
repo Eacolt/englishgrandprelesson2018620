@@ -385,8 +385,6 @@ class BookReadingModule extends PIXI.Container {
 
           }, "*");
         }
-
-
         setTimeout(()=>{
           let isQingsuan = self.vueInstance.$route.name==self.vueInstance.restArrangementStat[self.vueInstance.restArrangementStat.length-1];//开始清算;
           if(isQingsuan && !self.vueInstance.gameHasBeenCompleted){
@@ -422,7 +420,6 @@ class BookReadingModule extends PIXI.Container {
     self.addChild(this.boySpine);
 
 
-
     //TODO:顶部导航逻辑-----
     GameMenuBars.freeze = false;
     GameMenuBars.instancement = null;
@@ -447,13 +444,7 @@ class BookReadingModule extends PIXI.Container {
       } else {
         self.playAudios.call(self)
       }
-
-
-    })
-
-
-
-
+    });
 
     self.gameMenuBar.backBtnShow = false;
     self.gameMenuBar.homeBtnShow = true;
@@ -511,9 +502,6 @@ class BookReadingModule extends PIXI.Container {
     this.gameMenuBar.energyOnce = self.vueInstance.energyCurrentNum;
 
     //顶部导航逻辑END
-
-
-
 
 
   };
@@ -699,7 +687,7 @@ class BookReadingModule extends PIXI.Container {
 
 
     TweenMax.to(this.pageMaskUpper, $time, {
-      x: 250, onComplete: function () {
+      x: 246, onComplete: function () {
         self.pageturn2.alpha = 0;
         if( self.vueInstance.currentLessonCompleted == true){
           self.pageturn.alpha = 0;
@@ -709,7 +697,7 @@ class BookReadingModule extends PIXI.Container {
 
 
         self.turnAnimating = false;
-        self.pageMaskUpper.x = 150;
+        self.pageMaskUpper.x = 126;
         self.playAudios();
         self.pageturn.play();
       }

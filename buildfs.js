@@ -82,34 +82,46 @@ var newRouters = `export default new Router({
 })`;
 var routerStructor = baseImports + newRouters;
 
-assetsModules.forEach((mainItem) => {
-
-  //移除模板;
-  if (fs.existsSync('./static/' + mainItem)) {
-    var subfilesCopyed = fs.readdirSync('./static/' + mainItem);
-    if (subfilesCopyed.length > 0) {
-      subfilesCopyed.forEach((items, indexs) => {
-        //批量删除资源目录中所有文件
-        fs.unlinkSync('./static/' + mainItem + '/' + items);
-      });
-    }
-    fs.rmdirSync('./static/' + mainItem);
+var alldirpoor = fs.readdirSync('./static/').map((item)=>{
+  if(fs.statSync('./static/'+item).isDirectory()){
+    return item;
   }
 });
-//创建模板;
+var regModuel =  new RegExp("module|choiceinterface","");
+alldirpoor.forEach((mainItem,index) => {
+  //移除模板;
+
+  if (mainItem && fs.existsSync('./static/' + mainItem)) {
+    var subfilesCopyed = fs.readdirSync('./static/' + mainItem);
+    if(regModuel.test(mainItem)){
+      if (subfilesCopyed.length > 0) {
+        subfilesCopyed.forEach((items, indexs) => {
+          //批量删除资源目录中所有文件
+          fs.unlinkSync('./static/' + mainItem + '/' + items);
+        });
+      }
+      fs.rmdirSync('./static/' + mainItem);
+
+    }
+
+
+
+
+  }
+});
+
+
+
+//c创建模板;
 assetsModules.forEach((mainItem,index) => {
   var name = './englishmodules/' + mainItem;
   var subfiles = fs.readdirSync(name);
   var copyedFiles = subfiles.filter((item) => {
     let rootUrl = name + '/' + item;
     if (fs.statSync(rootUrl).isFile()) {
-
       return rootUrl
     }
   });
-  // console.log(mainItem)
-
-
   fs.mkdirSync('./static/' + mainItem);
   copyedFiles.forEach((items) => {
     copyIt('./englishmodules/' + mainItem + '/' + items, './static/' + mainItem + '/' + items)
@@ -149,7 +161,6 @@ function copyTheme() {
     fs.mkdirSync('./static/themetypeui');
   //复制小怪物；
   preparation.menus.forEach((item)=>{
-    //console.log('是什么：',item.name)
     switch (item.name){
       case 'song':
         copyIt('./englishmodules/themetypeui/monster1_song.atlas','./static/themetypeui/monster1_song.atlas');
@@ -547,11 +558,8 @@ function copyTheme() {
         copyIt('./englishmodules/themetypeui/'+item,'./static/themetypeui/'+newname)
       });
     }
-    console.log('node buildfs.....');
-    console.log('预习编译成功…^_^');
-
+    console.log('预习编译成功！你真棒^_^');
 }
-
 fs.writeFile('./src/router/index.js', routerStructor, function (err) {
   if (err) {
     return console.error(err);
@@ -560,7 +568,5 @@ fs.writeFile('./src/router/index.js', routerStructor, function (err) {
     if (err) {
       return console.error(err);
     }
-
   });
 });
-
