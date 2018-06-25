@@ -42,25 +42,14 @@
           "name": "practice",
           "pageModuleId": "choicePicModule",
           "pageResourceId": "choicepicmodule"
-        }
-      ]
-    },
-    {
-      "name": "story",
-      "pageModuleId": "choiceInterface",
-      "pageResourceId": "choiceinterface",
-      "menus": [
+        },
         {
           "name": "learning",
           "pageModuleId": "bookReadingModule",
           "pageResourceId": "bookreadingmodule"
-        },
-        {
-          "name": "learning2",
-          "pageModuleId": "picSwipeModule",
-          "pageResourceId": "picswipemodule2"
         }
       ]
     }
+
   ]
 }

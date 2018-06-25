@@ -1,0 +1,36 @@
+{"frames": {
+
+"sound0.png":
+{
+	"frame": {"x":1,"y":1,"w":120,"h":120},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":120},
+	"sourceSize": {"w":120,"h":120}
+},
+"sound1.png":
+{
+	"frame": {"x":123,"y":1,"w":120,"h":120},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":120},
+	"sourceSize": {"w":120,"h":120}
+},
+"sound2.png":
+{
+	"frame": {"x":245,"y":1,"w":120,"h":120},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":120},
+	"sourceSize": {"w":120,"h":120}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "menusTrumpet.png",
+	"format": "RGBA8888",
+	"size": {"w":366,"h":122},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:3a6ff567c18f404a96367be9ca51e274:37cf04ede6040e6293c1055505c6c896:46abfc2eb1e1d5c76d20eaae9b643299$"
+}
+}
