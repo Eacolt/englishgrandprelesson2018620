@@ -4,7 +4,7 @@ import {checkForJumpRoute} from './Utils.js'
 import {Debugs} from "./Utils";
 import {LoadingAnimation} from './gameui/GameManager.js'
 import GameMenuBars from "./gameui/GameMenuBar";
-import {SoundTrumpet} from './EasyPIXI.js'
+import {AnimationSprite} from './EasyPIXI.js'
 import {PIXIAudio} from "./EasyPIXI";
 
 class ChoiceTextModule extends PIXI.Container {
@@ -402,7 +402,7 @@ class ChoiceTextModule extends PIXI.Container {
 
     //播放声音;
 
-    self.soundButton = new SoundTrumpet();
+    self.soundButton = new AnimationSprite();
     self.soundButton.resName = 'gamebtnSound_atlas';
     self.soundButton.alienImages = ['gamesound0.png','gamesound1.png','gamesound2.png']
     self.soundButton.interactive = true;

@@ -15,14 +15,10 @@ class PIXIAudio{
 
     function loadSound(item){
       if(PIXIAudio.loadedStatus[$soundClassName] == 'completed')return;
-
-
       if(audioNum>=$manifest.length-1){
         $callback();
         PIXIAudio.loadedStatus[$soundClassName] = 'completed';
-
       }
-
       for(let i =0;i<$manifest.length;i++){
         if(PIXIAudio.audios[$manifest[i].id] == undefined){
           let myaudio  = createjs.Sound.createInstance($manifest[i].id);
@@ -51,14 +47,10 @@ class PIXIAudio{
     }); // call handleLoad when each sound loads
     createjs.Sound.registerSounds($manifest, $soundPath);
 
-
-
-
   }
-
 }
 
-class SoundTrumpet extends PIXI.Container {
+class AnimationSprite extends PIXI.Container {
   constructor() {
     super();
     this.soundTrumpet = null;
@@ -71,7 +63,7 @@ class SoundTrumpet extends PIXI.Container {
   addedToStage() {
     const self = this;
     let textureArray = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < this.alienImages.length; i++) {
       let texture = PIXI.loader.resources[self.resName].textures[self.alienImages[i]];
       textureArray.push(texture);
     }
@@ -91,9 +83,12 @@ class SoundTrumpet extends PIXI.Container {
 
   }
 
-  stop() {
+  stop($num=2) {
     this.status = 'stoping';
-    this.soundTrumpet.gotoAndStop(2);
+    this.soundTrumpet.gotoAndStop($num);
+  }
+  set speed($num=1){
+    this.soundTrumpet.animationSpeed = $num;
   }
 };
 
@@ -246,4 +241,4 @@ class TimesTicker{
 }
 
 
-export {pixiAnimation,TimesTicker,SoundTrumpet,PIXIAudio};
+export {pixiAnimation,TimesTicker,AnimationSprite,PIXIAudio};

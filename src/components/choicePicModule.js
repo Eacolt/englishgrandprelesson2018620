@@ -1,6 +1,6 @@
 import ProgressBar from './gameui/Progressbar.js'
 import {TimelineMax, TweenMax} from 'gsap'
-import {SoundTrumpet} from './EasyPIXI.js'
+import {AnimationSprite} from './EasyPIXI.js'
 import {checkForJumpRoute, Debugs} from './Utils.js'
 import {LoadingAnimation} from "./gameui/GameManager";
 import GameMenuBars from "./gameui/GameMenuBar";
@@ -386,7 +386,7 @@ class ChoicePicModule extends PIXI.Container {
 
     //播放声音;
 
-    self.soundButton = new SoundTrumpet();
+    self.soundButton = new AnimationSprite();
     self.soundButton.resName = 'gamebtnSound_atlas';
     self.soundButton.alienImages = ['gamesound0.png','gamesound1.png','gamesound2.png']
     self.soundButton.interactive = true;

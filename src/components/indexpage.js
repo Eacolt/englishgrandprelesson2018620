@@ -196,14 +196,10 @@ class PixiScene1 extends PIXI.Container {
         default:
           break;
       }
-
       let monsters = new PIXI.spine.Spine(monsterData);
-      monsters.state.setAnimation(0, 'standing', true)
-
+      monsters.state.setAnimation(0, 'standing', true);
       monsters.x = 308;
       monsters.y = -10;
-
-
       var tablebarStart = new PIXI.Sprite(self.resource['tablebar2_png'].texture);
 
       var plate =new PIXI.Sprite(self.resource['table_png'].texture);

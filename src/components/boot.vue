@@ -155,18 +155,23 @@
 
       },
       getStuAnswerPromise() {
+        let isgo = true;
         return new Promise(function (resolve, reject) {
           window.parent.postMessage({
             type: "indexcomplete"
           }, "*");
           window.addEventListener('message', function (e) {
             if (e.data.type === 'getId') {
+
               resolve(e.data.stuAnswer);
-              //console.log('后台卡片数量：',e.data.stuAnswer.card,'是否开启宝箱：',e.data.stuAnswer.opened)
-            } else {
-              //  reject('getId异步发生错误');
-              resolve({detail: [0,1,2,3,4], card: 2, opened:1,isOpenBook:3});
+            }else{
+              if(isgo){
+                resolve({detail: [0,1,2], card: 2, opened:1,isOpenBook:0});
+                //console.log(e.data.type,'???..')
+                isgo = false;
+              }
             }
+
           });
         });
       },
@@ -185,6 +190,13 @@
             PIXIAudio.init(soundRes.data, 'static/sound/', function () {
               PIXI.loader.add(response.data)
                 .load(function (loader, resource) {
+
+                  console.log(Number(self.openMagicBookByGameIndex>0));
+                  if(Number(self.openMagicBookByGameIndex>0)){
+                    self.$router.push('/index');
+                    return;
+                  }
+
                   var gameCtn = new PIXI.Container();
                   var gameStartPage = new PIXI.spine.Spine(PIXI.loader.resources['monsterStartPage_json'].spineData);
                   gameStartPage.x = 1920/2;

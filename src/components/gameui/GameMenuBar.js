@@ -1,6 +1,6 @@
 import {TweenMax} from 'gsap'
 import BookScene from './BookScene.js'
-import {SoundTrumpet,PIXIAudio} from '../EasyPIXI.js'
+import {AnimationSprite,PIXIAudio} from '../EasyPIXI.js'
 
 class GameMenuBars extends PIXI.Container {
   static instancement = null;
@@ -10,11 +10,8 @@ class GameMenuBars extends PIXI.Container {
   constructor() {
     super();
 
-
     this.barCtn = null;
     this.bookScene = null;
-
-
 
     this.offsetToTop = 35;
     this.offsetToLeft = 90;
@@ -155,7 +152,7 @@ class GameMenuBars extends PIXI.Container {
 
     //Sound;
     function init_SoundMenu(){
-      this.soundBtn =   new SoundTrumpet();
+      this.soundBtn =   new AnimationSprite();
       this.soundBtn.resName = 'menubtnSound_atlas';
       this.soundBtn.alienImages = ["sound0.png", "sound1.png", "sound2.png"]
 
@@ -406,7 +403,7 @@ class GameMenuBars extends PIXI.Container {
     if(newarr.length>1){
       this.setEnergyBarPos.call(this,Number(1920-this.offsetToLeft-this.bookBtn.width-this.buttonsOffset));
     }else{
-      this.setEnergyBarPos.call(this,Number(1920-this.buttonsOffset));
+      this.setEnergyBarPos.call(this,Number(1920-this.offsetToLeft));
 
     }
 

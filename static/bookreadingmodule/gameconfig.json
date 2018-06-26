@@ -57,16 +57,16 @@
       "audioSrc":"sound001.mp3"
     },{
       "picture":"page1",
-      "audioSrc":"sound002.mp3"
+      "audioSrc":""
     },{
       "picture":"page2",
-      "audioSrc":"sound003.mp3"
+      "audioSrc":""
     },{
       "picture":"page3",
       "audioSrc":"sound004.mp3"
     },{
       "picture":"page4",
-      "audioSrc":"sound005.mp3"
+      "audioSrc":""
     }],
     "showCoverpage":true,
     "coverpageAudio":"sound111.mp3"

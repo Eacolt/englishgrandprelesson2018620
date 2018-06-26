@@ -67,7 +67,6 @@ class ResourceMent {
 /*
 * //选文：
                   .add([
-
                   ])*/
 const loaderAssetsByValided = function(modulesUrl,$newAssets,GameStart,$otherAssets=[]){
   const self = this;
@@ -86,7 +85,6 @@ const loaderAssetsByValided = function(modulesUrl,$newAssets,GameStart,$otherAss
         validAssetsArr.push(item);
       }
     });
-
     return validAssetsArr;
   }
   self.axios.get('static/' + modulesUrl + '/gameconfig.json').then((gameConfigData) => {
@@ -100,19 +98,14 @@ const loaderAssetsByValided = function(modulesUrl,$newAssets,GameStart,$otherAss
       GameStart.call(self,PIXI.loader.resources,gameConfigData.data);
       return;
     }
-    //console.log('剩下：',getValidedAssets(assets))
     PIXI.loader.add(getValidedAssets(assets))
-
       .load(function (loader,resources) {
         GameStart.call(self,resources,gameConfigData.data);
       });
   });
 
 }
-
 ///End加载逻辑
-
-
 
 
 //Vue

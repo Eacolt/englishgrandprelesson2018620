@@ -7,7 +7,7 @@
     "pictureList":[
       {
         "picture":"slidepic001.jpg",
-        "audioSrc":"sound001.mp3"
+        "audioSrc":""
       },
       {
         "picture":"slidepic002.jpg",
@@ -15,15 +15,15 @@
       },
       {
         "picture":"slidepic003.jpg",
-        "audioSrc":"sound003.mp3"
+        "audioSrc":""
       },
       {
         "picture":"slidepic004.jpg",
-        "audioSrc":"sound004.mp3"
+        "audioSrc":""
       },
       {
         "picture":"slidepic001.jpg",
-        "audioSrc":"sound001.mp3"
+        "audioSrc":""
       },
       {
         "picture":"slidepic002.jpg",
@@ -31,7 +31,7 @@
       },
       {
         "picture":"slidepic003.jpg",
-        "audioSrc":"sound003.mp3"
+        "audioSrc":""
       },
       {
         "picture":"slidepic004.jpg",

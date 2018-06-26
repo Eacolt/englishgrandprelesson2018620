@@ -159,39 +159,39 @@ class PixiScene3 extends PIXI.Container {
   //音频控制;
   playAudios() {
     const self = this;
-    if (this.currentAudioPlaying) return;
-
+    //if (this.currentAudioPlaying) return;
+    self.stopAudios()
     let soundName =  this.vueInstance.$route.meta.assetsUrl+'_' + this.gameConfig.pictureList[this.vueInstance.currentPage].audioSrc.replace(/\./g,'_');
-   this.gameAudio = PIXIAudio.audios[soundName];
+    if(this.gameConfig.pictureList[this.vueInstance.currentPage].audioSrc && _.trim(this.gameConfig.pictureList[this.vueInstance.currentPage].audioSrc)!=''){
+      this.gameAudio = PIXIAudio.audios[soundName];
+      this.gameAudio.play();
+      this.gameAudio.position = 0;
+      let soundTime =this.gameAudio.duration;
+      this.gameAudio.on('complete',()=>{
+        if(self.gameMenuBar.soundBtn){
+          self.gameMenuBar.soundBtn.stop();
+        }
+        //self.currentAudioPlaying = false;
+      })
 
-    this.gameAudio.play();
-    this.gameAudio.position = 0;
-
-
-    let soundTime =this.gameAudio.duration;
-    this.gameAudio.on('complete',()=>{
-      if(self.gameMenuBar.soundBtn){
-        self.gameMenuBar.soundBtn.stop();
-
+      if(this.gameMenuBar.soundBtn){
+        this.gameMenuBar.soundBtn.play();
       }
-
-
-
-      self.currentAudioPlaying = false;
-    })
-
-    if(this.gameMenuBar.soundBtn){
-      this.gameMenuBar.soundBtn.play();
+      //this.currentAudioPlaying = true;
+      self.gameMenuBar.soundBtnShow = true;
+      self.gameMenuBar.updateGameMenu();
+    }else{
+      self.gameMenuBar.soundBtnShow = false;
+      self.gameMenuBar.updateGameMenu();
     }
 
-    this.currentAudioPlaying = true;
   }
 
   stopAudios() {
 
     if(this.gameAudio){
       this.gameAudio.stop();
-      this.currentAudioPlaying = false;
+      //this.currentAudioPlaying = false;
       this.gameMenuBar.soundBtn.stop();
 
     }
@@ -218,30 +218,7 @@ class PixiScene3 extends PIXI.Container {
 
     let sound = new Audio('static/sound/nextpart.mp3');
     sound.play();
-
   }
-
-  toCanvasPosX(x) {
-    return 1920 * (x) / parseInt($('#app').width())
-  }
-
-  toCanvasPosY(x) {
-    return 1920 * x / parseInt(document.documentElement.clientHeight)
-  }
-
-  updateFromVue(swiperX, scaleNumber) {
-    const self = this;
-    if (this.swiperContainer) {
-      // this.swiperContainer.x = swiperX/0.4
-      this.cardList.forEach((item, index) => {
-        // matrix(0.9, 0, 0, 0.9, 0, 0)
-        item.x = self.toCanvasPosX(swiperX[index] + (0));
-        item.scale.x = item.scale.y = scaleNumber[index]
-        //  item.worldTransform = new PIXI.Matrix(0.9,0,0,0.9,0,0);
-      });
-    }
-  }
-
   destroyed() {
     this.stopAudios();
     if(this.gameMenuBar){

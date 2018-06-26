@@ -321,7 +321,7 @@ class BookReadingModule extends PIXI.Container {
     page0Ctn.endFill();
     var page1Ctn = page0Ctn.clone();
     page0Ctn.addChild(this.pageUpper);
-    page1Ctn.addChild(this.pageDown)
+    page1Ctn.addChild(this.pageDown);
 
 
     bookmask.addChild(page1Ctn)
@@ -561,45 +561,49 @@ class BookReadingModule extends PIXI.Container {
   playAudios($num=null) {
     const self = this;
     self.stopAudios()
-   // if (this.currentAudioPlaying) return;
 
     let myIndex = $num || this.currentPage;
-
     let soundName;
-    if(this.gameConfig.showCoverpage==true  && this.isCoverPageTime){
+    if(this.gameConfig.showCoverpage==true  && this.isCoverPageTime && _.trim(this.gameConfig.coverpageAudio)!=''){
       soundName = this.vueInstance.$route.meta.assetsUrl+'_'+this.gameConfig.coverpageAudio.replace(/\./g,'_');
     }else{
       soundName = this.vueInstance.$route.meta.assetsUrl+'_'+this.gameConfig.levels[myIndex].audioSrc.replace(/\./g,'_');
     }
+    //console.log(_.trim(this.gameConfig.levels[myIndex].audioSrc),'<=audio');
+    if((this.gameConfig.levels[myIndex].audioSrc && _.trim(this.gameConfig.levels[myIndex].audioSrc)!='') ||
+      (this.gameConfig.showCoverpage==true &&  this.isCoverPageTime && _.trim(this.gameConfig.coverpageAudio)!='')){
+      this.gameAudio = PIXIAudio.audios[soundName];
+      this.gameAudio.play();
+      this.gameAudio.position = 0;
 
+      let soundTime =this.gameAudio.duration;
+      self.gameAudio.on('complete',()=>{
+        if(self.gameMenuBar.soundBtn){
+          self.gameMenuBar.soundBtn.stop();
+        }
+        //self.currentAudioPlaying = false;
+      })
 
-    this.gameAudio = PIXIAudio.audios[soundName];
-
-
-    this.gameAudio.play();
-    this.gameAudio.position = 0;
-
-
-    let soundTime =this.gameAudio.duration;
-    self.gameAudio.on('complete',()=>{
-      if(self.gameMenuBar.soundBtn){
-        self.gameMenuBar.soundBtn.stop();
+      if(this.gameMenuBar.soundBtn){
+        this.gameMenuBar.soundBtn.play();
       }
-      self.currentAudioPlaying = false;
-    })
 
-    if(this.gameMenuBar.soundBtn){
-      this.gameMenuBar.soundBtn.play();
+     // this.currentAudioPlaying = true;
+      this.gameMenuBar.soundBtnShow = true;
+      this.gameMenuBar.updateGameMenu();
+    }else{
+      this.gameMenuBar.soundBtnShow = false;
+      this.gameMenuBar.updateGameMenu();
     }
 
-    this.currentAudioPlaying = true;
+
   }
 
   stopAudios() {
 
     if(this.gameAudio){
       this.gameAudio.stop();
-      this.currentAudioPlaying = false;
+      //this.currentAudioPlaying = false;
       if(this.gameMenuBar.soundBtn){
         this.gameMenuBar.soundBtn.stop();
       }

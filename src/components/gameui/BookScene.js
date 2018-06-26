@@ -338,8 +338,7 @@ class BookScene extends PIXI.Container{
     });
     EventTarget.removeAllListeners();
 
-
-
+    let isGo = true;
   //这个地方立即判断是否中奖;
   //   console.log('当前页面是--book:',self.vueInstance.lessonCurrentPageIndex)
      let promise = new Promise(function(resolve,reject){
@@ -353,9 +352,12 @@ class BookScene extends PIXI.Container{
        window.addEventListener('message', function(e) {
          if (e.data.type === 'getCard') {
            resolve(Number(e.data.getCard));
-
          }else{
-           resolve(1)
+           if(isGo){
+             resolve(1);
+             isGo = false;
+           }
+
          }
        });
        //看看得到卡片的结果是什么;

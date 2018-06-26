@@ -146,7 +146,7 @@ class MovieModule extends PIXI.Container {
         let arr = self.vueInstance.$route.fullPath.split('/');
         let index = self.vueInstance.allPartNames.indexOf(arr[2]);
         self.vueInstance.SET_INDEXPAGEINITIALSLIDE(Number(index));
-        console.log('fuckkk',arr[2])
+
       }
     });
     self.gameMenuBar.backBtnShow = false;

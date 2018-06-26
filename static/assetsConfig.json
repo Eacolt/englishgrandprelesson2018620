@@ -4,6 +4,10 @@
     "url": "static/img/timepoint.png"
   },
   {
+    "name":"loadingmonster_json",
+    "url":"static/img/loading/loadingmonster.json"
+  },
+  {
     "name": "boyskeleton",
     "url": "static/img/choicepage/boyskeleton/boy.json"
   },
@@ -111,10 +115,7 @@
     "name": "congracard_png",
     "url": "static/img/menus/energyanime/congracard.png"
   },
-  {
-    "name":"practiceSoundPlay_png",
-    "url":"static/img/menus/sound-b.png"
-  },
+
   {
     "name":"powerstar_png",
     "url":"static/img/powerstar.png"

@@ -69,7 +69,7 @@
   import {swiper, swiperSlide} from 'vue-awesome-swiper'
 
   import 'swiper/dist/css/swiper.css'
-  import {PIXIAudio} from './EasyPIXI.js'
+  import {PIXIAudio,AnimationSprite} from './EasyPIXI.js'
   var pixiScene = null;
   var gameTicker = null;
 
@@ -536,13 +536,36 @@
                 let audioSrc = gameConfigData.gameData.pictureList[i].audioSrc;
                 let audioName = modulesUrl+'_'+audioSrc.replace(/\./g,'_');
 
+                if(audioSrc && _.trim(audioSrc)!=''){
+                  audioManifest.push({
+                    id:audioName,
+                    src:audioSrc
+                  });
+                }
 
-                audioManifest.push({
-                  id:audioName,
-                  src:audioSrc
-                });
+              };
 
+
+              // 加载页面小人
+              var loadingContainer = new PIXI.Container();
+              let animeloader = new AnimationSprite();
+              animeloader.resName = 'loadingmonster_json';
+              let imgs = [];
+              for(let i=0;i<18;i++){
+                imgs.push('loading'+i+'.png');
               }
+              animeloader.alienImages = imgs;
+              loadingContainer.addChild(animeloader);
+              animeloader.pivot.x = animeloader.width/2;
+              animeloader.pivot.y = animeloader.height/2;
+              animeloader.x = 1920/2;
+              animeloader.y = 1080/2;
+              animeloader.speed = 0.42;
+              animeloader.play();
+              app.stage.addChild(loadingContainer);
+              //加载页面小人END
+
+
 
               if(PIXIAudio.loadedStatus[modulesUrl]==undefined && audioManifest.length>0){
                 PIXIAudio.addAudio(audioManifest, self.globalStatic+'/', ()=>{
@@ -553,6 +576,7 @@
                 PixiGameStart.call(self)
               }
               function PixiGameStart(){
+                app.stage.removeChildAt(0)
                 var scene1 = new PixiScene1({
                   json: gameConfigData.gameData,
                   app: app,
