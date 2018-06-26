@@ -7,9 +7,6 @@ import {PIXIAudio} from "./EasyPIXI";
 import Masker from "./gameui/Masker";
 import {LoadingAnimation} from "./gameui/GameManager";
 
-import GamePopupBand from "./gameui/GamePopupBand";
-
-
 class PixiScene3 extends PIXI.Container {
   constructor($options) {
     super();
@@ -53,7 +50,7 @@ class PixiScene3 extends PIXI.Container {
 
     this.addChild(gameBg)
     this.maskerBg = new Masker();
-    self.gamePopups = new GamePopupBand();
+
     this.swiperContainer = new PIXI.Container();
 
     var boyData = self.resources['boyskeleton'].spineData;

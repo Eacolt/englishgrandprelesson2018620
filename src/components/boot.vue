@@ -10,12 +10,9 @@
   import $ from 'jquery'
   import {mapActions, mapState} from 'vuex'
   import IndexPage from './indexpage.js'
-  import congraPopup from './gameui/congraPopup.vue'
-
   import GameHand from './gameui/Gamehand.js'
   import {LoadingAnimation} from './gameui/GameManager.js'
   import {Debugs, myVueMixin, TextureCache, AudioManager} from "./Utils";
-  import TestIndex from './TestIndex.js'
   import {PIXIAudio} from "./EasyPIXI";
   import GameMenuBars from './gameui/GameMenuBar.js'
 
@@ -166,7 +163,7 @@
               resolve(e.data.stuAnswer);
             }else{
               if(isgo){
-                resolve({detail: [0,1,2], card: 2, opened:1,isOpenBook:0});
+                resolve({detail: [], card: 2, opened:1,isOpenBook:0});
                 //console.log(e.data.type,'???..')
                 isgo = false;
               }

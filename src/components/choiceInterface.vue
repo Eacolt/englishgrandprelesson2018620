@@ -99,6 +99,14 @@
               "name": "popupIconGetCard_png",
               "url": "static/img/menus/popups/icon-hengfu.png"
             },
+            {
+              "name":"choiceDesk_png",
+              "url":"static/themetypeui/back2ground.png"
+            },
+            {
+              "name": "practiceBox_skeleton",
+              "url": "static/img/choicepage/boxskeleton/skeleton.json"
+            },
           ]);
           PIXI.loader.load(function (loader, resource) {
             GameStart.call(self);

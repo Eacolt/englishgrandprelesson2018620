@@ -92,42 +92,6 @@ class AnimationSprite extends PIXI.Container {
   }
 };
 
-//
-// class SoundTrumpetMenu extends PIXI.Container {
-//   constructor() {
-//     super();
-//     this.soundTrumpet = null;
-//     this.status = 'stoping';
-//     this.on('added', this.addedToStage, this);
-//   }
-//
-//   addedToStage() {
-//     let alienImages = ["trumpet0.png", "trumpet1.png", "trumpet2.png"];
-//     let textureArray = [];
-//     for (let i = 0; i < 3; i++) {
-//       let texture = PIXI.loader.resources['soundTrumpetAn_json'].textures[alienImages[i]];
-//       textureArray.push(texture);
-//     }
-//     ;
-//     this.soundTrumpet = new PIXI.extras.AnimatedSprite(textureArray);
-//     this.soundTrumpet.animationSpeed = 0.08;
-//     this.stop();
-//     this.addChild(this.soundTrumpet)
-//     //this.soundTrumpet = new PIXI.Container()
-//   }
-//
-//   play() {
-//
-//     this.soundTrumpet.play();
-//     this.status = 'playing';
-//
-//   }
-//
-//   stop() {
-//     this.status = 'stoping';
-//     this.soundTrumpet.gotoAndStop(2);
-//   }
-// };
   class pixiAnimation{
     constructor($atlasName){
       // super();
@@ -139,13 +103,10 @@ class AnimationSprite extends PIXI.Container {
       this.currentFrames = 0;
       this.framesArr = [];
       this.yoyoTweenMax = null;
-
       let alienImages = PIXI.loader.resources[$atlasName].textures;
-
       for(let i in alienImages){
         this.textureArr.push(alienImages[i])
       }
-
     }
     create(){
       this.mc = new PIXI.extras.AnimatedSprite(this.textureArr);
@@ -161,7 +122,6 @@ class AnimationSprite extends PIXI.Container {
 
     playYoyo($totalFrames=3,$time=1){
       const self = this;
-
       // if(this.yoyoTweenMax){
       //   this.yoyoTweenMax.pause();
       //   this.yoyoTweenMax.restart();
@@ -235,7 +195,6 @@ class TimesTicker{
     }
     this.currentTimes = 0;
     this.isStart = null;
-
   }
 
 }

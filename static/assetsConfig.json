@@ -60,10 +60,6 @@
   },
 
   {
-    "name": "practiceBox_skeleton",
-    "url": "static/img/choicepage/boxskeleton/skeleton.json"
-  },
-  {
     "name": "bookAnime_skeleton",
     "url": "static/img/menus/bookanime/book.json"
   },
@@ -107,18 +103,10 @@
     "name":"tablebar_png",
     "url":"static/themetypeui/table1.png"
   },
-  {
-    "name":"choiceDesk_png",
-    "url":"static/themetypeui/back2ground.png"
-  },
+
   {
     "name": "congracard_png",
     "url": "static/img/menus/energyanime/congracard.png"
-  },
-
-  {
-    "name":"powerstar_png",
-    "url":"static/img/powerstar.png"
   },
 
   {

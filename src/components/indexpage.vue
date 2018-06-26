@@ -11,7 +11,6 @@
   import GameHand from './gameui/Gamehand.js'
   import {LoadingAnimation} from './gameui/GameManager.js'
   import {Debugs, myVueMixin, TextureCache, AudioManager} from "./Utils";
-  import TestIndex from './TestIndex.js'
   import {PIXIAudio} from "./EasyPIXI";
   import GameMenuBars from './gameui/GameMenuBar.js'
   var pixiScene = null;

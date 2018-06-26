@@ -1,14 +1,11 @@
 import GameMenuBars from "./gameui/GameMenuBar";
 import {PIXIAudio} from "./EasyPIXI";
 
-import GamePopupBand from "./gameui/GamePopupBand";
 import {LoadingAnimation} from "./gameui/GameManager";
 
 class ChoiceInterface extends PIXI.Container {
   constructor($options) {
     super();
-
-
     this.resources = PIXI.loader.resources;
     this.vueInstance = $options.vueInstance;
     this.gameMenuBars = null;
