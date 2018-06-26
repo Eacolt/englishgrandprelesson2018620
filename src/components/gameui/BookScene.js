@@ -450,6 +450,7 @@ class BookScene extends PIXI.Container{
 
     if(this.closeBookAnimating==false){
       this.closeBookAnimating = true;
+      PIXIAudio.audios['bgSound'].play();
 
       this.leftBtn.interactive = this.rightBtn.interactive = false;
       if(this.currentPage==0){

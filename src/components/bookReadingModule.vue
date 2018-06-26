@@ -96,26 +96,9 @@
       //  var gameConfig;
         var urls = 'static/' + modulesUrl + '/resource.json';
 
-        // 加载页面小人
-        var loadingContainer = new PIXI.Container();
-        let animeloader = new AnimationSprite();
-        animeloader.resName = 'loadingmonster_json';
-        let imgs = [];
-        for(let i=0;i<18;i++){
-          imgs.push('loading'+i+'.png');
-        }
-        animeloader.alienImages = imgs;
-        loadingContainer.addChild(animeloader);
-        animeloader.pivot.x = animeloader.width/2;
-        animeloader.pivot.y = animeloader.height/2;
-        animeloader.x = 1920/2;
-        animeloader.y = 1080/2;
-        animeloader.speed = 0.42;
-        animeloader.play();
-        app.stage.addChild(loadingContainer);
         //加载页面小人END
-
-       // loadingContainer.
+        LoadingAnimation.setMaskShow(true,0);
+        //end
 
         ////加载逻辑
         self.axios.get('static/' + modulesUrl + '/gameconfig.json').then((gameConfigData) => {
@@ -130,7 +113,9 @@
         ///End加载逻辑
 
         function GameStart(resource,gameConfigData){
-          app.stage.removeChildAt(0);
+
+
+
 
           let audioManifest = [];
           for(let i=0;i<gameConfigData.gameData.levels.length;i++){

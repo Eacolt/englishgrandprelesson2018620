@@ -26,9 +26,11 @@
         },
         {
           "name": "practice",
-          "pageModuleId": "choiceTextModule",
-          "pageResourceId": "choicetextmodule"
+          "pageModuleId": "choicePicModule",
+          "pageResourceId": "choicepicmodule"
         }
+
+
       ]
     },
     {
@@ -37,12 +39,12 @@
       "pageModuleId": "choiceInterface",
       "pageResourceId": "choiceinterface",
       "menus": [
-
         {
           "name": "practice",
-          "pageModuleId": "choicePicModule",
-          "pageResourceId": "choicepicmodule"
+          "pageModuleId": "choiceTextModule",
+          "pageResourceId": "choicetextmodule"
         },
+
         {
           "name": "learning",
           "pageModuleId": "bookReadingModule",

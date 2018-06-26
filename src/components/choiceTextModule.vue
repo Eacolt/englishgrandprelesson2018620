@@ -109,24 +109,10 @@
         });
         ///End加载逻辑
 
-        // 加载页面小人
-        var loadingContainer = new PIXI.Container();
-        let animeloader = new AnimationSprite();
-        animeloader.resName = 'loadingmonster_json';
-        let imgs = [];
-        for(let i=0;i<18;i++){
-          imgs.push('loading'+i+'.png');
-        }
-        animeloader.alienImages = imgs;
-        loadingContainer.addChild(animeloader);
-        animeloader.pivot.x = animeloader.width/2;
-        animeloader.pivot.y = animeloader.height/2;
-        animeloader.x = 1920/2;
-        animeloader.y = 1080/2;
-        animeloader.speed = 0.42;
-        animeloader.play();
-        app.stage.addChild(loadingContainer);
         //加载页面小人END
+        LoadingAnimation.setMaskShow(true,0);
+        //end
+
 
 
         function GameStart(resource,gameConfigData){
@@ -150,7 +136,6 @@
 
           if(PIXIAudio.loadedStatus[modulesUrl]==undefined && audioManifest.length>0){
             PIXIAudio.addAudio(audioManifest, 'static/' + modulesUrl+'/', ()=>{
-              app.stage.removeChildAt(0)
 
               var scene1 = new PixiScene1({
                 json: gameConfigData.gameData,
@@ -162,11 +147,12 @@
               app.stage.addChild(scene1);
 
               pixiScene = scene1;
-               LoadingAnimation.setMaskShow(false)
+              LoadingAnimation.setMaskShow(false);
+
 
             },modulesUrl);
           }else{
-            app.stage.removeChildAt(0)
+
             var scene1 = new PixiScene1({
               json: gameConfigData.gameData,
               app: app,
@@ -177,7 +163,7 @@
             app.stage.addChild(scene1);
 
             pixiScene = scene1;
-             LoadingAnimation.setMaskShow(false)
+            LoadingAnimation.setMaskShow(false);
           }
         }
       }
