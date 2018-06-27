@@ -14,6 +14,7 @@
   import {LoadingAnimation} from './gameui/GameManager.js'
   import {Debugs, myVueMixin, TextureCache, AudioManager} from "./Utils";
   import {PIXIAudio} from "./EasyPIXI";
+  import {TweenMax} from 'gsap'
   import GameMenuBars from './gameui/GameMenuBar.js'
 
   var pixiScene = null;
@@ -28,7 +29,7 @@
       }
     },
     computed: {
-      ...mapState(['lessonPartsList','bookOpened', 'openMagicBookByGameIndex', 'gameThemeType', 'showMagicBook', 'energyCurrentNum', 'alreadyHasOneCard', 'indexPageInitialSlide', 'gameHasBeenCompleted', 'alreadyHasOneCard', 'assetsPages', 'assetsPages', 'assetsResources', 'assetsResources', 'allLessonsNum', 'baseAssetsCompleted', 'completedLessonNum', 'allLessonCompleteStat', 'restArrangementStat', 'allPartNames', 'gameInitResponse', 'allGameCards']),
+      ...mapState(['lessonPartsList', 'bookOpened', 'openMagicBookByGameIndex', 'gameThemeType', 'showMagicBook', 'energyCurrentNum', 'alreadyHasOneCard', 'indexPageInitialSlide', 'gameHasBeenCompleted', 'alreadyHasOneCard', 'assetsPages', 'assetsPages', 'assetsResources', 'assetsResources', 'allLessonsNum', 'baseAssetsCompleted', 'completedLessonNum', 'allLessonCompleteStat', 'restArrangementStat', 'allPartNames', 'gameInitResponse', 'allGameCards']),
       ufoStyle() {
         return {
           backgroundImage: 'url("static/img/indexpage/table.png")',
@@ -74,7 +75,7 @@
 
     },
     methods: {
-      ...mapActions(['PUSH_GAMES','SET_BOOKOPENED', 'SET_GAMETHEMETYPE', 'SET_MAGICBOOKBYGAMEINDEX', 'SET_SHOWMAGICBOOK', 'SET_INDEXPAGEINITIALSLIDE', 'SET_ALREADYHASONECARD', 'SET_ASSETSRESOURCES', 'SET_ALLASSETSPACKAGE', 'SET_ASSETSPAGES', 'SET_COMPLETEDLESSONNUM', 'SET_GAMEHASBEENCOMPLETED', 'SET_ENERGY', 'SET_ALLPARTNAMES', 'SET_GAMEINITRESPONSE', 'SET_ALLLESSONNUM', 'SET_GAMECARDS',
+      ...mapActions(['PUSH_GAMES', 'SET_BOOKOPENED', 'SET_GAMETHEMETYPE', 'SET_MAGICBOOKBYGAMEINDEX', 'SET_SHOWMAGICBOOK', 'SET_INDEXPAGEINITIALSLIDE', 'SET_ALREADYHASONECARD', 'SET_ASSETSRESOURCES', 'SET_ALLASSETSPACKAGE', 'SET_ASSETSPAGES', 'SET_COMPLETEDLESSONNUM', 'SET_GAMEHASBEENCOMPLETED', 'SET_ENERGY', 'SET_ALLPARTNAMES', 'SET_GAMEINITRESPONSE', 'SET_ALLLESSONNUM', 'SET_GAMECARDS',
         'SET_PREPARATION', 'SET_LESSONPARTSINDEX',
         'SET_LESSONPARTSLIST', 'SET_BASEASSETSCOMPLETE', 'SET_LESSONCOMPLETESTAT', 'SET_RESTARRANGEMENTSTAT', 'SET_ALLLESSONCOMPONENTSNAMES']),
       gameInit(response) {
@@ -142,7 +143,7 @@
 
 
           //是否从游戏过来;
-          if(getId_response.isOpenBook && getId_response.isOpenBook){
+          if (getId_response.isOpenBook && getId_response.isOpenBook) {
             self.SET_MAGICBOOKBYGAMEINDEX(getId_response.isOpenBook);
           }
         }, (error) => {
@@ -161,9 +162,9 @@
             if (e.data.type === 'getId') {
 
               resolve(e.data.stuAnswer);
-            }else{
-              if(isgo){
-                resolve({detail: [], card: 2, opened:1,isOpenBook:0});
+            } else {
+              if (isgo) {
+                resolve({detail: [], card: 2, opened: 1, isOpenBook: 0});
                 //console.log(e.data.type,'???..')
                 isgo = false;
               }
@@ -181,40 +182,80 @@
        */
       gameStart(app) {
         const self = this;
+        var _Ga = {};
         LoadingAnimation.loading = self.$parent.$refs.masker;
+        LoadingAnimation.setMaskShow(false,0);
+
+        let tt = 0;
+        _Ga.monster = document.getElementById('starmonster');
+        _Ga.planet1 = document.getElementById('load_planet1');
+        _Ga.planet2 = document.getElementById('load_planet2');
+        _Ga.starmonsterImg = new Image();
+        _Ga.starmonsterImg.src = 'static/img/loadingpage/starmonster.gif';
+        _Ga.starmonsterImg.onload = function(){
+          _Ga.monster.setAttribute('src','static/img/loadingpage/starmonster.gif');
+          _Ga.starmonsterImg = null;
+        };
+
+
+
+
+
+        _Ga.progressBar = document.getElementById('progress_masker')
+            _Ga.intervalment = setInterval(()=>{
+              if(tt>100){
+                tt = 100
+              }
+              if(_Ga.progress){
+              //  console.log('progess:',678* _Ga.progress/100)
+               // _Ga.monster.style.width = 6.78*(_Ga.progress/100)+'rem';
+              }
+
+              _Ga.progressBar.style.width = 6.78*(tt/100)+'rem';
+              _Ga.monster.style.left = 5.2+6.78*(tt/100)+'rem'
+              //_Ga
+              tt+=0.4;
+            },10);
+
+
+
         self.axios.get('static/assetsConfig.json').then((response) => {
           self.axios.get('static/allSounds.json').then((soundRes) => {
             PIXIAudio.init(soundRes.data, 'static/sound/', function () {
               PIXI.loader.add(response.data)
+                .on('progress',(loader)=>{
+                  _Ga.progress = loader.progress;
+                })
                 .load(function (loader, resource) {
+                  return;
 
-                  console.log(Number(self.openMagicBookByGameIndex>0));
-                  if(Number(self.openMagicBookByGameIndex>0)){
+
+                  if (Number(self.openMagicBookByGameIndex > 0)) {
                     self.$router.push('/index');
                     return;
                   }
 
                   var gameCtn = new PIXI.Container();
                   var gameStartPage = new PIXI.spine.Spine(PIXI.loader.resources['monsterStartPage_json'].spineData);
-                  gameStartPage.x = 1920/2;
-                  gameStartPage.y = 1080/2;
+                  gameStartPage.x = 1920 / 2;
+                  gameStartPage.y = 1080 / 2;
                   let gameBg = new PIXI.Graphics();
                   gameBg.beginFill(0xffffff);
-                  gameBg.drawRect(0,0,1920,1080);
+                  gameBg.drawRect(0, 0, 1920, 1080);
                   gameBg.endFill();
                   gameBg.interactive = true;
-                  gameStartPage.state.setAnimation(0,'animation',true);
+                  gameStartPage.state.setAnimation(0, 'animation', true);
                   let gameStartBtn = new PIXI.Graphics();
-                  gameStartBtn.beginFill(0xffffff,0);
-                  gameStartBtn.drawRect(0,0,400,200);
+                  gameStartBtn.beginFill(0xffffff, 0);
+                  gameStartBtn.drawRect(0, 0, 400, 200);
                   gameStartBtn.endFill();
-                  gameStartBtn.x = 1920/2-200;
+                  gameStartBtn.x = 1920 / 2 - 200;
                   gameStartBtn.y = 820;
                   gameStartBtn.interactive = true;
                   gameCtn.addChild(gameBg);
                   gameCtn.addChild(gameStartPage);
                   gameCtn.addChild(gameStartBtn);
-                  gameStartBtn.on('pointertap',()=>{
+                  gameStartBtn.on('pointertap', () => {
                     gameStartBtn.destroy();
                     gameStartPage.destroy();
                     gameBg.destroy();
@@ -226,6 +267,12 @@
                   app.stage.addChild(gameCtn)
                   self.SET_ASSETSPAGES({assetsName: 'indexPage', completedStat: 1});
                   LoadingAnimation.setMaskShow(false);
+                  _Ga.loading = document.getElementsByClassName('container')[0];
+                  _Ga.loading.parentNode.removeChild(_Ga.loading);
+                  _Ga = null;
+
+
+
                 });
             });
           })

@@ -49,14 +49,12 @@
 
   document.onreadystatechange = function () {//文档加载完毕
     if (document.readyState === "complete") {
-      var loading = document.getElementsByClassName('container')[0];
-
-      loading.parentNode.removeChild(loading)
-
+      // var loading = document.getElementsByClassName('container')[0];
+      // loading.parentNode.removeChild(loading)
 
       //to php
-      var data = {type: 'onload'};
-      window.parent.postMessage(data, '*');
+      // var data = {type: 'onload'};
+      // window.parent.postMessage(data, '*');
     }
   }
 })(document, window);

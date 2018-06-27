@@ -71,35 +71,6 @@
 
           PIXI.loader.add([
             {
-              "name": "popupIconbandWin_png",
-              "url": "static/img/menus/popups/icon-win.png"
-            },
-
-            {
-              "name": "popupIconbandNext_png",
-              "url": "static/img/menus/popups/icon-tankuang.png"
-            },
-            {
-              "name": "popupIconbandAgain_png",
-              "url": "static/img/menus/popups/tuichuyemian.png"
-            },
-            {
-              "name": "popupIconNext_png",
-              "url": "static/img/menus/popups/btn-1.png"
-            },
-            {
-              "name": "popupIconResume_png",
-              "url": "static/img/menus/popups/btn-2.png"
-            },
-            {
-              "name": "popupIconQuit_png",
-              "url": "static/img/menus/popups/btn-quit.png"
-            },
-            {
-              "name": "popupIconGetCard_png",
-              "url": "static/img/menus/popups/icon-hengfu.png"
-            },
-            {
               "name":"choiceDesk_png",
               "url":"static/themetypeui/back2ground.png"
             },
@@ -107,6 +78,14 @@
               "name": "practiceBox_skeleton",
               "url": "static/img/choicepage/boxskeleton/skeleton.json"
             },
+            {
+              "name":"backbg_jpg",
+              "url":"static/themetypeui/backbg.jpg"
+            },
+            {
+              "name":"practicebg_jpg",
+              "url":"static/themetypeui/practicebg.jpg"
+            }
           ]);
           PIXI.loader.load(function (loader, resource) {
             GameStart.call(self);

@@ -17,28 +17,38 @@
   <meta name="360-fullscreen" content="true"/>
   <meta name="author" content="dreamcolt_liuzhaoting"/>
   <title>英语预习平台</title>
-  <link href="static/preload.css" rel="stylesheet" type="text/css">
+  <link href="static/css/preload.css" rel="stylesheet" type="text/css">
   <link href="static/css/swiper.min.css" rel="stylesheet" type="text/css">
+  <link href="static/css/swiper.min.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="static/js/preload.js"></script>
   <script type="text/javascript" src="static/js/soundjs.min.js"></script>
-  <script type="text/javascript" src="static/preload.js"></script>
   <script type="text/javascript" src="static/js/swiper.min.js"></script>
   <script>
     console.log('version-06-25-537')
   </script>
-
-
 
 </head>
 <body>
 
 <div id="app"></div>
 <div class="container">
-  <div class="page-loading">
-    <div class="loader-container">
-      <span class="runner"></span>
-    </div>
-    <span class="loadingText">loading...</span>
+
+  <img class="bg" src="static/img/loadingpage/ground.jpg" width="100%" height="100%">
+  <div class="loadingupper">
+    <img src="static/img/loadingpage/timeline.png" width="100%" height="auto"/>
   </div>
+  <div id="progress_masker">
+    <div class="loadingdown">
+      <img src="static/img/loadingpage/timepoint.png" width="100%" height="auto"/>
+    </div>
+  </div>
+
+  <img id="load_planet1" src="static/img/loadingpage/planet1.png">
+  <img id="load_planet2" src="static/img/loadingpage/planet2.png">
+  <img id="load_meteor" src="static/img/loadingpage/meteor.png">
+  <img class="monster" id="starmonster" src="static/img/loadingpage/premonster.png" >
+
+
 </div>
 
 

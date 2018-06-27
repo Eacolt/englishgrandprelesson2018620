@@ -1,6 +1,7 @@
 import $ from 'jquery'
 import FormatDate from 'dateformat'
 import {Debugs} from "../Utils";
+import GameMenuBars from "./GameMenuBar";
 
 
 class ControllBar extends PIXI.Container {
@@ -77,7 +78,27 @@ class ControllBar extends PIXI.Container {
 
 
     this.progressbar = new PIXI.Graphics();
-    this.progressbar.lineStyle(4,0x008bfb)
+    //进度条边缘颜色
+    switch (GameMenuBars.vueInstance.gameThemeType) {
+      case 1:
+        this.progressbar.lineStyle(4,0xc34a8b)
+        break;
+      case 2:
+        this.progressbar.lineStyle(4,0xc6730f)
+        break;
+      case 3:
+        this.progressbar.lineStyle(4,0x3da44c)
+        break;
+      case 4:
+        this.progressbar.lineStyle(4,0x008bfb)
+        break;
+      case 5:
+        this.progressbar.lineStyle(4,0x9758ea)
+        break;
+      default:
+        break;
+    }
+
     this.progressbar.beginFill(0xd1e0ee);
     this.progressbar.drawRoundedRect(0, 0, this.progressWidth, 18, 10);
     this.progressbar.endFill();
@@ -100,8 +121,27 @@ class ControllBar extends PIXI.Container {
 
 
     this.playedProgressBar = new PIXI.Graphics();
-    //内部颜色
-    this.playedProgressBar.beginFill(0x00b2ff);
+    //进度条内部颜色
+    switch (GameMenuBars.vueInstance.gameThemeType) {
+      case 1:
+        this.playedProgressBar.beginFill(0xe97aba);
+        break;
+      case 2:
+        this.playedProgressBar.beginFill(0xffd659);
+        break;
+      case 3:
+        this.playedProgressBar.beginFill(0x57e26a);
+        break;
+      case 4:
+        this.playedProgressBar.beginFill(0x00b2ff);
+        break;
+      case 5:
+        this.playedProgressBar.beginFill(0xc094f9);
+        break;
+      default:
+        break;
+    }
+
     this.playedProgressBar.drawRect(0, 0, 100, 18);
     this.playedProgressBar.endFill();
     this.progressbar.addChild(progressMaskBar);

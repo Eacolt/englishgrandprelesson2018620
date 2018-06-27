@@ -161,7 +161,7 @@
     -webkit-text-size-adjust:none;
     -moz-text-size-adjust: none;
     user-select: none;
-    cursor: none;
+    /*cursor: none;*/
     outline: none;
     box-sizing: border-box !important;
 

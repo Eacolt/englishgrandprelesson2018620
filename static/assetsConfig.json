@@ -4,10 +4,6 @@
     "url": "static/img/timepoint.png"
   },
   {
-    "name":"loadingmonster_json",
-    "url":"static/img/loading/loadingmonster.json"
-  },
-  {
     "name": "boyskeleton",
     "url": "static/img/choicepage/boyskeleton/boy.json"
   },
@@ -170,14 +166,7 @@
   {
     "name":"indexback1_jpg",
     "url":"static/themetypeui/indexback1.png"
-  },
-  {
-    "name":"backbg_jpg",
-    "url":"static/themetypeui/backbg.jpg"
-  },
-  {
-    "name":"practicebg_jpg",
-    "url":"static/themetypeui/practicebg.jpg"
   }
+
 
 ]
