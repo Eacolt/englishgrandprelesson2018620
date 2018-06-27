@@ -8,8 +8,6 @@ class GameHand {
 
   static init() {
     if (GameHand.hand) return;
-    var handImg = $('<img src="static/img/hand1.png"/>');
-    var handImg2 =  $('<img src="static/img/hand4.png"/>');
 
     var handsArr = [
       $('<img src="static/img/hand1.png" />'),
@@ -34,10 +32,9 @@ class GameHand {
       width: '.9rem',
       height: '.9rem',
       zIndex: 999999,
-      top: '0',
+      top: '-6rem',
       left: '0',
       visibility:'hidden',
-
       pointerEvents: 'none',
       transformOrigin: 'center center'
     });
@@ -46,7 +43,6 @@ class GameHand {
     GameHand.hand.append(handsArr[2]);
     GameHand.hand.append(handsArr[3]);
 
-   // GameHand.hand.append(handImg2);
     document.getElementsByTagName('body')[0].appendChild(GameHand.hand.get(0));
     document.getElementById('app').addEventListener('mousemove', (e) => {
 

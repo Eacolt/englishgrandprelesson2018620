@@ -165,11 +165,9 @@
             } else {
               if (isgo) {
                 resolve({detail: [], card: 2, opened: 1, isOpenBook: 0});
-                //console.log(e.data.type,'???..')
                 isgo = false;
               }
             }
-
           });
         });
       },
@@ -182,52 +180,89 @@
        */
       gameStart(app) {
         const self = this;
+
+
+
         var _Ga = {};
         LoadingAnimation.loading = self.$parent.$refs.masker;
-        LoadingAnimation.setMaskShow(false,0);
+        LoadingAnimation.setMaskShow(false, 0);
 
         let tt = 0;
         _Ga.monster = document.getElementById('starmonster');
-        _Ga.planet1 = document.getElementById('load_planet1');
+        _Ga.planet1 = document.getElementById('load_planet1');//8
         _Ga.planet2 = document.getElementById('load_planet2');
+        _Ga.meter = document.getElementById('load_meteor');
         _Ga.starmonsterImg = new Image();
         _Ga.starmonsterImg.src = 'static/img/loadingpage/starmonster.gif';
-        _Ga.starmonsterImg.onload = function(){
-          _Ga.monster.setAttribute('src','static/img/loadingpage/starmonster.gif');
+        _Ga.starmonsterImg.onload = function () {
+          _Ga.monster.setAttribute('src', 'static/img/loadingpage/starmonster.gif');
           _Ga.starmonsterImg = null;
         };
 
 
+        TweenMax.to(_Ga.meter, 0, {
+          left: '19.8rem',
+          top: '0rem',
+          opacity:1
+
+
+        })
+
+        _Ga.tl = new TimelineMax({repeat:-1,delay:3,repeatDelay:3});
+
+
+        _Ga.tm_meter = TweenMax.to(_Ga.meter, 2,
+          {
+            bezier: {
+              type: "soft", values: [
+                {left: '16.2rem', top: '1rem'},
+                {left: '9rem', top: '4rem'},
+                {left: '-3rem', top: '12rem'}],
+              autoRotate: true
+            }
+          })
+        _Ga.tl.add(_Ga.tm_meter);
+
+        _Ga.tm_plane2 = TweenMax.to(_Ga.planet2, 25, {
+          bezier: [{left: '8rem', top: '+=0.8rem'},
+            {left: '12rem', top: '-=0.4rem'},
+            {left: '16rem', top: '+=1rem'},
+            {left: '19rem', top: '-=0.8rem'}]
+        });
+        _Ga.tm_plane1 = TweenMax.to(_Ga.planet1, 25, {
+          bezier: [{left: '10rem', top: '+=0.3rem'},
+            {left: '12rem', top: '-=0.3rem'},
+            {left: '14rem', top: '+=.3rem'},
+            {left: '16rem', top: '-=0.3rem'}]
+        });
 
 
 
         _Ga.progressBar = document.getElementById('progress_masker')
-            _Ga.intervalment = setInterval(()=>{
-              if(tt>100){
-                tt = 100
-              }
-              if(_Ga.progress){
-              //  console.log('progess:',678* _Ga.progress/100)
-               // _Ga.monster.style.width = 6.78*(_Ga.progress/100)+'rem';
-              }
+        _Ga.intervalment = setInterval(() => {
+          if (_Ga.progress) {
 
-              _Ga.progressBar.style.width = 6.78*(tt/100)+'rem';
-              _Ga.monster.style.left = 5.2+6.78*(tt/100)+'rem'
-              //_Ga
-              tt+=0.4;
-            },10);
+            TweenMax.to(_Ga.monster,0.3,{
+              left:5.2 + 6.78 * (_Ga.progress / 100) + 'rem'
+            })
+            TweenMax.to(_Ga.progressBar,0.3,{
+              width:6.78 * (_Ga.progress / 100) + 'rem'
+            })
 
+          }
+
+        }, 10);
 
 
         self.axios.get('static/assetsConfig.json').then((response) => {
           self.axios.get('static/allSounds.json').then((soundRes) => {
             PIXIAudio.init(soundRes.data, 'static/sound/', function () {
               PIXI.loader.add(response.data)
-                .on('progress',(loader)=>{
+                .on('progress', (loader) => {
                   _Ga.progress = loader.progress;
                 })
                 .load(function (loader, resource) {
-                  return;
+
 
 
                   if (Number(self.openMagicBookByGameIndex > 0)) {
@@ -262,17 +297,25 @@
                     PIXIAudio.audios.bgSound.play();
                     PIXIAudio.audios.bgSound.loop = -1;
                     PIXIAudio.audios.bgSound.volume = 1;
-                    self.$router.push('/index')
+                    self.$router.push('/index');
+                    gameStartBtn.removeListener('pointertap')
+
                   });
                   app.stage.addChild(gameCtn)
                   self.SET_ASSETSPAGES({assetsName: 'indexPage', completedStat: 1});
                   LoadingAnimation.setMaskShow(false);
                   _Ga.loading = document.getElementsByClassName('container')[0];
                   _Ga.loading.parentNode.removeChild(_Ga.loading);
+                  clearInterval(_Ga.intervalment);
+
+                  document.getElementById('app').style.cursor = 'none';
+                  PIXI.loader.removeListener('progress');
+
+
+                  _Ga.tm_meter.kill();
+                  _Ga.tm_plane1.kill();
+                  _Ga.tm_plane2.kill();
                   _Ga = null;
-
-
-
                 });
             });
           })

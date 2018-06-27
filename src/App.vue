@@ -170,8 +170,6 @@
   #app {
     position: absolute;
     display: flex;
-
-
     justify-content: center;
     align-items: center;
     width: 19.20rem;
@@ -183,7 +181,7 @@
     transform: translate(0, -50%);
     transform-origin: center center;
     background: black;
-    /*overflow: hidden;*/
+    overflow: hidden;
     box-sizing: border-box;
     /*font-family: sans-serif;*/
   }

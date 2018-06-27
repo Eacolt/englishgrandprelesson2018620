@@ -521,9 +521,15 @@
                       },20)
                       GameHand.locked = false;
 
-                      setTimeout(()=>{
-                        pixiScene.playAudios();
-                      },300)
+
+                      let s = setInterval(()=>{
+                        if(pixiScene){
+                          pixiScene.playAudios();
+                          clearInterval(s);
+
+                        }
+                      },2)
+
                       this.update();
 
                     }
@@ -562,7 +568,6 @@
               }
               function PixiGameStart(){
                 //app.stage.removeChildAt(0)
-
                 var scene1 = new PixiScene1({
                   json: gameConfigData.gameData,
                   app: app,
@@ -571,7 +576,6 @@
                   swiper:mySwiper
                 });
                 app.stage.addChild(scene1);
-
                 pixiScene = scene1;
                 LoadingAnimation.setMaskShow(false)
 

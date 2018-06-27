@@ -145,11 +145,15 @@ class BookScene extends PIXI.Container{
     let texttable = new PIXI.Sprite(self.resources['texttable_png'].texture);
     self.treasureBoxUI = new PIXI.Container();
 
+
     self.treasureBoxUI.addChild(texttable)
     self.treasureBoxUI.addChild(congracard);
-    texttable.scale.x = texttable.scale.y = 0.58;
+    texttable.scale.x = texttable.scale.y = 0.7;
     congracard.scale.x = congracard.scale.y = 0.7;
+    texttable.y = -220;
+    texttable.x = 20;
     congracard.y = 140;
+    congracard.x = 30;
     self.addChild(self.treasureBoxUI);
     self.treasureBoxUI.x = 1920/2-250;
     self.treasureBoxUI.y = 500;
@@ -158,7 +162,7 @@ class BookScene extends PIXI.Container{
     for(let i=0;i<3;i++){
       this.boxes.push(new PIXI.spine.Spine(boxTexture));
       this.boxes[i].alpha = 0;
-      this.boxes[i].x = 360+i*this.boxes[0].width/1.2;
+      this.boxes[i].x = 400+i*this.boxes[0].width/1.2;
       this.boxes[i].y = 1080/2;
       this.addChild(this.boxes[i])
       this.boxes[i].interactive = false;
@@ -386,7 +390,7 @@ class BookScene extends PIXI.Container{
              //todo:让宝箱的UI消失
              setTimeout(()=>{
                TweenMax.to(self.treasureBoxUI,1,{alpha:1});
-               //todo:打开魔法书后，页面及时跳转到主界面;
+               //todo:打开魔法书后，页面及时跳转到主界面//
                setTimeout(()=>{
 
                  let isGo = null;
