@@ -7,34 +7,6 @@
     "name": "boyskeleton",
     "url": "static/img/choicepage/boyskeleton/boy.json"
   },
-  {
-    "name": "indexMonster1_json",
-    "url": "static/themetypeui/monster1_song.json"
-  },
-  {
-    "name": "indexMonster2_json",
-    "url": "static/themetypeui/monster2_vocabulary.json"
-  },
-  {
-    "name": "indexMonster3_json",
-    "url": "static/themetypeui/monster3_sentences.json"
-  },
-  {
-    "name": "indexMonster4_json",
-    "url": "static/themetypeui/monster4_story.json"
-  },
-  {
-    "name": "indexMonster5_json",
-    "url": "static/themetypeui/monster5_grammar.json"
-  },
-  {
-    "name": "indexMonster6_json",
-    "url": "static/themetypeui/monster6_text.json"
-  },
-  {
-    "name": "indexMonster7_json",
-    "url": "static/themetypeui/monster7_ketpet.json"
-  },
 
   {
     "name": "tablebar2_png",

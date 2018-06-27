@@ -4,7 +4,6 @@
   </div>
 
 </template>
-
 <script>
   import Vue from 'vue'
   import $ from 'jquery'
@@ -17,7 +16,6 @@
   import {TweenMax} from 'gsap'
   import GameMenuBars from './gameui/GameMenuBar.js'
 
-  var pixiScene = null;
 
   export default {
     name: "module1",
@@ -25,11 +23,10 @@
     data: function () {
       return {
         gameConfig: "static/module1/gameconfig.json",
-
       }
     },
     computed: {
-      ...mapState(['lessonPartsList', 'bookOpened', 'openMagicBookByGameIndex', 'gameThemeType', 'showMagicBook', 'energyCurrentNum', 'alreadyHasOneCard', 'indexPageInitialSlide', 'gameHasBeenCompleted', 'alreadyHasOneCard', 'assetsPages', 'assetsPages', 'assetsResources', 'assetsResources', 'allLessonsNum', 'baseAssetsCompleted', 'completedLessonNum', 'allLessonCompleteStat', 'restArrangementStat', 'allPartNames', 'gameInitResponse', 'allGameCards']),
+      ...mapState(['lessonPartsList', 'bookOpened', 'openMagicBookByGameIndex', 'gameThemeType', 'showMagicBook', 'energyCurrentNum', 'alreadyHasOneCard', 'indexPageInitialSlide', 'gameHasBeenCompleted', 'alreadyHasOneCard', 'assetsPages', 'assetsPages', 'assetsResources',  'allLessonsNum', 'baseAssetsCompleted', 'completedLessonNum', 'allLessonCompleteStat', 'restArrangementStat', 'allPartNames', 'gameInitResponse', 'allGameCards']),
       ufoStyle() {
         return {
           backgroundImage: 'url("static/img/indexpage/table.png")',
@@ -60,20 +57,6 @@
     },
     //todo:观察者;
 
-
-    beforeDestroy() {
-
-
-    },
-    destroyed() {
-      if (pixiScene) {
-        pixiScene.destroyed();
-        pixiScene.destroy();
-        pixiScene = null;
-      }
-
-
-    },
     methods: {
       ...mapActions(['PUSH_GAMES', 'SET_BOOKOPENED', 'SET_GAMETHEMETYPE', 'SET_MAGICBOOKBYGAMEINDEX', 'SET_SHOWMAGICBOOK', 'SET_INDEXPAGEINITIALSLIDE', 'SET_ALREADYHASONECARD', 'SET_ASSETSRESOURCES', 'SET_ALLASSETSPACKAGE', 'SET_ASSETSPAGES', 'SET_COMPLETEDLESSONNUM', 'SET_GAMEHASBEENCOMPLETED', 'SET_ENERGY', 'SET_ALLPARTNAMES', 'SET_GAMEINITRESPONSE', 'SET_ALLLESSONNUM', 'SET_GAMECARDS',
         'SET_PREPARATION', 'SET_LESSONPARTSINDEX',
@@ -181,8 +164,6 @@
       gameStart(app) {
         const self = this;
 
-
-
         var _Ga = {};
         LoadingAnimation.loading = self.$parent.$refs.masker;
         LoadingAnimation.setMaskShow(false, 0);
@@ -198,19 +179,12 @@
           _Ga.monster.setAttribute('src', 'static/img/loadingpage/starmonster.gif');
           _Ga.starmonsterImg = null;
         };
-
-
         TweenMax.to(_Ga.meter, 0, {
           left: '19.8rem',
           top: '0rem',
           opacity:1
-
-
         })
-
         _Ga.tl = new TimelineMax({repeat:-1,delay:3,repeatDelay:3});
-
-
         _Ga.tm_meter = TweenMax.to(_Ga.meter, 2,
           {
             bezier: {
@@ -235,9 +209,6 @@
             {left: '14rem', top: '+=.3rem'},
             {left: '16rem', top: '-=0.3rem'}]
         });
-
-
-
         _Ga.progressBar = document.getElementById('progress_masker')
         _Ga.intervalment = setInterval(() => {
           if (_Ga.progress) {
@@ -257,19 +228,83 @@
         self.axios.get('static/assetsConfig.json').then((response) => {
           self.axios.get('static/allSounds.json').then((soundRes) => {
             PIXIAudio.init(soundRes.data, 'static/sound/', function () {
+              /**
+               * 判断所有对小怪物的资源加载
+               */
+              let monsterLoaders = [];
+              for(let i=0;i<self.allPartNames.length;i++){
+                switch (self.allPartNames[i]){
+                  case 'song':
+                    monsterLoaders.push({
+                     "name": "indexMonster1_json",
+                     "url": "static/themetypeui/monster1_song.json"
+                   });
+                    break;
+                  case 'vocabulary':
+                    monsterLoaders.push({
+                      "name": "indexMonster2_json",
+                      "url": "static/themetypeui/monster2_vocabulary.json"
+                    });
+                    break;
+                  case 'sentences':
+                    monsterLoaders.push(
+                      {
+                        "name": "indexMonster3_json",
+                        "url": "static/themetypeui/monster3_sentences.json"
+                      });
+                    break;
+
+                  case 'story':
+                    monsterLoaders.push(
+                      {
+                        "name": "indexMonster4_json",
+                        "url": "static/themetypeui/monster4_story.json"
+                      });
+                    break;
+
+                  case 'reading':
+                    monsterLoaders.push(
+                      {
+                        "name": "indexMonster4_json",
+                        "url": "static/themetypeui/monster4_story.json"
+                      });
+                    break;
+
+                  case 'grammar':
+                    monsterLoaders.push(
+                      {
+                        "name": "indexMonster5_json",
+                        "url": "static/themetypeui/monster5_grammar.json"
+                      });
+                    break;
+                  case 'text':
+                    monsterLoaders.push(
+
+                      {
+                        "name": "indexMonster6_json",
+                        "url": "static/themetypeui/monster6_text.json"
+                      });
+                    break;
+                  case 'ketpet':
+                    monsterLoaders.push(
+                      {
+                        "name": "indexMonster7_json",
+                        "url": "static/themetypeui/monster7_ketpet.json"
+                      });
+                    break;
+                }
+              }
+
               PIXI.loader.add(response.data)
+                .add(monsterLoaders)
                 .on('progress', (loader) => {
                   _Ga.progress = loader.progress;
                 })
                 .load(function (loader, resource) {
-
-
-
                   if (Number(self.openMagicBookByGameIndex > 0)) {
                     self.$router.push('/index');
                     return;
                   }
-
                   var gameCtn = new PIXI.Container();
                   var gameStartPage = new PIXI.spine.Spine(PIXI.loader.resources['monsterStartPage_json'].spineData);
                   gameStartPage.x = 1920 / 2;

@@ -91,7 +91,9 @@
         },
 
         popupType:'popup2',
-        paginationballs_style:{},
+        paginationballs_style:{
+          opacity:0
+        },
         backShow:false,
         homeShow:true,
         currentPage:0,
@@ -167,7 +169,6 @@
           let isQingsuan = self.$route.name==self.restArrangementStat[self.restArrangementStat.length-1];//开始清算;
           if(isQingsuan && !self.gameHasBeenCompleted ){
             setTimeout(()=>{
-           //   pixiScene.gameMenuBar.bookScene.openEnergyCan(false);
 
               self.openEnergyed = {
                 type:false,
@@ -358,13 +359,13 @@
 
 
 
-
-              self.paginationballs_style = {
+              Object.assign(self.paginationballs_style,{
                 backgroundImage:"url("+self.globalStatic+'/pagiball1.png'+")",
                 backgroundRepeat:'no-repeat',
-                backgroundSize:'contain'
+                backgroundSize:'contain',
+                opacity:1
+              });
 
-              }
               self.paginationPicture = {
                 backgroundImage: "url(static/themetypeui"+'/pagination.png'+")",
                 backgroundSize: "100% 100%",
@@ -439,10 +440,6 @@
                     },
                     slideChangeTransitionStart: function () {
                       const _swiper = this;
-                      if (pixiScene) {
-
-                        //pixiScene.stopAudios();
-                      }
 
                       Array.prototype.forEach.call(this.slides,function(item,index){
                         _swiper.slides.eq(index).removeClass('none-effect');
@@ -463,13 +460,7 @@
                       mySwiperPagination.slideTo(_swiper.activeIndex, 1000);
 
                     },
-                    slideChangeTransitionEnd:function(){
-                      if (pixiScene) {
 
-                       // pixiScene.playAudios();
-
-                      }
-                    },
                     slideChange(){
                       self.currentPage = this.activeIndex;
 
@@ -526,16 +517,12 @@
                         if(pixiScene){
                           pixiScene.playAudios();
                           clearInterval(s);
-
                         }
                       },2)
-
                       this.update();
-
                     }
                   },
                 });
-
 
               let audioManifest = [];
               for(let i=0;i<gameConfigData.gameData.pictureList.length;i++){
@@ -550,14 +537,9 @@
                 }
 
               };
-
               //加载页面小人END
               LoadingAnimation.setMaskShow(true,0);
               //end
-
-
-
-
               if(PIXIAudio.loadedStatus[modulesUrl]==undefined && audioManifest.length>0){
                 PIXIAudio.addAudio(audioManifest, self.globalStatic+'/', ()=>{
                   PixiGameStart.call(self)
@@ -578,7 +560,6 @@
                 app.stage.addChild(scene1);
                 pixiScene = scene1;
                 LoadingAnimation.setMaskShow(false)
-
               }
               //END
             }

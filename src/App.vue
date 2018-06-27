@@ -18,10 +18,8 @@
   import GameHand from './components/gameui/Gamehand.js'
   import {Debugs, myVueMixin,AudioManager} from './components/Utils.js'
 
-  //
   import {LoadingAnimation} from './components/gameui/GameManager.js'
   import masker from './components/masker.vue'
-
   import 'swiper/dist/css/swiper.css'
   require('pixi-spine')
   Vue.use(VueAxios, axios);
