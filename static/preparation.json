@@ -16,7 +16,7 @@
       ]
     },
     {
-      "name": "reading",
+      "name": "vocabulary",
       "pageModuleId": "choiceInterface",
       "pageResourceId": "choiceinterface",
       "menus": [
@@ -26,27 +26,27 @@
           "pageResourceId": "picswipemodule"
         },
         {
-          "name": "learning2",
-          "pageModuleId": "picSwipeModule",
-          "pageResourceId": "picswipemodule"
+          "name": "practice",
+          "pageModuleId": "choiceTextModule",
+          "pageResourceId": "choicetextmodule"
         }
 
       ]
     },
     {
-      "name": "grammar",
+      "name": "sentences",
       "pageModuleId": "choiceInterface",
       "pageResourceId": "choiceinterface",
       "menus": [
         {
-          "name": "practice",
-          "pageModuleId": "choicePicModule",
-          "pageResourceId": "choicepicmodule"
+          "name": "learning",
+          "pageModuleId": "picSwipeModule",
+          "pageResourceId": "picswipemodule"
         },
         {
           "name": "practice",
-          "pageModuleId": "choiceTextModule",
-          "pageResourceId": "choicetextmodule"
+          "pageModuleId": "choicePicModule",
+          "pageResourceId": "choicepicmodule"
         }
       ]
     },
@@ -55,7 +55,6 @@
       "pageModuleId": "choiceInterface",
       "pageResourceId": "choiceinterface",
       "menus": [
-
         {
           "name": "learning",
           "pageModuleId": "bookReadingModule",

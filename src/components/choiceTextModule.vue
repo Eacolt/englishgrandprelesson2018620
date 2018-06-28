@@ -51,7 +51,7 @@
     },
 
     computed: {
-      ...mapState(['lessonPartsList','alreadyHasOneCard','allPartNames','assetsPages','assetsGameConfig', 'assetsResources','completedLessonNum','allLessonsNum','showPopupDelay','lessonPartsIndex', 'allLessonComponentsNames','restArrangementStat','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
+      ...mapState(['lessonPartsList','alreadyHasOneCard','gameThemeType','allPartNames','assetsPages','assetsGameConfig', 'assetsResources','completedLessonNum','allLessonsNum','showPopupDelay','lessonPartsIndex', 'allLessonComponentsNames','restArrangementStat','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
 
     },
     components: {congraPopup},

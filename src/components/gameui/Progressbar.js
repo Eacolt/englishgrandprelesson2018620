@@ -33,6 +33,9 @@ class ProgressBar extends PIXI.Container{
    // self.barClothLight.x = movedX+(-1*this.barWidth/2+20);
 
     this.progressText.text = this.currentProgress+1;
+    if(Number(this.progressText.text)>=10){
+      this.progressText.x = 50;
+    }
 
   }
   get progress(){
@@ -136,9 +139,9 @@ class ProgressBar extends PIXI.Container{
     this.progressText=new PIXI.Text(this.progress+'',{
       fontFamily: 'Microsoft YaHei',
       fontSize: 54,
-
       fontWeight: 'bold',
-      fill: 0xff9546, // gradient
+      align:'center',
+      fill: 0xffffff, // gradient
 
     });
     this.progressText.pivot.x = this.progressText.width/2;

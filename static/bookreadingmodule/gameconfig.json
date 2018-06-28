@@ -11,10 +11,6 @@
       "url":"static/bookreadingmodule/beimian2.png"
     },
     {
-      "name":"page0",
-      "url":"static/bookreadingmodule/page0.png"
-    },
-    {
       "name":"page1",
       "url":"static/bookreadingmodule/page1.png"
     },
@@ -29,6 +25,10 @@
     {
       "name":"page4",
       "url":"static/bookreadingmodule/page4.png"
+    },
+    {
+      "name":"page5",
+      "url":"static/bookreadingmodule/page5.png"
     },
     {
       "name":"leftbtn_png",
@@ -53,23 +53,23 @@
   ],
   "gameData":{
     "levels":[{
-      "picture":"page0",
+      "picture":"page1",
       "audioSrc":"sound001.mp3"
     },{
-      "picture":"page1",
-      "audioSrc":""
-    },{
       "picture":"page2",
-      "audioSrc":""
+      "audioSrc":"sound002.mp3"
     },{
       "picture":"page3",
-      "audioSrc":"sound004.mp3"
+      "audioSrc":"sound003.mp3"
     },{
       "picture":"page4",
-      "audioSrc":""
+      "audioSrc":"sound004.mp3"
+    },{
+      "picture":"page5",
+      "audioSrc":"sound005.mp3"
     }],
     "showCoverpage":true,
-    "coverpageAudio":"sound111.mp3"
+    "coverpageAudio":"sound000.mp3"
 
 
   }

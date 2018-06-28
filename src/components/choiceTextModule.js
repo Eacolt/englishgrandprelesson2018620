@@ -97,7 +97,27 @@ class ChoiceTextModule extends PIXI.Container {
           } else {
             item.getChildAt(0).highlighter.alpha = 1;
             item.getChildAt(0).openDoor();
-            item.getChildAt(0).myText.style.fill = 0x23609f;
+
+            switch (self.vueInstance.gameThemeType){
+              case 1:
+                item.getChildAt(0).myText.style.fill = 0xfdfc90;
+                break;
+              case 2:
+                item.getChildAt(0).myText.style.fill = 0xbe6f00;
+                break;
+              case 3:
+                item.getChildAt(0).myText.style.fill = 0x236a37;
+                break;
+              case 4:
+                item.getChildAt(0).myText.style.fill = 0x0c5e90;
+                break;
+              case 5:
+                item.getChildAt(0).myText.style.fill = 0x4a47b4;
+                break;
+              default:
+                item.getChildAt(0).myText.style.fill = 0x236a37;
+                break;
+            }
           }
         });
 
