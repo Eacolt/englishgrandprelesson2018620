@@ -547,8 +547,8 @@ class PicCard extends PIXI.Container {
   added_handler() {
     this.leftDoor = new PIXI.Sprite(PIXI.Texture.from('cardchoose_doorL'));
     this.rightDoor = new PIXI.Sprite(PIXI.Texture.from('cardchoose_doorR'));
-    this.leftDoor.pivot.x = this.leftDoor.width / 2;
-    this.rightDoor.pivot.x = this.rightDoor.width / 2;
+    this.leftDoor.pivot.x = this.leftDoor.width / 2-1;
+    this.rightDoor.pivot.x = this.rightDoor.width / 2+1;
     this.leftDoor.pivot.y = this.leftDoor.height / 2;
     this.rightDoor.pivot.y = this.rightDoor.height / 2;
 

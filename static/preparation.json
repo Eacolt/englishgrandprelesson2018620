@@ -1,6 +1,6 @@
 {
   "menuModuleId": "string",
-  "themeType":1,
+  "themeType":5,
   "menus": [
     {
       "name": "song",
@@ -12,10 +12,11 @@
           "pageModuleId": "movieModule",
           "pageResourceId": "moviemodule"
         }
+
       ]
     },
     {
-      "name": "vocabulary",
+      "name": "reading",
       "pageModuleId": "choiceInterface",
       "pageResourceId": "choiceinterface",
       "menus": [
@@ -25,25 +26,35 @@
           "pageResourceId": "picswipemodule"
         },
         {
-          "name": "practice",
-          "pageModuleId": "choicePicModule",
-          "pageResourceId": "choicepicmodule"
+          "name": "learning2",
+          "pageModuleId": "picSwipeModule",
+          "pageResourceId": "picswipemodule"
         }
-
 
       ]
     },
     {
-
-      "name": "sentences",
+      "name": "grammar",
       "pageModuleId": "choiceInterface",
       "pageResourceId": "choiceinterface",
       "menus": [
         {
           "name": "practice",
+          "pageModuleId": "choicePicModule",
+          "pageResourceId": "choicepicmodule"
+        },
+        {
+          "name": "practice",
           "pageModuleId": "choiceTextModule",
           "pageResourceId": "choicetextmodule"
-        },
+        }
+      ]
+    },
+    {
+      "name": "ketpet",
+      "pageModuleId": "choiceInterface",
+      "pageResourceId": "choiceinterface",
+      "menus": [
 
         {
           "name": "learning",
@@ -52,6 +63,5 @@
         }
       ]
     }
-
   ]
 }

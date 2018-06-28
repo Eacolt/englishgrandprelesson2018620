@@ -1,5 +1,5 @@
 <template>
-  <div class="gameContainer" :style="gameContainer">
+  <div class="gameContainer">
     <pixi-canvas @startGame="gameStart"></pixi-canvas>
 
     <transition  @before-enter="beforeEnter"
@@ -14,10 +14,8 @@
   </div>
 
 </template>
-
 <script>
   import Vue from 'vue'
-
   import {ResourceMent,myVueMixin,Debugs,myVueMixin_Popup,loaderAssetsByValided} from './Utils.js'
   import {mapActions, mapState} from 'vuex'
   import PixiScene1 from './choicePicModule.js'
@@ -51,13 +49,7 @@
 
     computed:{
       ...mapState(['lessonPartsIndex','alreadyHasOneCard','showPopupDelay','allPartNames','lessonPartsList','assetsPages','assetsGameConfig', 'assetsResources','completedLessonNum','allLessonsNum','allLessonComponentsNames','restArrangementStat','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
-      gameContainer(){
-        return {
-          backgroundImage:'url("static/img/practice_bg.jpg")',
-          backgroundRepeat:'no-repeat',
-          backgroundSize:'100% 100%'
-        }
-      }
+
     },
     components:{congraPopup},
     methods: {

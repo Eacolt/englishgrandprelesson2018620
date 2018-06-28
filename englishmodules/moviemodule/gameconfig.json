@@ -14,10 +14,6 @@
       "url": "static/themetypeui/pausebtn.png"
     },
     {
-      "name": "progressbar_png",
-      "url": "static/themetypeui/progressbar.png"
-    },
-    {
       "name": "goplaybtn_png",
       "url": "static/themetypeui/goplaybtn.png"
     },

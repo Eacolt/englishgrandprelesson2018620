@@ -190,8 +190,9 @@
             bezier: {
               type: "soft", values: [
                 {left: '16.2rem', top: '1rem'},
+                {left: '16.2rem', top: '1rem'},
                 {left: '9rem', top: '4rem'},
-                {left: '-3rem', top: '12rem'}],
+                {left: '-2rem', top: '12rem'}],
               autoRotate: true
             }
           })
@@ -212,6 +213,7 @@
         _Ga.progressBar = document.getElementById('progress_masker')
         _Ga.intervalment = setInterval(() => {
           if (_Ga.progress) {
+
 
             TweenMax.to(_Ga.monster,0.3,{
               left:5.2 + 6.78 * (_Ga.progress / 100) + 'rem'
@@ -301,6 +303,7 @@
                   _Ga.progress = loader.progress;
                 })
                 .load(function (loader, resource) {
+
                   if (Number(self.openMagicBookByGameIndex > 0)) {
                     self.$router.push('/index');
                     return;

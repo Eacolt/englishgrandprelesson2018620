@@ -1,0 +1,209 @@
+
+monster7_ketpet.png
+size: 1024,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bag
+  rotate: false
+  xy: 320, 110
+  size: 132, 211
+  orig: 132, 211
+  offset: 0, 0
+  index: -1
+baghand
+  rotate: true
+  xy: 846, 306
+  size: 83, 176
+  orig: 83, 176
+  offset: 0, 0
+  index: -1
+body
+  rotate: false
+  xy: 2, 27
+  size: 316, 483
+  orig: 316, 483
+  offset: 0, 0
+  index: -1
+bodypoint
+  rotate: false
+  xy: 786, 391
+  size: 168, 119
+  orig: 168, 119
+  offset: 0, 0
+  index: -1
+catchbody
+  rotate: false
+  xy: 799, 141
+  size: 46, 58
+  orig: 46, 58
+  offset: 0, 0
+  index: -1
+catchhand1
+  rotate: true
+  xy: 2, 14
+  size: 11, 92
+  orig: 11, 92
+  offset: 0, 0
+  index: -1
+catchhandL
+  rotate: false
+  xy: 956, 437
+  size: 66, 73
+  orig: 66, 73
+  offset: 0, 0
+  index: -1
+catchhandR
+  rotate: true
+  xy: 723, 135
+  size: 64, 74
+  orig: 64, 74
+  offset: 0, 0
+  index: -1
+catchline
+  rotate: false
+  xy: 475, 132
+  size: 5, 9
+  orig: 5, 9
+  offset: 0, 0
+  index: -1
+close
+  rotate: false
+  xy: 534, 2
+  size: 47, 47
+  orig: 47, 47
+  offset: 0, 0
+  index: -1
+earpieceL
+  rotate: false
+  xy: 482, 20
+  size: 50, 121
+  orig: 50, 121
+  offset: 0, 0
+  index: -1
+earpieceR
+  rotate: false
+  xy: 584, 376
+  size: 200, 134
+  orig: 200, 134
+  offset: 0, 0
+  index: -1
+eye
+  rotate: false
+  xy: 577, 126
+  size: 47, 47
+  orig: 47, 47
+  offset: 0, 0
+  index: -1
+eyein
+  rotate: false
+  xy: 999, 416
+  size: 19, 19
+  orig: 19, 19
+  offset: 0, 0
+  index: -1
+faceL
+  rotate: false
+  xy: 982, 284
+  size: 32, 20
+  orig: 32, 20
+  offset: 0, 0
+  index: -1
+faceR
+  rotate: true
+  xy: 454, 110
+  size: 31, 19
+  orig: 31, 19
+  offset: 0, 0
+  index: -1
+handL
+  rotate: false
+  xy: 454, 143
+  size: 111, 178
+  orig: 111, 178
+  offset: 0, 0
+  index: -1
+handR
+  rotate: false
+  xy: 567, 175
+  size: 58, 146
+  orig: 58, 146
+  offset: 0, 0
+  index: -1
+handR2
+  rotate: false
+  xy: 956, 401
+  size: 41, 34
+  orig: 41, 34
+  offset: 0, 0
+  index: -1
+hornL
+  rotate: false
+  xy: 627, 176
+  size: 94, 95
+  orig: 94, 95
+  offset: 0, 0
+  index: -1
+hornR
+  rotate: false
+  xy: 910, 234
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: -1
+legL
+  rotate: true
+  xy: 759, 273
+  size: 61, 76
+  orig: 61, 76
+  offset: 0, 0
+  index: -1
+legR
+  rotate: false
+  xy: 837, 234
+  size: 71, 70
+  orig: 71, 70
+  offset: 0, 0
+  index: -1
+lightdrop
+  rotate: false
+  xy: 320, 323
+  size: 262, 187
+  orig: 262, 187
+  offset: 0, 0
+  index: -1
+mic
+  rotate: false
+  xy: 723, 201
+  size: 98, 70
+  orig: 98, 70
+  offset: 0, 0
+  index: -1
+mouth
+  rotate: false
+  xy: 627, 273
+  size: 130, 61
+  orig: 130, 61
+  offset: 0, 0
+  index: -1
+mouth1
+  rotate: true
+  xy: 534, 51
+  size: 90, 41
+  orig: 90, 41
+  offset: 0, 0
+  index: -1
+shadow
+  rotate: false
+  xy: 584, 336
+  size: 260, 38
+  orig: 260, 38
+  offset: 0, 0
+  index: -1
+wow
+  rotate: false
+  xy: 320, 5
+  size: 160, 103
+  orig: 160, 103
+  offset: 0, 0
+  index: -1

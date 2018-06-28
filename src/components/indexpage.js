@@ -280,7 +280,7 @@ class PixiScene1 extends PIXI.Container {
       swiperArea: {x: 0, width: 1920, y: 300, height: 1000}
     });
     this.swiperHammer.setMoveLeftCallBack(function () {
-      if (self.swiperPosition >= 2) return;
+      if (self.swiperPosition >= self.ufoSlides.length -2) return;
 
       self.swiperAnimating = true;
       if (self.swiperPosition <= self.ufoSlides.length - 3) {
