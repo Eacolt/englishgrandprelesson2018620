@@ -167,7 +167,7 @@ class BookScene extends PIXI.Container{
       this.addChild(this.boxes[i])
       this.boxes[i].interactive = false;
 
-      this.boxes[i].on('pointerdown',self.boxPointerDown_handler.bind(self,i),self)
+      this.boxes[i].on('pointertap',self.boxPointerDown_handler.bind(self,i),self)
     }
 
     var bookTexture =  self.resources["bookAnime_skeleton"].spineData;
@@ -335,17 +335,19 @@ class BookScene extends PIXI.Container{
     const self = this;
     var boxIndex = index;
     var EventTarget = event.currentTarget;
+    EventTarget.interactive = false;
+    EventTarget.removeAllListeners();
 
 
     self.boxes.forEach((item)=>{
       item.interactive = false;
     });
-    EventTarget.removeAllListeners();
+
 
     let isGo = true;
   //这个地方立即判断是否中奖;
   //   console.log('当前页面是--book:',self.vueInstance.lessonCurrentPageIndex)
-     let promise = new Promise(function(resolve,reject){
+     let mypromise = new Promise(function(resolve,reject){
        window.parent.postMessage({
          type: "stepSubmit",
          page:self.vueInstance.lessonCurrentPageIndex
@@ -370,7 +372,7 @@ class BookScene extends PIXI.Container{
        //设置得到卡片，表示课程完成;
      });
 
-    promise.then((value)=>{
+    mypromise.then((value)=>{
       //中奖了
        if(value==1){
          self.vueInstance.SET_ALREADYHASONECARD(true);
@@ -418,6 +420,7 @@ class BookScene extends PIXI.Container{
 
              },1400);
            }})
+
        }else if(value==0){
          TweenMax.to(EventTarget,1,{alpha:1,onStart:function(){
              self.boxes.forEach((item,_index)=>{

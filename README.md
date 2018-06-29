@@ -1,6 +1,6 @@
 # grandenglishplatform
 
-> A Vue.js project
+> 全新英语预习项目
 
 ## Build Setup
 

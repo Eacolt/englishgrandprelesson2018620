@@ -229,7 +229,10 @@
 
         self.axios.get('static/assetsConfig.json').then((response) => {
           self.axios.get('static/allSounds.json').then((soundRes) => {
+            PIXIAudio.reset();
+
             PIXIAudio.init(soundRes.data, 'static/sound/', function () {
+
               /**
                * 判断所有对小怪物的资源加载
                */
@@ -297,6 +300,12 @@
                 }
               }
 
+
+              // if(PIXI.loader){
+              //   PIXI.utils.clearTextureCache();
+              //   PIXI.utils.destroyTextureCache();
+              // }
+
               PIXI.loader.add(response.data)
                 .add(monsterLoaders)
                 .on('progress', (loader) => {
@@ -304,10 +313,7 @@
                 })
                 .load(function (loader, resource) {
 
-                  if (Number(self.openMagicBookByGameIndex > 0)) {
-                    self.$router.push('/index');
-                    return;
-                  }
+
                   var gameCtn = new PIXI.Container();
                   var gameStartPage = new PIXI.spine.Spine(PIXI.loader.resources['monsterStartPage_json'].spineData);
                   gameStartPage.x = 1920 / 2;
@@ -342,10 +348,13 @@
                   app.stage.addChild(gameCtn)
                   self.SET_ASSETSPAGES({assetsName: 'indexPage', completedStat: 1});
                   LoadingAnimation.setMaskShow(false);
+
+
                   _Ga.loading = document.getElementsByClassName('container')[0];
                   _Ga.loading.parentNode.removeChild(_Ga.loading);
-                  clearInterval(_Ga.intervalment);
 
+
+                  clearInterval(_Ga.intervalment);
                   document.getElementById('app').style.cursor = 'none';
                   PIXI.loader.removeListener('progress');
 
@@ -354,6 +363,10 @@
                   _Ga.tm_plane1.kill();
                   _Ga.tm_plane2.kill();
                   _Ga = null;
+
+                  if (Number(self.openMagicBookByGameIndex > 0)) {
+                    self.$router.push('/index');
+                  }
                 });
             });
           })

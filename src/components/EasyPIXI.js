@@ -6,6 +6,12 @@ class PIXIAudio{
   static audios = {};
   static loadedStatus = {};
 
+  static reset(){
+    PIXIAudio.mainLoadStat = false;
+    PIXIAudio.loadedStatus = {};
+    PIXIAudio.audios = {};
+  }
+
   static init($manifest=[],$soundPath='static/sound/',$callback=function(){},$soundClassName='mainload',){
     var audioNum = 0;
 
