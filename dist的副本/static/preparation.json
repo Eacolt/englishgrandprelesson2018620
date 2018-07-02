@@ -1,0 +1,66 @@
+{
+  "menuModuleId": "string",
+  "themeType":5,
+  "menus": [
+    {
+      "name": "song",
+      "pageModuleId": "choiceInterface",
+      "pageResourceId": "choiceinterface",
+      "menus": [
+        {
+          "name": "learning",
+          "pageModuleId": "movieModule",
+          "pageResourceId": "moviemodule"
+        }
+
+      ]
+    },
+    {
+      "name": "vocabulary",
+      "pageModuleId": "choiceInterface",
+      "pageResourceId": "choiceinterface",
+      "menus": [
+        {
+          "name": "learning",
+          "pageModuleId": "picSwipeModule",
+          "pageResourceId": "picswipemodule"
+        },
+        {
+          "name": "practice",
+          "pageModuleId": "choiceTextModule",
+          "pageResourceId": "choicetextmodule"
+        }
+
+      ]
+    },
+    {
+      "name": "sentences",
+      "pageModuleId": "choiceInterface",
+      "pageResourceId": "choiceinterface",
+      "menus": [
+        {
+          "name": "learning",
+          "pageModuleId": "picSwipeModule",
+          "pageResourceId": "picswipemodule"
+        },
+        {
+          "name": "practice",
+          "pageModuleId": "choicePicModule",
+          "pageResourceId": "choicepicmodule"
+        }
+      ]
+    },
+    {
+      "name": "ketpet",
+      "pageModuleId": "choiceInterface",
+      "pageResourceId": "choiceinterface",
+      "menus": [
+        {
+          "name": "learning",
+          "pageModuleId": "bookReadingModule",
+          "pageResourceId": "bookreadingmodule"
+        }
+      ]
+    }
+  ]
+}
