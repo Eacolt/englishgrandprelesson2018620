@@ -335,12 +335,12 @@ class PixiScene1 extends PIXI.Container {
       if(Number(self.vueInstance.openMagicBookByGameIndex)>=1){
         self.gameMenuBar.bookScene.openBook();
         self.swiperHammer.lock = true;
-        console.log(Number(false))
+
       }
     },300);
     this.gameMenuBar.setBackBtn_tapHandler(() => {
       //返回主目录;
-      console.log('返回主页')
+
         window.parent.postMessage({
           "type": "preparationClose"
         }, "*");

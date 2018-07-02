@@ -208,13 +208,9 @@ class PixiScene3 extends PIXI.Container {
     if (this.boySpine) {
       this.boySpine.alpha = 1;
       this.boySpine.x = 1800;
-
-      // TweenMax.to(this.boySpine,0,{x:2800})
       TweenMax.to(this.boySpine, 0.3, {x: 1950})
     }
 
-    let sound = new Audio('static/sound/nextpart.mp3');
-    sound.play();
   }
   destroyed() {
     this.stopAudios();

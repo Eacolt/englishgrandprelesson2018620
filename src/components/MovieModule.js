@@ -199,23 +199,18 @@ class MovieModule extends PIXI.Container {
     this.controllerStayTime = 2;
   }
 
-  destroy(){
-
+  destroyed(){
     this.gameMenuBar.clearGameMenuEvents();
     this.gameMenuBar.destroy();
     this.gameMenuBar = null;
-
     this.videoDom.pause();
-    this.videoDom.removeEventListener('canplaythrough', this.videoCompleted.bind(self))
+    this.videoDom.removeEventListener('loadedmetadata', this.videoCompleted.bind(self))
     this.videoController.clearAllDomListener();
     this.videoSprite.removeListener('pointerdown',this.videoClickedHandler,this);
     this.videoController.removeListener('pointermove',this.videoControllerHandler_pointermove,this);
     this.videoController.removeListener('pointerdown',this.videoControllerHandler_pointerdown,this)
-    this.videoDom.removeEventListener('canplaythrough', this.videoCompleted.bind(this),this);
     this.controllerStayTime = 0;
-
   }
-
   /**
    * @点击视屏区域开启控件
    */
@@ -235,13 +230,12 @@ class MovieModule extends PIXI.Container {
     this.topMenuIsAnimating = true;
     this.smallerMovie.call(this);
     this.hideMovieControl.call(this);
-    // this.vueInstance.$parent.$parent.$refs.gameMenu.foldDown();
-    this.gameMenuBar.foldDown()
-//
+    if(this.gameMenuBar){
+      this.gameMenuBar.foldDown()
+    }
     this.gameMenuBar.homeBtnShow = true;
     this.gameMenuBar.backBtnShow = false;
     this.gameMenuBar.updateGameMenu();
-
     if(this.videoDom){
       this.videoDom.pause();
     }
@@ -337,9 +331,7 @@ class MovieModule extends PIXI.Container {
       }})
       //  self.videoController.y = (1080 - 120)+125;
     }
-    if(self.gameStat ==1){
-      // self.vueInstance.$parent.$parent.$refs.gameMenu.foldUp();
-
+    if(self.gameStat ==1 && self.gameMenuBar){
       self.gameMenuBar.foldUp()
     }
   }

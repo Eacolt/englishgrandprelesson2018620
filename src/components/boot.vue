@@ -15,7 +15,7 @@
   import {PIXIAudio} from "./EasyPIXI";
   import {TweenMax} from 'gsap'
   import GameMenuBars from './gameui/GameMenuBar.js'
-
+  const VConsole = require('vconsole');
 
   export default {
     name: "module1",
@@ -147,7 +147,8 @@
               resolve(e.data.stuAnswer);
             } else {
               if (isgo) {
-                resolve({detail: [], card: 2, opened: 1, isOpenBook: 0});
+                var vConsole = new VConsole();
+                resolve({detail: [], card: 1, opened: 1, isOpenBook: 0});
                 isgo = false;
               }
             }

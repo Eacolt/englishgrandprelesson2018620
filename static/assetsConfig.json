@@ -20,7 +20,7 @@
 
   {
     "name":"monsterStartPage_json",
-    "url":"static/img/monster_start.json"
+    "url":"static/img/startscreen.json"
   },
   {
     "name":"starflash_json",

@@ -458,15 +458,14 @@
                         color:"white"
                       });
                       mySwiperPagination.slideTo(_swiper.activeIndex, 1000);
-
                     },
-
                     slideChange(){
                       self.currentPage = this.activeIndex;
 
                       if(this.activeIndex>=this.slides.length-1){
                         self.$refs.boyBtnArea.style.pointerEvents = 'auto';
                         pixiScene.showBoy();
+                        // PIXIAudio.audios['nextpart'].play();
                         self.currentLessonCompleted= true;
 
                       }else{
@@ -475,8 +474,7 @@
                       }
                       pixiScene.stopAudios();
                       pixiScene.playAudios();
-
-                    //  self.$parent.$parent.$refs.gameMenu.showAudio = false;
+                      //self.$parent.$parent.$refs.gameMenu.showAudio = false;
                       //【重要】设置当前下部导航的索引;
                       self.currentPaginationPages = this.realIndex;
 

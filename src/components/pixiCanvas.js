@@ -1,13 +1,9 @@
 // const PIXI = require('pixi.js')
 var pixiCanvas = {};
+var myApp = null;
+var vueUnWatch = null;
 pixiCanvas.install = function (Vue) {
-
   Vue.component('pixiCanvas', {
-    data() {
-      return {
-        myapp: null
-      }
-    },
     props: {
       screenW: {
         type: Number,
@@ -16,50 +12,78 @@ pixiCanvas.install = function (Vue) {
       screenH: {
         type: Number,
         default: 1080
+      },
+      canTouch:{
+        type:Boolean,
+        default:true
+      },
+      zOrder:{
+        type:Number,
+        default:0
+      },
+      autoRender:{
+        type:Boolean,
+        default:true
       }
     },
-    template: `<div class="pixiCanvas" ref="pixicanvas"></div>`,
-
+    template: `<div :style="pixiCanvasStyle" ref="pixicanvas"></div>`,
     mounted() {
-      if (this.app) return;
+
       const self = this;
-      PIXI.utils.skipHello();
-      this.app = new PIXI.Application({
-        width: self.screenW,
-        height: self.screenH,
-        antialias: false,
-        // roundPixels: true,
+      if (myApp==null){
+        PIXI.utils.skipHello();
+        myApp  = new PIXI.Application({
+          width: self.screenW,
+          height: self.screenH,
+          antialias: true,
+          // roundPixels: true,
           transparent: true
-      });
-      this.app.renderer.autoResize = true;
-      this.app.view.style.position = 'absolute';
-      this.app.view.style.width = '100%';
-      this.app.view.style.height = '100%';
-      this.app.view.style.top = '0px';
-      this.app.view.style.left = '0px';
-      this.app.view.style.right = '0px';
-      this.app.view.style.margin = '0px auto';
-      self.$refs.pixicanvas.appendChild(this.app.view);
-      self.$emit('startGame', this.app);
+        });
+        myApp.renderer.autoResize = true;
+        myApp.view.style.position = 'absolute';
+        myApp.view.style.width = '100%';
+        myApp.view.style.height = '100%';
+        myApp.view.style.top = '0px';
+        myApp.view.style.left = '0px';
+        myApp.view.style.right = '0px';
+        myApp.view.style.margin = '0px auto';
+        self.$refs.pixicanvas.appendChild(myApp.view);
 
+        vueUnWatch = self.$watch(()=>{
+          return self.autoRender
+        },(newval,oldval)=>{
+          if(newval==true){
+            self.$emit('startGame', myApp);
+          }
+        });
+        if(self.autoRender==true){
+          self.$emit('startGame', myApp);
+        }
 
+      }
 
+    },
+    computed:{
+      pixiCanvasStyle(){
+        return {
+          pointerEvents:this.canTouch==true ? 'auto' : 'none',
+          zIndex:this.zOrder
+        }
+
+      }
     },
     destroyed() {
-      if (this.app) {
+      if (myApp) {
+        vueUnWatch();
        // this.app.loader.reset();
-        this.app.destroy();
+        myApp.destroy();
+
         // PIXI.utils.clearTextureCache();
         // PIXI.utils.destroyTextureCache();
-
-        // Object.keys(PIXI.utils.TextureCache).forEach(texture => {
-        //   PIXI.utils.TextureCache[texture].destroy(true);
-        // });
-        this.app = null;
-        delete this.app;
+        myApp = null;
+        vueUnWatch = null;
 
       }
-
     }
   });
 }

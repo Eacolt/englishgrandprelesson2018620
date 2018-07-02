@@ -1,0 +1,358 @@
+
+startscreen.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+boy_footR
+  rotate: false
+  xy: 728, 3
+  size: 59, 73
+  orig: 59, 73
+  offset: 0, 0
+  index: -1
+boy_handR
+  rotate: true
+  xy: 848, 6
+  size: 70, 95
+  orig: 70, 95
+  offset: 0, 0
+  index: -1
+cloud4
+  rotate: false
+  xy: 2, 365
+  size: 1000, 657
+  orig: 1000, 657
+  offset: 0, 0
+  index: -1
+eyeR
+  rotate: true
+  xy: 789, 5
+  size: 71, 57
+  orig: 71, 57
+  offset: 0, 0
+  index: -1
+faceL
+  rotate: false
+  xy: 945, 30
+  size: 77, 46
+  orig: 77, 46
+  offset: 0, 0
+  index: -1
+han
+  rotate: true
+  xy: 945, 2
+  size: 26, 36
+  orig: 26, 36
+  offset: 0, 0
+  index: -1
+monster_fav
+  rotate: true
+  xy: 1004, 1001
+  size: 21, 18
+  orig: 21, 18
+  offset: 0, 0
+  index: -1
+mouth
+  rotate: true
+  xy: 683, 2
+  size: 74, 43
+  orig: 74, 43
+  offset: 0, 0
+  index: -1
+planet1
+  rotate: false
+  xy: 337, 18
+  size: 344, 345
+  orig: 344, 345
+  offset: 0, 0
+  index: -1
+star2
+  rotate: false
+  xy: 983, 5
+  size: 22, 23
+  orig: 22, 23
+  offset: 0, 0
+  index: -1
+startbuttonback1
+  rotate: true
+  xy: 2, 3
+  size: 360, 333
+  orig: 360, 333
+  offset: 0, 0
+  index: -1
+startbuttonback2
+  rotate: true
+  xy: 683, 78
+  size: 285, 322
+  orig: 285, 322
+  offset: 0, 0
+  index: -1
+
+startscreen2.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+color
+  rotate: false
+  xy: 981, 14
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+crystal1
+  rotate: true
+  xy: 2, 20
+  size: 437, 458
+  orig: 437, 458
+  offset: 0, 0
+  index: -1
+legL
+  rotate: true
+  xy: 981, 98
+  size: 78, 41
+  orig: 78, 41
+  offset: 0, 0
+  index: -1
+legR
+  rotate: false
+  xy: 678, 8
+  size: 162, 168
+  orig: 162, 168
+  offset: 0, 0
+  index: -1
+monster_body
+  rotate: false
+  xy: 842, 22
+  size: 137, 154
+  orig: 137, 154
+  offset: 0, 0
+  index: -1
+monster_handL
+  rotate: true
+  xy: 981, 46
+  size: 50, 36
+  orig: 50, 36
+  offset: 0, 0
+  index: -1
+shdL
+  rotate: false
+  xy: 462, 2
+  size: 214, 174
+  orig: 214, 174
+  offset: 0, 0
+  index: -1
+sky
+  rotate: false
+  xy: 2, 459
+  size: 1000, 563
+  orig: 1000, 563
+  offset: 0, 0
+  index: -1
+textback
+  rotate: false
+  xy: 462, 178
+  size: 536, 279
+  orig: 536, 279
+  offset: 0, 0
+  index: -1
+
+startscreen3.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+boy_footL
+  rotate: false
+  xy: 860, 10
+  size: 35, 64
+  orig: 35, 64
+  offset: 0, 0
+  index: -1
+boy_handL
+  rotate: true
+  xy: 771, 5
+  size: 69, 87
+  orig: 69, 87
+  offset: 0, 0
+  index: -1
+cloud1
+  rotate: false
+  xy: 2, 272
+  size: 1000, 324
+  orig: 1000, 324
+  offset: 0, 0
+  index: -1
+cloud3
+  rotate: false
+  xy: 2, 598
+  size: 1000, 420
+  orig: 1000, 420
+  offset: 0, 0
+  index: -1
+eyeL
+  rotate: true
+  xy: 897, 15
+  size: 59, 51
+  orig: 59, 51
+  offset: 0, 0
+  index: -1
+faceR
+  rotate: false
+  xy: 950, 42
+  size: 52, 32
+  orig: 52, 32
+  offset: 0, 0
+  index: -1
+hair
+  rotate: false
+  xy: 285, 15
+  size: 237, 255
+  orig: 237, 255
+  offset: 0, 0
+  index: -1
+monster_handR
+  rotate: false
+  xy: 950, 4
+  size: 50, 36
+  orig: 50, 36
+  offset: 0, 0
+  index: -1
+planet3
+  rotate: false
+  xy: 2, 4
+  size: 281, 266
+  orig: 281, 266
+  offset: 0, 0
+  index: -1
+shine
+  rotate: true
+  xy: 524, 2
+  size: 72, 245
+  orig: 72, 245
+  offset: 0, 0
+  index: -1
+startbutton
+  rotate: false
+  xy: 524, 76
+  size: 481, 194
+  orig: 481, 194
+  offset: 0, 0
+  index: -1
+
+startscreen4.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+boy_body
+  rotate: false
+  xy: 809, 409
+  size: 159, 307
+  orig: 159, 307
+  offset: 0, 0
+  index: -1
+boy_shdL
+  rotate: true
+  xy: 970, 538
+  size: 50, 31
+  orig: 50, 31
+  offset: 0, 0
+  index: -1
+boy_shdR
+  rotate: false
+  xy: 970, 590
+  size: 33, 77
+  orig: 33, 77
+  offset: 0, 0
+  index: -1
+cloud2
+  rotate: false
+  xy: 2, 2
+  size: 532, 130
+  orig: 532, 130
+  offset: 0, 0
+  index: -1
+crystal2
+  rotate: false
+  xy: 684, 24
+  size: 316, 383
+  orig: 316, 383
+  offset: 0, 0
+  index: -1
+crystal3
+  rotate: true
+  xy: 809, 718
+  size: 276, 197
+  orig: 276, 197
+  offset: 0, 0
+  index: -1
+ground
+  rotate: false
+  xy: 2, 568
+  size: 805, 426
+  orig: 805, 426
+  offset: 0, 0
+  index: -1
+mushroom
+  rotate: true
+  xy: 2, 134
+  size: 432, 680
+  orig: 432, 680
+  offset: 0, 0
+  index: -1
+planet4
+  rotate: false
+  xy: 684, 454
+  size: 112, 112
+  orig: 112, 112
+  offset: 0, 0
+  index: -1
+star1
+  rotate: false
+  xy: 970, 669
+  size: 47, 47
+  orig: 47, 47
+  offset: 0, 0
+  index: -1
+
+startscreen5.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+headlight
+  rotate: false
+  xy: 2, 2
+  size: 741, 750
+  orig: 741, 750
+  offset: 0, 0
+  index: -1
+
+startscreen6.png
+size: 1024,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body
+  rotate: false
+  xy: 730, 139
+  size: 291, 290
+  orig: 291, 290
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 2, 2
+  size: 427, 427
+  orig: 427, 427
+  offset: 0, 0
+  index: -1
+planet2
+  rotate: false
+  xy: 431, 133
+  size: 297, 296
+  orig: 297, 296
+  offset: 0, 0
+  index: -1

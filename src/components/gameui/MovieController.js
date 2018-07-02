@@ -213,7 +213,7 @@ class ControllBar extends PIXI.Container {
         self.vueInstance.$route.meta.completed = 1;
         self.vueInstance.setOwnLessonComplete();
         //【注意！】gameStat必须设置为0 ，让上部导航不可继续隐藏
-        self.parent.gameStat = 0;
+        self.parent.gameStat = 1;
 
 
 

@@ -6,6 +6,7 @@
 </template>
 <script>
   import Vue from 'vue'
+
   import {TweenMax} from 'gsap'
   import * as PIXI from 'pixi.js'
   import axios from 'axios';
@@ -22,6 +23,7 @@
   import masker from './components/masker.vue'
   import 'swiper/dist/css/swiper.css'
   require('pixi-spine')
+
   Vue.use(VueAxios, axios);
 
   const bowser = require('bowser')
@@ -42,6 +44,7 @@
     },
     mounted() {
       const self = this;
+
       this.SET_CURRENTPAGE(1);
       GameHand.init();
       GameHand.setAnimation('normal')

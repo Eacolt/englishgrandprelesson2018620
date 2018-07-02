@@ -167,7 +167,7 @@ class BookScene extends PIXI.Container{
       this.addChild(this.boxes[i])
       this.boxes[i].interactive = false;
 
-      this.boxes[i].on('pointertap',self.boxPointerDown_handler.bind(self,i),self)
+      this.boxes[i].on('pointerdown',self.boxPointerDown_handler.bind(self,i),self)
     }
 
     var bookTexture =  self.resources["bookAnime_skeleton"].spineData;
@@ -336,15 +336,13 @@ class BookScene extends PIXI.Container{
     var boxIndex = index;
     var EventTarget = event.currentTarget;
     EventTarget.interactive = false;
-    EventTarget.removeAllListeners();
-
-
     self.boxes.forEach((item)=>{
       item.interactive = false;
+      item.removeListener('pointerdown',self.boxPointerDown_handler,self);
     });
 
-
     let isGo = true;
+    let getOne = true;
   //这个地方立即判断是否中奖;
   //   console.log('当前页面是--book:',self.vueInstance.lessonCurrentPageIndex)
      let mypromise = new Promise(function(resolve,reject){
@@ -356,7 +354,8 @@ class BookScene extends PIXI.Container{
          type: "taskSubmit"
        }, "*");
        window.addEventListener('message', function(e) {
-         if (e.data.type === 'getCard') {
+         if (e.data.type === 'getCard' && getOne) {
+           getOne = false;
            resolve(Number(e.data.getCard));
          }else{
            if(isGo){

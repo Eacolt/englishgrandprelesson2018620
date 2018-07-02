@@ -8,76 +8,6 @@ import PixiHammer from './gameui/PixiHammer.js'
 import {PIXIAudio} from "./EasyPIXI";
 
 
-class GestureManager {
-  constructor() {
-    this.hitArea = null;
-    this.startDrag = false;
-    this.touchesPos = [];
-    this.intervalTimer = null;
-    this.touchTimes = 0;
-
-
-    this.touchToLeft = function () {
-
-    }
-    this.touchToRight = function () {
-
-    }
-  }
-
-  swiperTouch() {
-    if (!this.hitArea) return;
-    this.hitArea.on('pointerdown', this.touchStartHandler.bind(this));
-    this.hitArea.on('pointermove', this.touchMovingHandler.bind(this));
-    this.hitArea.on('pointerup', this.touchUpHandler.bind(this))
-    this.hitArea.on('pointerupoutside', this.touchUpHandler.bind(this))
-
-  }
-
-  touchUpHandler(event) {
-    this.startDrag = false;
-
-    if (this.intervalTimer) {
-      clearInterval(this.intervalTimer)
-    }
-
-
-    if (this.touchTimes <= 80 && this.touchesPos.length > 2) {
-      if (this.touchesPos[this.touchesPos.length - 1] > this.touchesPos[this.touchesPos.length - 2]) {
-        this.touchToRight();
-      } else {
-        this.touchToLeft();
-      }
-
-    }
-
-    this.touchTimes = 0;
-    this.touchesPos = [];
-
-  }
-
-  touchMovingHandler(event) {
-
-    if (this.startDrag) {
-      if (this.touchesPos.length > 3) {
-        this.touchesPos.shift()
-      }
-
-      this.touchesPos.push(event.data.global.x)
-    }
-    ;
-
-  }
-
-  touchStartHandler(event) {
-    const self = this;
-    this.startDrag = true;
-    this.intervalTimer = setInterval(() => {
-      self.touchTimes++;
-    }, 10)
-  }
-}
-
 class BookReadingModule extends PIXI.Container {
   constructor($options) {
     super();
@@ -96,6 +26,7 @@ class BookReadingModule extends PIXI.Container {
     this.pageUpper = null;
     this.pageDown = null;
     this.currentPage = 0;
+    this.swiperHammer = null;
 
     this.turnAnimating = false;
     this.boySpine = null;
@@ -251,9 +182,6 @@ class BookReadingModule extends PIXI.Container {
         )
         ],'-=0.469');
 
-
-
-
       }
 
       tl.stop();
@@ -339,14 +267,14 @@ class BookReadingModule extends PIXI.Container {
     self.pageturn2.alpha = 0;
     this.leftBtn.on('pointerdown', this.turnPrev.bind(this, .5));
     this.rightBtn.on('pointerdown', this.turnNext.bind(this, .5));
-    var swiperHammer = new PixiHammer({
+    self.swiperHammer = new PixiHammer({
       swiperContainer: self,
       swiperArea: {x: 200, width: 1920-200, y: 100, height: 1000}
     });
-    swiperHammer.setMoveLeftCallBack(function () {
+    self.swiperHammer.setMoveLeftCallBack(function () {
       self.turnNext.call(self, .5)
     });
-    swiperHammer.setMoveRightCallBack(() => {
+    self.swiperHammer.setMoveRightCallBack(() => {
 
       self.turnPrev.call(self, .5)
     });
@@ -369,10 +297,12 @@ class BookReadingModule extends PIXI.Container {
         //开始设置清算界面逻辑全套;
         self.vueInstance.$route.meta.completed = 1;
         self.vueInstance.setOwnLessonComplete();
+        self.swiperHammer.lock = true;
+       // self.interactiveChildren = false;
+
         if(self.gameAudio){
           self.stopAudios();
         }
-
         //开始清算。。
         if (self.vueInstance.gameHasBeenCompleted == false) {
           window.parent.postMessage({
@@ -392,8 +322,8 @@ class BookReadingModule extends PIXI.Container {
 
             if(self.vueInstance.alreadyHasOneCard){
               self.vueInstance.showCongra = true;
-              let sound = new Audio('static/sound/win_jump.mp3');
-              sound.play();
+              PIXIAudio.audios['win_jump'].play();
+
               return;
             }
             if(self.vueInstance.gameHasBeenCompleted && !self.vueInstance.alreadyHasOneCard){
@@ -401,8 +331,8 @@ class BookReadingModule extends PIXI.Container {
             }
             if(!self.vueInstance.gameHasBeenCompleted && isQingsuan==false){
               self.vueInstance.showCongra = true;
-              let sound = new Audio('static/sound/win_jump.mp3');
-              sound.play();
+
+              PIXIAudio.audios['win_jump'].play();
             };
 
           },self.vueInstance.showPopupDelay);
@@ -451,7 +381,9 @@ class BookReadingModule extends PIXI.Container {
       return self.vueInstance.energyCurrentNum
     },(newval)=>{
       self.gameMenuBar.energy = newval;
+      self.gameMenuBar.playStars();
     });
+
 
 
 
@@ -537,9 +469,8 @@ class BookReadingModule extends PIXI.Container {
         }
       })
     }
-    ;
-    let sound = new Audio('static/sound/nextpart.mp3');
-    sound.play();
+
+    PIXIAudio.audios['nextpart'].play();
 
   }
 

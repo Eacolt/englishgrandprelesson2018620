@@ -7,11 +7,13 @@ import VueAxios from 'vue-axios'
 import App from './App'
 import router from './router'
 import store from './store'
+
 // import phaserCanvas from './components/phaserCanvas.js'
 import pixiCanvas from './components/pixiCanvas.js'
 
 
 const _ = require('lodash');
+
 
 Vue.use(VueAxios,axios)
 Vue.use(pixiCanvas)
