@@ -169,12 +169,8 @@ class BookReadingModule extends PIXI.Container {
     this.leftBtn.interactive = this.rightBtn.interactive = true;
     var pageturnArr = ['pageturn1.png', 'pageturn3.png'];
     this.myAn_pageTurns = new pixiAnimation('pageturns_atlas');
-
     this.pageturn = this.myAn_pageTurns.create();
-
     this.pageturn.animationSpeed = 0.08;
-
-
     this.pageturn.play();
 
     //创建封面;
