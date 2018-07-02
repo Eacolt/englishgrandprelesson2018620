@@ -27,6 +27,10 @@ class BookScene extends PIXI.Container{
     this.page3StartBtn = null;
     this.currentBookPage = 0;//第一页
     this.backGroundMask  = null;//一个黑色背景;
+
+    this.isGo = true;
+    this.isGoIndex = null;
+    this.getOne = true;
     this.on('added',this.initial,this);
 
   }
@@ -341,8 +345,7 @@ class BookScene extends PIXI.Container{
       item.removeListener('pointerdown',self.boxPointerDown_handler,self);
     });
 
-    let isGo = true;
-    let getOne = true;
+
   //这个地方立即判断是否中奖;
   //   console.log('当前页面是--book:',self.vueInstance.lessonCurrentPageIndex)
      let mypromise = new Promise(function(resolve,reject){
@@ -354,15 +357,14 @@ class BookScene extends PIXI.Container{
          type: "taskSubmit"
        }, "*");
        window.addEventListener('message', function(e) {
-         if (e.data.type === 'getCard' && getOne) {
-           getOne = false;
+         if (e.data.type === 'getCard' && self.getOne) {
+           self.getOne = false;
            resolve(Number(e.data.getCard));
          }else{
-           if(isGo){
-             resolve(1);
-             isGo = false;
+           if(self.isGo){
+             resolve(0);
+             self.isGo = false;
            }
-
          }
        });
        //看看得到卡片的结果是什么;
@@ -394,16 +396,16 @@ class BookScene extends PIXI.Container{
                //todo:打开魔法书后，页面及时跳转到主界面//
                setTimeout(()=>{
 
-                 let isGo = null;
+
                  if(GameMenuBars.vueInstance.$route.fullPath=='/index'){
-                   isGo = true;
+                   self.isGoIndex = true;
                  }else{
-                   isGo = false;
+                   self.isGoIndex = false;
                  }
                  GameMenuBars.vueInstance.$router.push('/index')
                  TweenMax.to(self.treasureBoxUI,.5,{alpha:0});
                  TweenMax.to(EventTarget,.5,{alpha:0});
-                 if(isGo){
+                 if(self.isGoIndex){
                    self.openBook();
                  }else{
                    GameMenuBars.vueInstance.SET_SHOWMAGICBOOK(true);

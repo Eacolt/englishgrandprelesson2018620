@@ -137,17 +137,18 @@
       },
       getStuAnswerPromise() {
         let isgo = true;
+        let getIdAlready = true;
         return new Promise(function (resolve, reject) {
           window.parent.postMessage({
             type: "indexcomplete"
           }, "*");
           window.addEventListener('message', function (e) {
-            if (e.data.type === 'getId') {
-
+            if (e.data.type === 'getId' && getIdAlready) {
+              getIdAlready = false;
               resolve(e.data.stuAnswer);
             } else {
               if (isgo) {
-                var vConsole = new VConsole();
+                //var vConsole = new VConsole();
                 resolve({detail: [], card: 1, opened: 1, isOpenBook: 0});
                 isgo = false;
               }
@@ -302,10 +303,6 @@
               }
 
 
-              // if(PIXI.loader){
-              //   PIXI.utils.clearTextureCache();
-              //   PIXI.utils.destroyTextureCache();
-              // }
 
               PIXI.loader.add(response.data)
                 .add(monsterLoaders)
@@ -327,7 +324,7 @@
                   gameStartPage.state.setAnimation(0, 'animation', true);
                   let gameStartBtn = new PIXI.Graphics();
                   gameStartBtn.beginFill(0xffffff, 0);
-                  gameStartBtn.drawRect(0, 0, 400, 200);
+                  gameStartBtn.drawRect(-80, -190, 600, 400);
                   gameStartBtn.endFill();
                   gameStartBtn.x = 1920 / 2 - 200;
                   gameStartBtn.y = 820;
