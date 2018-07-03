@@ -1,7 +1,7 @@
 <template>
   <div ref="moduleMain">
     <video id="myVideo" ref="myVideo" class="myVideo" :src="myVideoSrc" v-show="showOriginVideo"
-           webkit-playsinline playsinline autoplay x5-video-player-type='h5'>
+           webkit-playsinline playsinline  x5-video-player-type='h5'>
 
     </video>
     <pixi-canvas ref="myPixiCanvas" :auto-render="autoRender" :z-order="canvasZOrder" :can-touch="canvasCanTouch" @startGame="gameStart"  ></pixi-canvas>
@@ -118,6 +118,7 @@
 
 
           if(self.appPlatform == 'pc'){
+            self.myVideoSrc = gameConfigData.gameData.movie;
             self.showOriginVideo = false;
             self.canvasCanTouch = true;
             var movieModule = new MovieModule({

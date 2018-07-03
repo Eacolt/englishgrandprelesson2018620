@@ -83,7 +83,8 @@ class MovieModule extends PIXI.Container {
     /**
      * @视屏实体
      */
-    this.videoDom = $('<video  src="' + this.gameConfig.movie + '"/>')[0];
+
+    this.videoDom =  this.vueInstance.$refs.myVideo;//$('<video  src="' + this.gameConfig.movie + '"/>')[0];
     var videoTexture = PIXI.Texture.from(this.videoDom);
     videoTexture.baseTexture.autoPlay = false
     this.videoSprite = new PIXI.Sprite(videoTexture);
@@ -163,14 +164,12 @@ class MovieModule extends PIXI.Container {
 
     //顶部导航逻辑END
 
-    this.videoDom.addEventListener('canplaythrough', this.videoCompleted.bind(self));
-
+     this.videoDom.addEventListener('loadedmetadata', this.videoCompleted.bind(self));
+     this.videoDom.addEventListener('canplaythrough', this.videoCompleted.bind(self));
   }
   videoCompleted() {
     const self = this;
-
-
-
+    if(self.videoIsComplete)return;
     if (self.videoIsComplete == false) {
       self.videoController = new MovieController({
         gameConfig: self.gameConfig,
@@ -184,7 +183,6 @@ class MovieModule extends PIXI.Container {
       self.videoController.interactive = true;
       self.videoController.on('pointermove',self.videoControllerHandler_pointermove,self);
       self.videoController.on('pointerdown',self.videoControllerHandler_pointerdown,self)
-
       self.addChild(self.videoController);
       self.videoController.y = (1080 - 120)+125;
 
@@ -289,6 +287,7 @@ class MovieModule extends PIXI.Container {
     if(self.controllerIsShow)return;
     self.controllerIsShow = true;
     this.currentMode = 1;
+
     if(self.videoController){
       let settime =null;
       self.controllerStayTime = 1;
@@ -337,6 +336,7 @@ class MovieModule extends PIXI.Container {
   }
 
   goplayBtnHandler(event) {
+    const self = this;
     if(this.topMenuIsAnimating)return;
     this.topMenuIsAnimating = true;
     event.currentTarget.interactive = false;
@@ -347,6 +347,7 @@ class MovieModule extends PIXI.Container {
     if(this.videoDom){
       this.videoDom.play()
     };
+
 
     this.videoController.playbtn.texture = PIXI.Texture.from('pausebtn_png');
     this.videoController.video.play();
