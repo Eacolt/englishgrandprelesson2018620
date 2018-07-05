@@ -21,15 +21,18 @@
 
   import {LoadingAnimation} from './components/gameui/GameManager.js'
   import masker from './components/masker.vue'
+
   import 'swiper/dist/css/swiper.css'
+
   require('pixi-spine')
-
+  const VConsole = require('vconsole')
   Vue.use(VueAxios, axios);
-
   const bowser = require('bowser')
   export default {
     name: 'App',
     created() {
+      new VConsole();
+      Debugs.locked = false;
       document.oncontextmenu = function(){
         return false;
       }
@@ -41,9 +44,11 @@
           return false;
         }
       };
+
     },
     mounted() {
       const self = this;
+
 
       this.SET_CURRENTPAGE(1);
       GameHand.init();
@@ -110,7 +115,7 @@
       },
       energyCurrentNum(newval){
 
-        if(newval==1){
+        if(newval>=1){
           this.SET_GAMEHASBEENCOMPLETED(true);
         };
         this.SET_COMPLETEDLESSONNUM(newval*this.allLessonsNum);

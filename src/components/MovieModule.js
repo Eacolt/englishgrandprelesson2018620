@@ -164,6 +164,14 @@ class MovieModule extends PIXI.Container {
 
     //顶部导航逻辑END
 
+    this.videoDom.oncanplay = function(){
+      console.log('oncanplay')
+    }
+    this.videoDom.onloadedmetadata = function(){
+      console.log('onloadedmetadata')
+    }
+
+
      this.videoDom.addEventListener('loadedmetadata', this.videoCompleted.bind(self));
      this.videoDom.addEventListener('canplaythrough', this.videoCompleted.bind(self));
   }

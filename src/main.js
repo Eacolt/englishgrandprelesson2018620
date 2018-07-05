@@ -11,6 +11,7 @@ import store from './store'
 // import phaserCanvas from './components/phaserCanvas.js'
 import pixiCanvas from './components/pixiCanvas.js'
 
+import {Debugs} from "./components/Utils";
 
 const _ = require('lodash');
 

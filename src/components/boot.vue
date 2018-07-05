@@ -15,7 +15,7 @@
   import {PIXIAudio} from "./EasyPIXI";
   import {TweenMax} from 'gsap'
   import GameMenuBars from './gameui/GameMenuBar.js'
-  const VConsole = require('vconsole');
+
 
   export default {
     name: "module1",
@@ -36,7 +36,7 @@
       }
     },
     created() {
-      //     Debugs.locked = true;
+      Debugs.log('哈哈啊哈我来啦')
     },
     mounted: function () {
       const self = this;
@@ -149,7 +149,7 @@
             } else {
               if (isgo) {
                 //var vConsole = new VConsole();
-                resolve({detail: [], card: 1, opened: 1, isOpenBook: 0});
+                resolve({detail: [0,3,4], card: 1, opened: 1, isOpenBook: 0});
                 isgo = false;
               }
             }

@@ -65,6 +65,7 @@
 
   import congraPopup from './gameui/congraPopup.vue'
   import masker from './masker.vue'
+  import {Debugs} from "./Utils";
 
   import {swiper, swiperSlide} from 'vue-awesome-swiper'
 
@@ -156,53 +157,46 @@
         self.setOwnLessonComplete();
         pixiScene.stopAudios();
         //开始清算。。
-        if(self.gameHasBeenCompleted == false){
+        if (self.vueInstance.gameHasBeenCompleted == false) {
           window.parent.postMessage({
             type: "stepSubmit",
-            page:self.lessonCurrentPageIndex
+            page: self.vueInstance.lessonCurrentPageIndex
 
           }, "*");
         }
-
         setTimeout(()=>{
-
-          let isQingsuan = self.$route.name==self.restArrangementStat[self.restArrangementStat.length-1];//开始清算;
-          if(isQingsuan && !self.gameHasBeenCompleted ){
+          let isQingsuan = self.vueInstance.$route.name==self.vueInstance.restArrangementStat[self.vueInstance.restArrangementStat.length-1];//开始清算;
+          if(isQingsuan && !self.vueInstance.gameHasBeenCompleted){
             setTimeout(()=>{
-
-              self.openEnergyed = {
-                type:false,
-                opened:true
-              }
-            },self.showPopupDelay);
+              Debugs.log('清算页面开启，游戏未完成','gameCOmpleted?',self.vueInstance.gameHasBeenCompleted)
+              self.gameMenuBar.bookScene.openEnergyCan(false);
+            },self.vueInstance.showPopupDelay)
+            return;
           }
           setTimeout(()=>{
 
-            if(self.alreadyHasOneCard){
-              self.showCongra = true;
-              let sound = new Audio('static/sound/win_jump.mp3');
-              sound.play();
+            if(self.vueInstance.gameHasBeenCompleted){
+              self.vueInstance.showCongra = true;
+              PIXIAudio.audios['win_jump'].play();
+              Debugs.log('游戏完成并且卡片已经获得','gameCompleted?',self.vueInstance.gameHasBeenCompleted)
               return;
             }
-            if(self.gameHasBeenCompleted && !self.alreadyHasOneCard){
-             // pixiScene.gameMenuBar.bookScene.openEnergyCan(true);
+            // if(self.vueInstance.gameHasBeenCompleted && !self.vueInstance.alreadyHasOneCard){
+            //   self.gameMenuBar.bookScene.openEnergyCan(true);
+            //   Debugs.log('游戏已经完成，但是没收集卡片')
+            // }
+            if(!self.vueInstance.gameHasBeenCompleted && isQingsuan==false){
+              self.vueInstance.showCongra = true;
 
-              self.openEnergyed = {
-                type:true,
-                opened:true
-              }
-            }
-            if(!self.gameHasBeenCompleted && isQingsuan==false ){
-              self.showCongra = true;
-              let sound = new Audio('static/sound/win_jump.mp3');
-              sound.play();
+              Debugs.log('游戏没有完成，并且也不是清算页')
 
+              PIXIAudio.audios['win_jump'].play();
             };
 
-          },self.showPopupDelay);
-          self.updateRestArrangementStat();
+          },self.vueInstance.showPopupDelay);
+          self.vueInstance.updateRestArrangementStat();
 
-        },1);
+        },2);
         //开始设置清算界面逻辑全套---END;
 
 

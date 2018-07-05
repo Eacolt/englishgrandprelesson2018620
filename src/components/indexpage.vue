@@ -14,6 +14,7 @@
   import {PIXIAudio} from "./EasyPIXI";
   import GameMenuBars from './gameui/GameMenuBar.js'
   var pixiScene = null;
+
   export default {
     name: "module1",
     mixins: [myVueMixin],
@@ -33,6 +34,8 @@
       }
     },
     mounted(){
+
+
       if(this.$store.state.lessonPartsList.length==0){
         this.$router.push('/');
         window.location.reload()

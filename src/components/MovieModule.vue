@@ -29,6 +29,7 @@
   import {LoadingAnimation} from "./gameui/GameManager";
   import {AnimationSprite} from  "./EasyPIXI.js"
   import MovieModulePure from "./MovieModulePure";
+  import {Debugs} from "./Utils";
 
   var pixiScene = null;
   export default {
@@ -115,7 +116,19 @@
 
         function GameStart(resources,gameConfigData){
 
-
+          // self.myVideoSrc = gameConfigData.gameData.movie;
+          // self.showOriginVideo = false;
+          // self.canvasCanTouch = true;
+          // var movieModule = new MovieModule({
+          //   json: gameConfigData.gameData,
+          //   app: app,
+          //   vueInstance: self
+          // });
+          // app.stage.addChild(movieModule);
+          // pixiScene = movieModule;
+          // LoadingAnimation.setMaskShow(false);
+          // Debugs.log('is ready pc')
+          // return;
 
           if(self.appPlatform == 'pc'){
             self.myVideoSrc = gameConfigData.gameData.movie;
@@ -129,6 +142,7 @@
             app.stage.addChild(movieModule);
             pixiScene = movieModule;
             LoadingAnimation.setMaskShow(false);
+            Debugs.log('is pc')
           }else{
             self.showOriginVideo = true;
             self.canvasCanTouch = true;
@@ -143,6 +157,7 @@
             app.stage.addChild(movieModulePure);
             pixiScene = movieModulePure;
             LoadingAnimation.setMaskShow(false);
+            Debugs.log('enter?',self.appPlatform);
 
           }
         }

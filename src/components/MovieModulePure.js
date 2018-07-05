@@ -2,7 +2,7 @@ import $ from 'jquery'
 import {TweenMax} from 'gsap'
 import MovieController from './gameui/MovieController.js'
 import {LoadingAnimation} from './gameui/GameManager.js'
-import {AudioManager} from "./Utils";
+import {AudioManager, Debugs} from "./Utils";
 import GameMenuBars from "./gameui/GameMenuBar";
 
 // const PIXI = require('pixi.js')
@@ -130,7 +130,7 @@ class MovieModulePure extends PIXI.Container {
       this.goplayBtn.on('pointerdown', this.goplayBtnHandler, this);
 
 
-       this.videoDom.addEventListener('loadedmetadata', this.videoCompleted.bind(this),this);
+
       //TODO:顶部导航逻辑-----
       GameMenuBars.freeze = false;
 
@@ -170,15 +170,20 @@ class MovieModulePure extends PIXI.Container {
     }
 
 
-
-
-
-
-
-
     //顶部导航逻辑END
+    this.videoDom.oncanplay = function(){
+      Debugs.log('oncanplay')
+    }
+    this.videoDom.onloadedmetadata = function(){
+      Debugs.log('onloadedmetadata')
+    }
+    this.videoDom.oncanplaythrough = function(){
+      Debugs.log('oncanplaythrough')
+    }
 
-    //this.videoDom.addEventListener('canplaythrough', this.videoCompleted.bind(self));
+    this.videoDom.addEventListener('loadedmetadata', this.videoCompleted.bind(this),this);
+    this.videoDom.addEventListener('canplaythrough',this.videoCompleted.bind(this),this)
+
 
   }
   videoCompleted() {
