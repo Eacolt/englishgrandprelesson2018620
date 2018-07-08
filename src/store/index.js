@@ -6,7 +6,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     // mainCanvas
-    canvasPages: [],
+    // canvasPages: [],
     appPlatform: "",//当前平台类型
     currentPage: 0,
     gamesArr: [],
@@ -16,6 +16,7 @@ const store = new Vuex.Store({
     gameThemeType:0,//游戏主题颜色;
 
     alreadyHasOneCard:false,//获得了一张卡片;
+    gameSecondPlayed:false,//游戏已经二周目
 
     openMagicBookByGameIndex:false,//从游戏返回翻开魔法书;
 
@@ -23,14 +24,13 @@ const store = new Vuex.Store({
 
     showMagicBook:false,//展示魔法书，仅仅从最后获得卡片回到主页的时候展现，并且只能有一次
 
-
     indexPageInitialSlide:0,//页面初始化滑动停留位置;
 
     showPopupDelay: 1200,//弹出框间隔时间
 
     gameInitResponse: null,//indexpage初始化获取的数据
 
-    // allLessonLength:0,//能量条总数字(课程总数)
+
     energyCurrentNum: 0,//能量条进度.百分比
     completedLessonNum: 0,//完成的课程数目;
 
@@ -43,9 +43,7 @@ const store = new Vuex.Store({
 
     gameHasBeenCompleted: false,//游戏全部完成，在点击最后清算页面后触发
 
-    lessonCurrentPageIndex: 0,//所有课程组件某一个课所在的索引位置
-
-    perLessonProgressArr: [],//每个课程的完成度情况;
+    lessonCurrentPageIndex: 0,//所有课程组件某一个课所在的索引位
 
 
     baseAssetsCompleted: false,//基礎部分資源加載完畢//烏龜
@@ -67,21 +65,12 @@ const store = new Vuex.Store({
     assetsPages: {
       indexPage: null,//0为资源未加载，1为加载过
       choicePage:null
-    },
-    assetsResources: {
-      indexPage: null,//某个H5的resource
-      choicePage:null,
-    },
-    assetsGameConfig:{
-
     }
-
-    //加载的东西
-
-
   },
-  getters: {},
   actions: {
+    SET_GAMESECONDPLAYED({commit},payload){
+      commit('setGameSecondPlayed',payload);
+    },
 
     SET_MAGICBOOKBYGAMEINDEX({commit},payload){
       commit('setMagicBookByGameIndex',payload)
@@ -113,18 +102,8 @@ const store = new Vuex.Store({
     //初始化所有的页面资源包
     SET_ALLASSETSPACKAGE({commit}, payload) {
       commit('setAllAssetsPackage', payload);
-      commit('setAllResourcesPackage', payload);
-      commit('setAllGameConfigPackage',payload)
     },
 
-    //设置GameConfig资源库存
-    SET_ASSETSGAMECONFIG({commit},payload){
-      commit('setAssetsGameConfig',payload);
-    },
-    //设置Resource资源存库
-    SET_ASSETSRESOURCES({commit}, payload) {
-      commit('setAssetsResources', payload);
-    },
     //设置页面资源加载状态存库
     SET_ASSETSPAGES({commit}, payload) {
       commit('setAssetsPages', payload);
@@ -153,10 +132,10 @@ const store = new Vuex.Store({
       commit('setAllLessonComponentNames', payload);
 
     },
-    //设置每一个完成度情况;
-    SET_PERLESSONPROGRESS({commit}, payload) {
-      commit('setPerLessonProgress', payload)
-    },
+    // //设置每一个完成度情况;
+    // SET_PERLESSONPROGRESS({commit}, payload) {
+    //   // commit('setPerLessonProgress', payload)
+    // },
     SET_ENERGY({commit}, payload) {
       commit('setEnergy', payload)
     },
@@ -175,9 +154,6 @@ const store = new Vuex.Store({
       commit('setLoadingAnimationReady', payload)
     },
 
-    // SET_LESSONCOMPLETEDLIST({commit},payload){
-    //   commit('setLessonCompletedList',payload);
-    // },
     SET_PLATFORM({commit}, payload) {
       commit('setPlatform', payload);
     },
@@ -210,9 +186,9 @@ const store = new Vuex.Store({
     SET_CURRENTPAGE({commit}, payload) {
       commit('setCurrentPage', payload);
     },
-    SET_CANVASPAGE({commit}, payload) {
-      commit('setCanvasPage', payload)
-    },
+    // SET_CANVASPAGE({commit}, payload) {
+    //   commit('setCanvasPage', payload)
+    // },
 
     SET_BASEASSETSCOMPLETE({commit}, payload) {
       commit('setBaseAssetsComplete', payload)
@@ -221,6 +197,9 @@ const store = new Vuex.Store({
   mutations: {
     setEnergy(state, payload) {
       state.energyCurrentNum = payload;
+    },
+    setGameSecondPlayed(state,payload){
+      state.gameSecondPlayed = payload;
     },
     setBookOpened(state,payload){
       state.bookOpened = payload;
@@ -242,31 +221,15 @@ const store = new Vuex.Store({
       state.indexPageInitialSlide = payload;
     },
     setAllAssetsPackage(state, payload) {
-      //payload:Array
       payload.forEach((item)=>{
         state.assetsPages[item] = null;
       })
     },
-    setAllResourcesPackage(state, payload) {
-      payload.forEach((item)=>{
-        state.assetsResources[item] = null;
-      })
-    },
-    setAllGameConfigPackage(state, payload) {
-      payload.forEach((item)=>{
-        state.assetsGameConfig[item] = null;
-      })
-    },
 
-    setAssetsResources(state, payload) {
-      state.assetsResources[payload.resName] = payload.resData;
-    },
     setAssetsPages(state, payload) {
       state.assetsPages[payload.assetsName] = payload.completedStat;
     },
-    setAssetsGameConfig(state,payload){
-      state.assetsGameConfig[payload.name] = payload.data;
-    },
+
     setGameCards(state, payload) {
       state.allGameCards = payload;
     },
@@ -294,9 +257,9 @@ const store = new Vuex.Store({
     setRestArrangementStat(state, payload) {
       state.restArrangementStat = payload;
     },
-    setPerLessonProgress(state, payload) {
-      state.perLessonProgressArr = payload;
-    },
+    // setPerLessonProgress(state, payload) {
+    //   // state.perLessonProgressArr = payload;
+    // },
 
     setLessonCompleteStat(state, payload) {
       state.allLessonCompleteStat = payload;
@@ -339,10 +302,10 @@ const store = new Vuex.Store({
     setCurrentPage(state, payload) {
       state.currentPage = payload;
     },
-    setCanvasPage(state, payload) {
-      state.canvasPages[payload] = true;
-
-    }
+    // setCanvasPage(state, payload) {
+    //   // state.canvasPages[payload] = true;
+    //
+    // }
   }
 });
 export default store;

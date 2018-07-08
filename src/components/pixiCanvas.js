@@ -1,7 +1,6 @@
 // const PIXI = require('pixi.js')
 var pixiCanvas = {};
-var myApp = null;
-var vueUnWatch = null;
+var myApps =null;
 pixiCanvas.install = function (Vue) {
   Vue.component('pixiCanvas', {
     props: {
@@ -20,19 +19,14 @@ pixiCanvas.install = function (Vue) {
       zOrder:{
         type:Number,
         default:0
-      },
-      autoRender:{
-        type:Boolean,
-        default:true
       }
     },
     template: `<div :style="pixiCanvasStyle" ref="pixicanvas"></div>`,
     mounted() {
-
       const self = this;
-      if (myApp==null){
+      myApps = [];
         PIXI.utils.skipHello();
-        myApp  = new PIXI.Application({
+        var myApp  = new PIXI.Application({
           width: self.screenW,
           height: self.screenH,
           antialias: true,
@@ -49,18 +43,8 @@ pixiCanvas.install = function (Vue) {
         myApp.view.style.margin = '0px auto';
         self.$refs.pixicanvas.appendChild(myApp.view);
 
-        vueUnWatch = self.$watch(()=>{
-          return self.autoRender
-        },(newval,oldval)=>{
-          if(newval==true){
-            self.$emit('startGame', myApp);
-          }
-        });
-        if(self.autoRender==true){
-          self.$emit('startGame', myApp);
-        }
-
-      }
+        self.$emit('startGame', myApp);
+        myApps.push(myApp)
 
     },
     computed:{
@@ -69,20 +53,17 @@ pixiCanvas.install = function (Vue) {
           pointerEvents:this.canTouch==true ? 'auto' : 'none',
           zIndex:this.zOrder
         }
-
       }
     },
     destroyed() {
-      if (myApp) {
-        vueUnWatch();
+      if (myApps && myApps.length>0) {
+        myApps.forEach((item)=>{
+          item.destroy();
+        })
+        myApps = null;
        // this.app.loader.reset();
-        myApp.destroy();
-
         // PIXI.utils.clearTextureCache();
         // PIXI.utils.destroyTextureCache();
-        myApp = null;
-        vueUnWatch = null;
-
       }
     }
   });

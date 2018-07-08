@@ -7,6 +7,8 @@ class GameMenuBars extends PIXI.Container {
   static vueInstance= null;
   static freeze = false;
 
+  static gameHasOpendBook= false;//游戏已经第二周目，不能再翻开书
+
   constructor() {
     super();
 
@@ -222,7 +224,7 @@ class GameMenuBars extends PIXI.Container {
 
     //精彩部分;
 
-    this.bookScene = new BookScene({vueInstance: GameMenuBars.vueInstance});
+    this.bookScene = new BookScene();
     this.addChild(this.bookScene);
 
 
@@ -462,13 +464,15 @@ class GameMenuBars extends PIXI.Container {
 
 
     TweenMax.to(this.barCtn,$time,{
-      y:-300
+      y:-300,
+      alpha:0
     })
 
   }
   foldDown($time=.3){
     TweenMax.to(this.barCtn,$time,{
-      y:0
+      y:0,
+      alpha:1
     })
   }
   //

@@ -8,10 +8,10 @@
       <!--<congraPopup showType="popup2" v-show="showCongra" @continueClicked="clickContinue()" @againClicked="againClicked"></congraPopup>-->
 
       <congraPopup :showType="popupType" v-if="showCongra"
-                   @quitGame="quitGame()"
-                   @continueGame="continueGame()"
-                   @continueClicked="clickContinue()"
-                   @againClicked="againClicked"></congraPopup>
+                   @quitGame.once="quitGame()"
+                   @continueGame.once="continueGame()"
+                   @continueClicked.once="clickContinue()"
+                   @againClicked.once="againClicked"></congraPopup>
     </transition>
   </div>
 
@@ -46,12 +46,12 @@
 
 
     computed: {
-      ...mapState(['lessonPartsList','alreadyHasOneCard','showPopupDelay','allPartNames','assetsPages','assetsGameConfig', 'assetsResources', 'completedLessonNum','allLessonsNum','lessonPartsIndex', 'restArrangementStat','allLessonComponentsNames','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
+      ...mapState(['lessonPartsList','gameSecondPlayed','showPopupDelay','allPartNames','assetsPages','completedLessonNum','allLessonsNum','lessonPartsIndex', 'restArrangementStat','allLessonComponentsNames','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
 
     },
     components: {congraPopup},
     methods: {
-      ...mapActions(['SET_CANVASPAGE','SET_INDEXPAGEINITIALSLIDE','SET_COMPLETEDLESSONNUM', 'SET_ASSETSPAGES','SET_ASSETSRESOURCES','SET_ASSETSGAMECONFIG', 'PUSH_GAMES', 'SET_LESSONCOMPLETESTAT','SET_RESTARRANGEMENTSTAT','SET_LESSONCURRENTPAGEINDEX']),
+      ...mapActions(['SET_CANVASPAGE','SET_INDEXPAGEINITIALSLIDE','SET_COMPLETEDLESSONNUM', 'SET_ASSETSPAGES','PUSH_GAMES', 'SET_LESSONCOMPLETESTAT','SET_RESTARRANGEMENTSTAT','SET_LESSONCURRENTPAGEINDEX']),
 
       clickContinue() {
         //
@@ -183,21 +183,14 @@
     },
     mounted() {
       const self = this;
-
       self.SET_LESSONCURRENTPAGEINDEX(Number(self.allLessonComponentsNames.indexOf(self.$route.name)))
-
-
 
       this.$on('changeGameLevel', function (n) {
         self.currentGameLevel = n;
       });
-
       this.$on('showCongra', function () {
         self.showCongra = true;
       });
-
-
-
 
     },
   }

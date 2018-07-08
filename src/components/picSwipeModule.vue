@@ -42,38 +42,30 @@
                  @enter="enter"
                  @leave="leave">
       <congraPopup :showType="popupType" v-if="showCongra"
-                   @quitGame="quitGame()"
-                   @continueGame="continueGame()"
-                   @continueClicked="clickContinue()"
-                   @againClicked="againClicked"></congraPopup>
+                   @quitGame.once="quitGame_hdr()"
+                   @continueGame.once="continueGame_hdr()"
+                   @continueClicked.once="clickContinue_hdr()"
+                   @againClicked.once="againClicked_hdr"></congraPopup>
     </transition>
 
   </div>
 </template>
 <script>
-  import Vue from 'vue'
-  import {ResourceMent,myVueMixin,checkForJumpRoute,myVueMixin_Popup,loaderAssetsByValided} from './Utils.js'
+  import {myVueMixin,checkForJumpRoute,myVueMixin_Popup,loaderAssetsByValided} from './Utils.js'
   import {mapActions, mapState} from 'vuex'
   import PixiScene1 from './picSwipeModule.js'
   import GameMenuBars from './gameui/GameMenuBar.js'
-
-  import $ from 'jquery'
   import GameHand from './gameui/Gamehand.js'
   import {LoadingAnimation} from "./gameui/GameManager";
-  import Masker from './gameui/Masker.js'
-
 
   import congraPopup from './gameui/congraPopup.vue'
   import masker from './masker.vue'
   import {Debugs} from "./Utils";
-
   import {swiper, swiperSlide} from 'vue-awesome-swiper'
 
   import 'swiper/dist/css/swiper.css'
-  import {PIXIAudio,AnimationSprite} from './EasyPIXI.js'
+  import {PIXIAudio} from './EasyPIXI.js'
   var pixiScene = null;
-  var gameTicker = null;
-
   var mySwiper = null;
   var mySwiperPagination = null;
   var modulesUrl = null;
@@ -86,10 +78,7 @@
         slideLists: [],
         paginationLists: [],
         paginationPicture: {},
-        openEnergyed:{
-          type:false,
-          opened:false
-        },
+        openEnergyed:-1,
 
         popupType:'popup2',
         paginationballs_style:{
@@ -109,6 +98,8 @@
         leftTriangle_style:{},
         rightTriangle_style:{},
 
+        boyCanClicked:true,
+
         currentPaginationPages:-1,
         canvas2Style:{
           pointerEvents:'none'
@@ -118,7 +109,7 @@
     },
     components:{congraPopup,masker},
     computed: {
-      ...mapState(['lessonPartsList','allPartNames', 'alreadyHasOneCard','assetsGameConfig','lessonPartsIndex','assetsPages','assetsResources','completedLessonNum','allLessonsNum','showPopupDelay','allLessonComponentsNames','energyCurrentNum','restArrangementStat','lessonCurrentPageIndex','gameHasBeenCompleted']),
+      ...mapState(['lessonPartsList','gameSecondPlayed','allPartNames','lessonPartsIndex','allLessonsNum','showPopupDelay','allLessonComponentsNames','energyCurrentNum','restArrangementStat','lessonCurrentPageIndex','gameHasBeenCompleted']),
       leftTriangleShow(){
         return this.currentPaginationPages>=4
       },
@@ -130,7 +121,7 @@
 
 
     methods: {
-      ...mapActions(['SET_CANVASPAGE','SET_INDEXPAGEINITIALSLIDE','SET_ASSETSGAMECONFIG','SET_ASSETSPAGES','SET_ASSETSRESOURCES', 'PUSH_GAMES','SET_LESSONCOMPLETESTAT','SET_RESTARRANGEMENTSTAT','SET_LESSONCURRENTPAGEINDEX']),
+      ...mapActions(['SET_CANVASPAGE','SET_INDEXPAGEINITIALSLIDE','SET_ASSETSPAGES','PUSH_GAMES','SET_LESSONCOMPLETESTAT','SET_RESTARRANGEMENTSTAT','SET_LESSONCURRENTPAGEINDEX']),
       goPrevPagi(){
         if(mySwiperPagination){
 
@@ -146,62 +137,58 @@
       },
       boyBtnAreaClicked(){
         const self = this;
+        if(self.boyCanClicked==false)return;
+        self.boyCanClicked = false;
+        Debugs.log('点到我了')
         if(mySwiper){
           if(mySwiper.activeIndex <mySwiper.slides.length-1){
             return;
           }
         }
+        pixiScene.stopAudios();
 
-        //开始设置清算界面逻辑全套;
+
+
+
+       //TODO:开始设置清算界面逻辑全套66;
         self.$route.meta.completed = 1;
         self.setOwnLessonComplete();
-        pixiScene.stopAudios();
-        //开始清算。。
-        if (self.vueInstance.gameHasBeenCompleted == false) {
+        if (self.gameHasBeenCompleted == false) {
           window.parent.postMessage({
             type: "stepSubmit",
-            page: self.vueInstance.lessonCurrentPageIndex
-
+            page: self.lessonCurrentPageIndex
           }, "*");
         }
-        setTimeout(()=>{
-          let isQingsuan = self.vueInstance.$route.name==self.vueInstance.restArrangementStat[self.vueInstance.restArrangementStat.length-1];//开始清算;
-          if(isQingsuan && !self.vueInstance.gameHasBeenCompleted){
-            setTimeout(()=>{
-              Debugs.log('清算页面开启，游戏未完成','gameCOmpleted?',self.vueInstance.gameHasBeenCompleted)
+        setTimeout(() => {
+          let isQingsuan = self.$route.name == self.restArrangementStat[self.restArrangementStat.length - 1];//开始清算;
+          setTimeout(() => {
+            if (isQingsuan && !self.gameHasBeenCompleted) {
+              Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.gameHasBeenCompleted)
               self.gameMenuBar.bookScene.openEnergyCan(false);
-            },self.vueInstance.showPopupDelay)
-            return;
-          }
-          setTimeout(()=>{
 
-            if(self.vueInstance.gameHasBeenCompleted){
-              self.vueInstance.showCongra = true;
-              PIXIAudio.audios['win_jump'].play();
-              Debugs.log('游戏完成并且卡片已经获得','gameCompleted?',self.vueInstance.gameHasBeenCompleted)
-              return;
-            }
-            // if(self.vueInstance.gameHasBeenCompleted && !self.vueInstance.alreadyHasOneCard){
-            //   self.gameMenuBar.bookScene.openEnergyCan(true);
-            //   Debugs.log('游戏已经完成，但是没收集卡片')
-            // }
-            if(!self.vueInstance.gameHasBeenCompleted && isQingsuan==false){
-              self.vueInstance.showCongra = true;
-
+            } else if (isQingsuan == false && !self.gameHasBeenCompleted) {
+              self.showCongra = true;
               Debugs.log('游戏没有完成，并且也不是清算页')
-
               PIXIAudio.audios['win_jump'].play();
-            };
+            }  else if (self.gameHasBeenCompleted && !self.gameSecondPlayed) {
+              self.gameMenuBar.bookScene.openEnergyCan(true);
+              PIXIAudio.audios['win_jump'].play();
+              Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.gameHasBeenCompleted)
+            }else if(self.gameHasBeenCompleted && self.gameSecondPlayed){
+              self.showCongra = true;
+              Debugs.log('游戏第二周目，继续玩')
+              PIXIAudio.audios['win_jump'].play();
+            }
+          }, self.showPopupDelay);
+          self.updateRestArrangementStat();
+        }, 1);
+        //TODO:开始设置清算界面逻辑全套---END;
 
-          },self.vueInstance.showPopupDelay);
-          self.vueInstance.updateRestArrangementStat();
 
-        },2);
-        //开始设置清算界面逻辑全套---END;
 
 
       },
-      quitGame(){
+      quitGame_hdr(){
         const self = this;
         setTimeout(() => {
           self.$router.push('/index/')
@@ -216,10 +203,10 @@
 
 
       },
-      continueGame(){
+      continueGame_hdr(){
         this.showCongra = false;
       },
-      clickContinue(){
+      clickContinue_hdr(){
 
         if(this.gameHasBeenCompleted){
           checkForJumpRoute.call(this,false);
@@ -228,8 +215,9 @@
           checkForJumpRoute.call(this,true);
         }
       },
-      againClicked(){
+      againClicked_hdr(){
         this.showCongra = false;
+        this.boyCanClicked = true;
 
         if(mySwiper){
           mySwiper.slideTo(0,500)
@@ -285,11 +273,8 @@
       gameStart2(app){
         const self = this;
 
-
         var gameMenuBar = new GameMenuBars();
-        var maskerBg = new Masker();
 
-        //
          app.stage.addChild(gameMenuBar);
         gameMenuBar.backBtnShow = false;
         gameMenuBar.homeBtnShow = false;
@@ -302,21 +287,21 @@
           return self.openEnergyed
         },(newval)=>{
 
-             if(newval.opened==true && newval.type == true){
+             if(Number(newval)==1){
+
                gameMenuBar.bookScene.openEnergyCan(true);
                self.canvas2Style = {
                  pointerEvents:'auto'
                }
-             }else if(newval.opened==true && newval.type == false){
+             }else if(Number(newval)==0){
                gameMenuBar.bookScene.openEnergyCan(false);
                self.canvas2Style = {
                  pointerEvents:'auto'
                }
              }
-        },{deep:true});
+        });
 
-        // app.stage.addChild(maskerBg)
-        //  app.stage.addChild(maskerBg);
+
 
       },
 
@@ -334,7 +319,7 @@
             }
           });
             self.slideLists =gameConfigData.data.gameData.pictureList.map((item, index) => {
-           //   this.gameConfig.pictureList[i].picture]
+
               return {
                 slideName: '',
                 styles:{
@@ -382,7 +367,7 @@
 
 
               //初始化Swiper;
-              // setTimeout(() => {
+
                 mySwiperPagination = new Swiper('#paginationdiy', {
                   direction: 'horizontal',
                   slidesPerView: 5,
@@ -394,18 +379,6 @@
                         left:e.pageX,
                         top:e.pageY
                       })
-                    },
-                    touchEnd(){
-                      if(GameHand.hand){
-                        GameHand.setStepAnimation(0)
-
-                      }
-                    },
-                    touchStart(){
-                      if(GameHand.hand){
-                        GameHand.setStepAnimation(1)
-
-                      }
                     },
                     init(){
                       this.update();
@@ -477,19 +450,6 @@
 
                       self.currentPage = this.activeIndex;
 
-                    },
-                    touchStart() {
-
-                      if(GameHand.hand){
-                        GameHand.setStepAnimation(1)
-
-                      }
-                    },
-                    touchEnd(){
-                      if(GameHand.hand){
-                        GameHand.setStepAnimation(0)
-
-                      }
                     },
                     init: function () {
                       this.slides.eq(this.activeIndex).addClass('none-effect');
@@ -563,15 +523,19 @@
         window.location.reload()
       }
     },
-    beforeDestroy(){
-      if(pixiScene){
-        pixiScene.destroyed();
-        pixiScene.destroy();
-      }
-    },
+
     destroyed(){
+
+        GameHand.setAnimation('normal')
         mySwiper.destroy(true,true);
         mySwiperPagination.destroy(true,true);
+        if(pixiScene){
+          pixiScene.destroyed();
+          pixiScene.destroy();
+          pixiScene = null
+
+        }
+
     },
     mounted() {
       const self = this;

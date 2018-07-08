@@ -6,10 +6,10 @@
                 @enter="enter"
                 @leave="leave">
       <congraPopup :showType="popupType" v-if="showCongra"
-                   @quitGame="quitGame()"
-                   @continueGame="continueGame()"
-                   @continueClicked="clickContinue()"
-                   @againClicked="againClicked"></congraPopup>
+                   @quitGame.once="quitGame_handler()"
+                   @continueGame.once="continueGame()"
+                   @continueClicked.once="clickContinue_handler()"
+                   @againClicked.once="againClicked_handler"></congraPopup>
     </transition>
   </div>
 
@@ -51,21 +51,21 @@
     },
 
     computed: {
-      ...mapState(['lessonPartsList','alreadyHasOneCard','gameThemeType','allPartNames','assetsPages','assetsGameConfig', 'assetsResources','completedLessonNum','allLessonsNum','showPopupDelay','lessonPartsIndex', 'allLessonComponentsNames','restArrangementStat','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
+      ...mapState(['lessonPartsList','gameSecondPlayed','alreadyHasOneCard','gameThemeType','allPartNames','assetsPages', 'completedLessonNum','allLessonsNum','showPopupDelay','lessonPartsIndex', 'allLessonComponentsNames','restArrangementStat','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
 
     },
     components: {congraPopup},
     methods: {
-      ...mapActions(['SET_CANVASPAGE', 'SET_ASSETSPAGES','SET_INDEXPAGEINITIALSLIDE','SET_ASSETSRESOURCES','SET_ASSETSGAMECONFIG','PUSH_GAMES', 'SET_LESSONCOMPLETESTAT','SET_RESTARRANGEMENTSTAT','SET_LESSONCURRENTPAGEINDEX']),
+      ...mapActions(['SET_CANVASPAGE', 'SET_ASSETSPAGES','SET_INDEXPAGEINITIALSLIDE','PUSH_GAMES', 'SET_LESSONCOMPLETESTAT','SET_RESTARRANGEMENTSTAT','SET_LESSONCURRENTPAGEINDEX']),
 
 
-      againClicked() {
+      againClicked_handler() {
         if (pixiScene) {
        //   this.$parent.$parent.$refs.gameMenu.showGrandMask = false;
           pixiScene.playAgain()
         }
       },
-      clickContinue() {
+      clickContinue_handler() {
 
         if (pixiScene) {
          // this.$parent.$parent.$refs.gameMenu.showGrandMask = false;
@@ -73,7 +73,7 @@
           pixiScene.playContinue();
         }
       },
-      quitGame(){
+      quitGame_handler(){
         const self = this;
         setTimeout(() => {
           self.$router.push('/index/')
@@ -88,7 +88,7 @@
 
 
       },
-      continueGame(){
+      continueGame_handler(){
         this.showCongra = false;
       },
 

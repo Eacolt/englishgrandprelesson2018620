@@ -45,7 +45,6 @@ class BookReadingModule extends PIXI.Container {
     this.currentAudioPlaying = false;
 
 
-
     this.on('added', this.addedToStage, this)
   }
 
@@ -56,14 +55,14 @@ class BookReadingModule extends PIXI.Container {
     this.addChild(gameBg)
 
 
-    setTimeout(()=>{
+    setTimeout(() => {
       self.playAudios();
-    },300)
+    }, 300)
 
 
     this.interactive = true;
 
-    this.pageUpper  = new PIXI.Sprite(PIXI.Texture.from(this.gameConfig.levels[0].picture))
+    this.pageUpper = new PIXI.Sprite(PIXI.Texture.from(this.gameConfig.levels[0].picture))
     this.pageDown = new PIXI.Sprite(PIXI.Texture.from(this.gameConfig.levels[1].picture))
     var book = new PIXI.Sprite(PIXI.Texture.from('mybooks_png'));
 
@@ -105,7 +104,7 @@ class BookReadingModule extends PIXI.Container {
     this.pageturn.play();
 
     //创建封面;
-    function createCoverPage($fromHead=true) {
+    function createCoverPage($fromHead = true) {
       const self = this;
       let coverPageCtn = new PIXI.Container();
 
@@ -114,73 +113,79 @@ class BookReadingModule extends PIXI.Container {
       var tl = new TimelineMax({
         onComplete: () => {
           //coverPageCtn.alpha = 0;
-         // self.isCoverPageTime = false;
-        //  self.playAudios()
+          // self.isCoverPageTime = false;
+          //  self.playAudios()
 
         }
       });
 
       let allTime = 1;
 
-      if($fromHead){
+      if ($fromHead) {
         coverPage.x = 0;
         coverPage.y = 0;
         coverPage.pivot.x = 0;
         coverPage.pivot.y = coverPage.height / 2;
         coverPageCtn.addChild(coverPage);
         coverPageCtn.pivot.x = 0;
-        coverPageCtn.x = 200-7;
-        coverPageCtn.y = 600+4;
-        tl.add([TweenMax.to(coverPageCtn.skew, allTime, {y: -3.16,onStart:function(){
+        coverPageCtn.x = 200 - 7;
+        coverPageCtn.y = 600 + 4;
+        tl.add([TweenMax.to(coverPageCtn.skew, allTime, {
+          y: -3.16, onStart: function () {
             coverPage.texture = PIXI.Texture.from('pagefengmian');
             self.isCoverPageTime = false;
             self.isCoverPageTime_reserve = true;
             self.playAudios()
-          }}), TweenMax.to(coverPage, allTime*0.28, {
+          }
+        }), TweenMax.to(coverPage, allTime * 0.28, {
           width: coverPage.width * 0.5, onComplete: function () {
 
-            TweenMax.to(coverPage, allTime*0.1, {width: coverPage.width * 1});
+            TweenMax.to(coverPage, allTime * 0.1, {width: coverPage.width * 1});
             coverPage.texture = PIXI.Texture.from('pagebeimian')
-          },onStart:function(){
+          }, onStart: function () {
             coverPage.texture = PIXI.Texture.from('pagefengmian')
           }
         })]);
-        tl.add(TweenMax.to(coverPageCtn,allTime*0.3,{alpha:0,onComplete:function(){
+        tl.add(TweenMax.to(coverPageCtn, allTime * 0.3, {
+          alpha: 0, onComplete: function () {
             coverPage.texture = PIXI.Texture.from('pagebeimian')
             self.isCoverPageTime = false;
 
-          }}),'-=.4');
-      }else{
+          }
+        }), '-=.4');
+      } else {
         coverPage.x = 0;
         coverPage.y = 0;
         coverPage.pivot.x = 0;
         coverPage.pivot.y = coverPage.height / 2;
         coverPageCtn.addChild(coverPage);
         coverPageCtn.pivot.x = 0;
-        coverPageCtn.x = 200-7;
-        coverPageCtn.y = 600+4;
-        coverPageCtn.alpha =0;
-       // coverPageCtn.alpha = 0;
-         tl.add( TweenMax.to(coverPageCtn,allTime*0.4,{alpha:1}));
+        coverPageCtn.x = 200 - 7;
+        coverPageCtn.y = 600 + 4;
+        coverPageCtn.alpha = 0;
+        // coverPageCtn.alpha = 0;
+        tl.add(TweenMax.to(coverPageCtn, allTime * 0.4, {alpha: 1}));
         tl.add([
-          TweenMax.from(coverPageCtn.skew, allTime, {y: -3.16,onStart:function(){
-            coverPage.texture = PIXI.Texture.from('pagebeimian');
-            self.isCoverPageTime_reserve = false;
+          TweenMax.from(coverPageCtn.skew, allTime, {
+            y: -3.16, onStart: function () {
+              coverPage.texture = PIXI.Texture.from('pagebeimian');
+              self.isCoverPageTime_reserve = false;
               self.isCoverPageTime = true;
               self.playAudios()
-          },onComplete:function(){
+            }, onComplete: function () {
 
-          }}),
-          TweenMax.from(coverPage, allTime*0.28, {
-          width: coverPage.width * 0.5, onComplete: function () {
-            TweenMax.to(coverPage, allTime*0.1, {width: coverPage.width * 1});
-            coverPage.texture = PIXI.Texture.from('pagefengmian');
-          },onStart:function(){
-            coverPage.texture = PIXI.Texture.from('pagebeimian')
-          }
-        },
-        )
-        ],'-=0.469');
+            }
+          }),
+          TweenMax.from(coverPage, allTime * 0.28, {
+              width: coverPage.width * 0.5, onComplete: function () {
+                TweenMax.to(coverPage, allTime * 0.1, {width: coverPage.width * 1});
+                coverPage.texture = PIXI.Texture.from('pagefengmian');
+              }, onStart: function () {
+                coverPage.texture = PIXI.Texture.from('pagebeimian')
+              }
+            },
+          )
+        ], '-=0.469');
 
       }
 
@@ -188,8 +193,8 @@ class BookReadingModule extends PIXI.Container {
 
       this.addChild(coverPageCtn);
       return {
-        tl:tl,
-        coverPage:coverPageCtn
+        tl: tl,
+        coverPage: coverPageCtn
       };
     }
 
@@ -211,9 +216,9 @@ class BookReadingModule extends PIXI.Container {
     this.addChild(book)
     this.addChild(bookmask);
 
-    if(this.gameConfig.showCoverpage){
-       this.coverPageTl = createCoverPage.call(self,true);
-       this.coverPageTl_reserve = createCoverPage.call(self,false);
+    if (this.gameConfig.showCoverpage) {
+      this.coverPageTl = createCoverPage.call(self, true);
+      this.coverPageTl_reserve = createCoverPage.call(self, false);
     }
 
 
@@ -236,8 +241,8 @@ class BookReadingModule extends PIXI.Container {
     //bookmask.addChild(page0);
     this.pageDown.pivot.x = this.pageDown.width / 2;
     this.pageDown.pivot.y = this.pageDown.height / 2;
-    this.pageDown.x = 1920 / 2 - 160+12;
-    this.pageDown.y = 1080 / 2 - 160+12;
+    this.pageDown.x = 1920 / 2 - 160 + 12;
+    this.pageDown.y = 1080 / 2 - 160 + 12;
 
     var page0Ctn = new PIXI.Graphics();
     page0Ctn.beginFill(0xfff7dc, 1);//0xfff7dc
@@ -252,8 +257,8 @@ class BookReadingModule extends PIXI.Container {
     bookmask.addChild(page0Ctn);
     this.pageUpper.pivot.x = this.pageUpper.width / 2;
     this.pageUpper.pivot.y = this.pageUpper.height / 2;
-    this.pageUpper.x = 1920 / 2 - 160+12;
-    this.pageUpper.y = 1080 / 2 - 160+12;
+    this.pageUpper.x = 1920 / 2 - 160 + 12;
+    this.pageUpper.y = 1080 / 2 - 160 + 12;
     //
     page0Ctn.mask = this.pageMaskUpper;
     page1Ctn.mask = this.pageMaskDown;
@@ -269,7 +274,7 @@ class BookReadingModule extends PIXI.Container {
     this.rightBtn.on('pointerdown', this.turnNext.bind(this, .5));
     self.swiperHammer = new PixiHammer({
       swiperContainer: self,
-      swiperArea: {x: 200, width: 1920-200, y: 100, height: 1000}
+      swiperArea: {x: 200, width: 1920 - 200, y: 100, height: 1000}
     });
     self.swiperHammer.setMoveLeftCallBack(function () {
       self.turnNext.call(self, .5)
@@ -292,58 +297,47 @@ class BookReadingModule extends PIXI.Container {
     this.boySpine.state.setAnimation(0, 'next', true);
     this.boySpine.alpha = 1;
     this.boySpine.interactive = true;
-    this.boySpine.on('pointerdown', () => {
+    this.boySpine.once('pointertap', () => {
+
       if (self.boyCanClicked) {
-        //开始设置清算界面逻辑全套;
-        self.vueInstance.$route.meta.completed = 1;
-        self.vueInstance.setOwnLessonComplete();
-        self.swiperHammer.lock = true;
-       // self.interactiveChildren = false;
-        if(self.gameAudio){
+        if (self.gameAudio) {
           self.stopAudios();
         }
-        //开始清算。。
+        self.swiperHammer.lock = true;
+
+        //TODO:开始设置清算界面逻辑全套;
+        self.vueInstance.$route.meta.completed = 1;
+        self.vueInstance.setOwnLessonComplete();
         if (self.vueInstance.gameHasBeenCompleted == false) {
           window.parent.postMessage({
             type: "stepSubmit",
             page: self.vueInstance.lessonCurrentPageIndex
-
           }, "*");
         }
-        setTimeout(()=>{
-          let isQingsuan = self.vueInstance.$route.name==self.vueInstance.restArrangementStat[self.vueInstance.restArrangementStat.length-1];//开始清算;
-          if(isQingsuan && !self.vueInstance.gameHasBeenCompleted){
-            setTimeout(()=>{
-              Debugs.log('清算页面开启，游戏未完成','gameCOmpleted?',self.vueInstance.gameHasBeenCompleted)
+        setTimeout(() => {
+          let isQingsuan = self.vueInstance.$route.name == self.vueInstance.restArrangementStat[self.vueInstance.restArrangementStat.length - 1];//开始清算;
+          setTimeout(() => {
+            if (isQingsuan && !self.vueInstance.gameHasBeenCompleted) {
+              Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.vueInstance.gameHasBeenCompleted)
               self.gameMenuBar.bookScene.openEnergyCan(false);
-            },self.vueInstance.showPopupDelay)
-            return;
-          }
-          setTimeout(()=>{
 
-            if(self.vueInstance.gameHasBeenCompleted){
+            } else if (isQingsuan == false && !self.vueInstance.gameHasBeenCompleted) {
               self.vueInstance.showCongra = true;
-              PIXIAudio.audios['win_jump'].play();
-              Debugs.log('游戏完成并且卡片已经获得','gameCompleted?',self.vueInstance.gameHasBeenCompleted)
-              return;
-            }
-            // if(self.vueInstance.gameHasBeenCompleted && !self.vueInstance.alreadyHasOneCard){
-            //   self.gameMenuBar.bookScene.openEnergyCan(true);
-            //   Debugs.log('游戏已经完成，但是没收集卡片')
-            // }
-            if(!self.vueInstance.gameHasBeenCompleted && isQingsuan==false){
-              self.vueInstance.showCongra = true;
-
               Debugs.log('游戏没有完成，并且也不是清算页')
-
               PIXIAudio.audios['win_jump'].play();
-            };
-
-          },self.vueInstance.showPopupDelay);
+            }  else if (self.vueInstance.gameHasBeenCompleted && !self.vueInstance.gameSecondPlayed) {
+              self.gameMenuBar.bookScene.openEnergyCan(true);
+              PIXIAudio.audios['win_jump'].play();
+              Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
+            }else if(self.vueInstance.gameHasBeenCompleted && self.vueInstance.gameSecondPlayed){
+                self.vueInstance.showCongra = true;
+                Debugs.log('游戏第二周目，继续玩')
+                PIXIAudio.audios['win_jump'].play();
+            }
+          }, self.vueInstance.showPopupDelay);
           self.vueInstance.updateRestArrangementStat();
-
-        },2);
-        //开始设置清算界面逻辑全套---END;
+        }, 1);
+        //TODO:开始设置清算界面逻辑全套---END;
 
       }
     })
@@ -356,15 +350,15 @@ class BookReadingModule extends PIXI.Container {
     self.gameMenuBar = new GameMenuBars();
 
     self.addChild(self.gameMenuBar)
-    self.gameMenuBar.setBackBtn_tapHandler(()=>{
+    self.gameMenuBar.setBackBtn_tapHandler(() => {
 
       self.turnPrev(.5);
     });
-    self.gameMenuBar.setHomeBtn_tapHandler(()=>{
+    self.gameMenuBar.setHomeBtn_tapHandler(() => {
       self.gotoHome();
     })
 
-  //播放声音;
+    //播放声音;
 
     //控制声音;
     self.gameMenuBar.setSoundBtn_tapHandler((evt) => {
@@ -378,26 +372,24 @@ class BookReadingModule extends PIXI.Container {
 
     self.gameMenuBar.backBtnShow = false;
     self.gameMenuBar.homeBtnShow = true;
-    self.gameMenuBar.bookBtnShow =false;
-    self.gameMenuBar.soundBtnShow =true;
+    self.gameMenuBar.bookBtnShow = false;
+    self.gameMenuBar.soundBtnShow = true;
     self.gameMenuBar.updateGameMenu();
-    self.vueInstance.$watch(()=>{
+    self.vueInstance.$watch(() => {
       return self.vueInstance.energyCurrentNum
-    },(newval)=>{
+    }, (newval) => {
       self.gameMenuBar.energy = newval;
       self.gameMenuBar.playStars();
     });
 
 
-
-
-    if(self.gameConfig.showCoverpage){
-      self.vueInstance.$watch(()=>{
+    if (self.gameConfig.showCoverpage) {
+      self.vueInstance.$watch(() => {
         return self.vueInstance.currentGameLevel
-      },(newval)=>{
+      }, (newval) => {
 
 
-        if (newval >=0) {
+        if (newval >= 0) {
 
           self.gameMenuBar.backBtnShow = true;
           self.gameMenuBar.homeBtnShow = true;
@@ -409,13 +401,13 @@ class BookReadingModule extends PIXI.Container {
           self.gameMenuBar.updateGameMenu();
         }
       });
-    }else{
-      self.vueInstance.$watch(()=>{
+    } else {
+      self.vueInstance.$watch(() => {
         return self.vueInstance.currentGameLevel
-      },(newval)=>{
+      }, (newval) => {
 
 
-        if (newval >0) {
+        if (newval > 0) {
 
           self.gameMenuBar.backBtnShow = true;
           self.gameMenuBar.homeBtnShow = true;
@@ -428,7 +420,6 @@ class BookReadingModule extends PIXI.Container {
         }
       });
     }
-
 
 
     this.gameMenuBar.energyOnce = self.vueInstance.energyCurrentNum;
@@ -437,17 +428,24 @@ class BookReadingModule extends PIXI.Container {
 
 
   };
+
   destroyed() {
     if (this.gameAudio) {
       this.gameAudio.stop();
       this.gameAudio = null;
       this.boySpine = null;
     }
-    if(this.gameMenuBar){
+    if (this.gameMenuBar) {
       this.gameMenuBar.clearGameMenuEvents();
       this.gameMenuBar.destroy();
     }
+    if (this.boySpine) {
+      this.boySpine.removeAllListeners()
+    }
+    this.removeChildren();
+    this.destroy();
   }
+
   hideBoy() {
     const self = this;
     if (this.boySpine) {
@@ -489,40 +487,40 @@ class BookReadingModule extends PIXI.Container {
   //Audios======
 
   //音频控制;
-  playAudios($num=null) {
+  playAudios($num = null) {
     const self = this;
     self.stopAudios()
 
     let myIndex = $num || this.currentPage;
     let soundName;
-    if(this.gameConfig.showCoverpage==true  && this.isCoverPageTime && _.trim(this.gameConfig.coverpageAudio)!=''){
-      soundName = this.vueInstance.$route.meta.assetsUrl+'_'+this.gameConfig.coverpageAudio.replace(/\./g,'_');
-    }else{
-      soundName = this.vueInstance.$route.meta.assetsUrl+'_'+this.gameConfig.levels[myIndex].audioSrc.replace(/\./g,'_');
+    if (this.gameConfig.showCoverpage == true && this.isCoverPageTime && _.trim(this.gameConfig.coverpageAudio) != '') {
+      soundName = this.vueInstance.$route.meta.assetsUrl + '_' + this.gameConfig.coverpageAudio.replace(/\./g, '_');
+    } else {
+      soundName = this.vueInstance.$route.meta.assetsUrl + '_' + this.gameConfig.levels[myIndex].audioSrc.replace(/\./g, '_');
     }
     //console.log(_.trim(this.gameConfig.levels[myIndex].audioSrc),'<=audio');
-    if((this.gameConfig.levels[myIndex].audioSrc && _.trim(this.gameConfig.levels[myIndex].audioSrc)!='') ||
-      (this.gameConfig.showCoverpage==true &&  this.isCoverPageTime && _.trim(this.gameConfig.coverpageAudio)!='')){
+    if ((this.gameConfig.levels[myIndex].audioSrc && _.trim(this.gameConfig.levels[myIndex].audioSrc) != '') ||
+      (this.gameConfig.showCoverpage == true && this.isCoverPageTime && _.trim(this.gameConfig.coverpageAudio) != '')) {
       this.gameAudio = PIXIAudio.audios[soundName];
       this.gameAudio.play();
       this.gameAudio.position = 0;
 
-      let soundTime =this.gameAudio.duration;
-      self.gameAudio.on('complete',()=>{
-        if(self.gameMenuBar.soundBtn){
+      let soundTime = this.gameAudio.duration;
+      self.gameAudio.on('complete', () => {
+        if (self.gameMenuBar.soundBtn) {
           self.gameMenuBar.soundBtn.stop();
         }
         //self.currentAudioPlaying = false;
       })
 
-      if(this.gameMenuBar.soundBtn){
+      if (this.gameMenuBar.soundBtn) {
         this.gameMenuBar.soundBtn.play();
       }
 
-     // this.currentAudioPlaying = true;
+      // this.currentAudioPlaying = true;
       this.gameMenuBar.soundBtnShow = true;
       this.gameMenuBar.updateGameMenu();
-    }else{
+    } else {
       this.gameMenuBar.soundBtnShow = false;
       this.gameMenuBar.updateGameMenu();
     }
@@ -532,10 +530,10 @@ class BookReadingModule extends PIXI.Container {
 
   stopAudios() {
 
-    if(this.gameAudio){
+    if (this.gameAudio) {
       this.gameAudio.stop();
       //this.currentAudioPlaying = false;
-      if(this.gameMenuBar.soundBtn){
+      if (this.gameMenuBar.soundBtn) {
         this.gameMenuBar.soundBtn.stop();
       }
 
@@ -543,7 +541,6 @@ class BookReadingModule extends PIXI.Container {
     }
 
   }
-
 
 
   //End Audios====
@@ -572,19 +569,20 @@ class BookReadingModule extends PIXI.Container {
 
   turnNext($time = 5) {
     const self = this;
-    if(this.isCoverPageTime && this.gameConfig.showCoverpage){
+    if (this.isCoverPageTime && this.gameConfig.showCoverpage) {
       this.coverPageTl.tl.restart();
       this.coverPageTl.coverPage.alpha = 1;
       this.coverPageTl_reserve.coverPage.alpha = 0;
       this.leftBtn.alpha = 1;
 
-      if(this.gameConfig.showCoverpage){
+      if (this.gameConfig.showCoverpage) {
         self.gameMenuBar.backBtnShow = true;
         self.gameMenuBar.updateGameMenu();
       }
 
       return;
-    };
+    }
+    ;
     if (this.currentPage >= this.gameConfig.levels.length - 2) {
       self.rightBtn.alpha = 0;
 
@@ -596,9 +594,9 @@ class BookReadingModule extends PIXI.Container {
 
     }
 
-      if (this.currentPage >=0) {
-        self.leftBtn.alpha = 1;
-      }
+    if (this.currentPage >= 0) {
+      self.leftBtn.alpha = 1;
+    }
     if (this.currentPage >= this.gameConfig.levels.length - 1) {
 
       return;
@@ -624,9 +622,9 @@ class BookReadingModule extends PIXI.Container {
     TweenMax.to(this.pageMaskUpper, $time, {
       x: 246, onComplete: function () {
         self.pageturn2.alpha = 0;
-        if( self.vueInstance.currentLessonCompleted == true){
+        if (self.vueInstance.currentLessonCompleted == true) {
           self.pageturn.alpha = 0;
-        }else{
+        } else {
           self.pageturn.alpha = 1;
         }
 
@@ -654,7 +652,7 @@ class BookReadingModule extends PIXI.Container {
       self.hideBoy();
       self.pageturn.alpha = 1;
     }
-    if(this.gameConfig.showCoverpage){
+    if (this.gameConfig.showCoverpage) {
       if (this.currentPage == 0) {
         self.leftBtn.alpha = 0;
         // self.gameMenuBar.backBtnShow = false;
@@ -662,7 +660,7 @@ class BookReadingModule extends PIXI.Container {
         self.gameMenuBar.backBtnShow = true;
         self.gameMenuBar.updateGameMenu();
       }
-    }else{
+    } else {
       if (this.currentPage == 1) {
         self.leftBtn.alpha = 0;
         self.gameMenuBar.backBtnShow = true;
@@ -671,21 +669,23 @@ class BookReadingModule extends PIXI.Container {
       }
     }
 
-    if (this.currentPage <= 0 ) {
+    if (this.currentPage <= 0) {
 
-      if(this.isCoverPageTime_reserve && this.gameConfig.showCoverpage){
+      if (this.isCoverPageTime_reserve && this.gameConfig.showCoverpage) {
         this.coverPageTl_reserve.tl.restart();
         this.isCoverPageTime = true;
         this.coverPageTl.coverPage.alpha = 0;
 
-        if(this.gameConfig.showCoverpage){
+        if (this.gameConfig.showCoverpage) {
           self.gameMenuBar.backBtnShow = false;
           self.gameMenuBar.updateGameMenu();
         }
-      };
+      }
+      ;
 
       return;
-    };
+    }
+    ;
     if (this.turnAnimating) return;
     this.turnAnimating = true;
     this.currentPage--;

@@ -51,7 +51,7 @@
     },
 
     computed: {
-      ...mapState(['lessonPartsList','energyCurrentNum', 'assetsPages', 'assetsResources', 'lessonPartsIndex', 'currentModuleList', 'baseAssetsCompleted']),
+      ...mapState(['lessonPartsList','energyCurrentNum', 'assetsPages',  'lessonPartsIndex', 'currentModuleList', 'baseAssetsCompleted']),
       bgContainer() {
         return {
           backgroundImage: 'url("static/img/choicepage/back2.jpg")',

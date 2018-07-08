@@ -22,11 +22,13 @@
     mixins: [myVueMixin],
     data: function () {
       return {
+        isgo:true,
+        getIdAlready:true,
         gameConfig: "static/module1/gameconfig.json",
       }
     },
     computed: {
-      ...mapState(['lessonPartsList', 'bookOpened', 'openMagicBookByGameIndex', 'gameThemeType', 'showMagicBook', 'energyCurrentNum', 'alreadyHasOneCard', 'indexPageInitialSlide', 'gameHasBeenCompleted', 'alreadyHasOneCard', 'assetsPages', 'assetsPages', 'assetsResources',  'allLessonsNum', 'baseAssetsCompleted', 'completedLessonNum', 'allLessonCompleteStat', 'restArrangementStat', 'allPartNames', 'gameInitResponse', 'allGameCards']),
+      ...mapState(['lessonPartsList', 'bookOpened', 'openMagicBookByGameIndex', 'gameThemeType', 'showMagicBook', 'energyCurrentNum', 'alreadyHasOneCard', 'indexPageInitialSlide', 'gameHasBeenCompleted', 'alreadyHasOneCard', 'assetsPages', 'assetsPages', 'allLessonsNum', 'baseAssetsCompleted', 'completedLessonNum', 'allLessonCompleteStat', 'restArrangementStat', 'allPartNames', 'gameInitResponse', 'allGameCards']),
       ufoStyle() {
         return {
           backgroundImage: 'url("static/img/indexpage/table.png")',
@@ -36,7 +38,7 @@
       }
     },
     created() {
-      Debugs.log('哈哈啊哈我来啦')
+
     },
     mounted: function () {
       const self = this;
@@ -58,7 +60,7 @@
     //todo:观察者;
 
     methods: {
-      ...mapActions(['PUSH_GAMES', 'SET_BOOKOPENED', 'SET_GAMETHEMETYPE', 'SET_MAGICBOOKBYGAMEINDEX', 'SET_SHOWMAGICBOOK', 'SET_INDEXPAGEINITIALSLIDE', 'SET_ALREADYHASONECARD', 'SET_ASSETSRESOURCES', 'SET_ALLASSETSPACKAGE', 'SET_ASSETSPAGES', 'SET_COMPLETEDLESSONNUM', 'SET_GAMEHASBEENCOMPLETED', 'SET_ENERGY', 'SET_ALLPARTNAMES', 'SET_GAMEINITRESPONSE', 'SET_ALLLESSONNUM', 'SET_GAMECARDS',
+      ...mapActions(['PUSH_GAMES', 'SET_BOOKOPENED', 'SET_GAMETHEMETYPE', 'SET_MAGICBOOKBYGAMEINDEX', 'SET_SHOWMAGICBOOK', 'SET_INDEXPAGEINITIALSLIDE', 'SET_ALREADYHASONECARD',  'SET_ALLASSETSPACKAGE', 'SET_ASSETSPAGES', 'SET_COMPLETEDLESSONNUM', 'SET_GAMEHASBEENCOMPLETED', 'SET_ENERGY', 'SET_ALLPARTNAMES', 'SET_GAMEINITRESPONSE', 'SET_ALLLESSONNUM', 'SET_GAMECARDS',
         'SET_PREPARATION', 'SET_LESSONPARTSINDEX',
         'SET_LESSONPARTSLIST', 'SET_BASEASSETSCOMPLETE', 'SET_LESSONCOMPLETESTAT', 'SET_RESTARRANGEMENTSTAT', 'SET_ALLLESSONCOMPONENTSNAMES']),
       gameInit(response) {
@@ -108,8 +110,9 @@
           self.SET_ALLLESSONCOMPONENTSNAMES(allComponentsNames);
           self.SET_LESSONCOMPLETESTAT(allEnergy);
           if (self.lessonPartsList.length == 0) {
-            //todo:一次性初始化
+            //todo:一次性初始化666
             self.SET_ALLASSETSPACKAGE(allComponentsNames);//资源包裹初始化，用于检测resource
+            Debugs.log('初始化成功')
           }
           self.SET_LESSONPARTSLIST(response.menus);
           self.SET_ALLPARTNAMES(self.slideLists);
@@ -124,6 +127,11 @@
           }
           self.SET_BOOKOPENED(getId_response.opened);
 
+          //是否完成了所有游戏；
+          if(getId_response.detail.length>=self.allLessonsNum){
+            Debugs.log('所有课程都已经完成了')
+          }
+
 
           //是否从游戏过来;
           if (getId_response.isOpenBook && getId_response.isOpenBook) {
@@ -136,21 +144,22 @@
 
       },
       getStuAnswerPromise() {
-        let isgo = true;
-        let getIdAlready = true;
+        const self = this;
+        // let isgo = true;
+        // let getIdAlready = true;
         return new Promise(function (resolve, reject) {
           window.parent.postMessage({
             type: "indexcomplete"
           }, "*");
           window.addEventListener('message', function (e) {
-            if (e.data.type === 'getId' && getIdAlready) {
-              getIdAlready = false;
+            if (e.data.type === 'getId' && self.getIdAlready) {
+              self.getIdAlready = false;
               resolve(e.data.stuAnswer);
             } else {
-              if (isgo) {
-                //var vConsole = new VConsole();
-                resolve({detail: [0,3,4], card: 1, opened: 1, isOpenBook: 0});
-                isgo = false;
+              if (self.isgo) {
+
+                resolve({detail: [], card: 1, opened: 1, isOpenBook: 0});
+                self.isgo = false;
               }
             }
           });
@@ -334,7 +343,7 @@
                   gameCtn.addChild(gameStartBtn);
                   gameStartBtn.on('pointertap', () => {
                     gameStartBtn.destroy();
-                    gameStartPage.destroy();
+                    gameStartPage.destroy(true);
                     gameBg.destroy();
                     PIXIAudio.audios.bgSound.play();
                     PIXIAudio.audios.bgSound.loop = -1;

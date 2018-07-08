@@ -322,9 +322,11 @@ class PixiScene1 extends PIXI.Container {
     this.gameMenuBar.updateGameMenu();
     GameMenuBars.freeze = false;
     setTimeout(()=>{
-      if(self.vueInstance.showMagicBook){
+      //回到首页自动翻书
+      if(self.vueInstance.showMagicBook && !GameMenuBars.gameHasOpendBook){
         self.swiperHammer.lock = true;
-        self.gameMenuBar.bookScene.openBook()
+        self.gameMenuBar.bookScene.openBook();
+        GameMenuBars.gameHasOpendBook = true;
       };
 
       if(self.vueInstance.bookOpened == 0 && self.vueInstance.gameHasBeenCompleted){

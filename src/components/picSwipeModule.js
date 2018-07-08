@@ -218,6 +218,10 @@ class PixiScene3 extends PIXI.Container {
       this.gameMenuBar.clearGameMenuEvents();
       this.gameMenuBar.destroy();
     }
+    this.removeAllListeners();
+    this.removeChildren();
+    this.destroy()
+    Debugs.log('picSwipeModule: destroyed')
 
   }
 }

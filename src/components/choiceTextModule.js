@@ -153,58 +153,43 @@ class ChoiceTextModule extends PIXI.Container {
         self.progressBar.progress = self.gameLevel;
         setTimeout(() => {
           if (self.gameLevel >= self.gameConfig.levels.length - 1) {
-
-            //开始设置清算界面逻辑全套;
-            self.vueInstance.$route.meta.completed = 1;
-            self.vueInstance.setOwnLessonComplete();
             if(self.gameAudio){
               self.soundButton.stop();
             }
 
-
-
-            //开始清算。。
+            //TODO:开始设置清算界面逻辑全套;
+            self.vueInstance.$route.meta.completed = 1;
+            self.vueInstance.setOwnLessonComplete();
             if (self.vueInstance.gameHasBeenCompleted == false) {
               window.parent.postMessage({
                 type: "stepSubmit",
                 page: self.vueInstance.lessonCurrentPageIndex
-
               }, "*");
             }
-            setTimeout(()=>{
-              let isQingsuan = self.vueInstance.$route.name==self.vueInstance.restArrangementStat[self.vueInstance.restArrangementStat.length-1];//开始清算;
-              if(isQingsuan && !self.vueInstance.gameHasBeenCompleted){
-                setTimeout(()=>{
-                  Debugs.log('清算页面开启，游戏未完成','gameCOmpleted?',self.vueInstance.gameHasBeenCompleted)
+            setTimeout(() => {
+              let isQingsuan = self.vueInstance.$route.name == self.vueInstance.restArrangementStat[self.vueInstance.restArrangementStat.length - 1];//开始清算;
+              setTimeout(() => {
+                if (isQingsuan && !self.vueInstance.gameHasBeenCompleted) {
+                  Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.vueInstance.gameHasBeenCompleted)
                   self.gameMenuBar.bookScene.openEnergyCan(false);
-                },self.vueInstance.showPopupDelay)
-                return;
-              }
-              setTimeout(()=>{
 
-                if(self.vueInstance.gameHasBeenCompleted){
+                } else if (isQingsuan == false && !self.vueInstance.gameHasBeenCompleted) {
                   self.vueInstance.showCongra = true;
-                  PIXIAudio.audios['win_jump'].play();
-                  Debugs.log('游戏完成并且卡片已经获得','gameCompleted?',self.vueInstance.gameHasBeenCompleted)
-                  return;
-                }
-                // if(self.vueInstance.gameHasBeenCompleted && !self.vueInstance.alreadyHasOneCard){
-                //   self.gameMenuBar.bookScene.openEnergyCan(true);
-                //   Debugs.log('游戏已经完成，但是没收集卡片')
-                // }
-                if(!self.vueInstance.gameHasBeenCompleted && isQingsuan==false){
-                  self.vueInstance.showCongra = true;
-
                   Debugs.log('游戏没有完成，并且也不是清算页')
-
                   PIXIAudio.audios['win_jump'].play();
-                };
-
-              },self.vueInstance.showPopupDelay);
+                }  else if (self.vueInstance.gameHasBeenCompleted && !self.vueInstance.gameSecondPlayed) {
+                  self.gameMenuBar.bookScene.openEnergyCan(true);
+                  PIXIAudio.audios['win_jump'].play();
+                  Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
+                }else if(self.vueInstance.gameHasBeenCompleted && self.vueInstance.gameSecondPlayed){
+                  self.vueInstance.showCongra = true;
+                  Debugs.log('游戏第二周目，继续玩')
+                  PIXIAudio.audios['win_jump'].play();
+                }
+              }, self.vueInstance.showPopupDelay);
               self.vueInstance.updateRestArrangementStat();
-
-            },2);
-            //开始设置清算界面逻辑全套---END;
+            }, 1);
+            //TODO:开始设置清算界面逻辑全套---END;
 
 
             self.progressBar.hideProgress()
@@ -550,6 +535,8 @@ class ChoiceTextModule extends PIXI.Container {
       this.gameMenuBar.clearGameMenuEvents();
       this.gameMenuBar.destroy();
     }
+    this.removeChildren();
+    this.destroy();
 
   }
 };

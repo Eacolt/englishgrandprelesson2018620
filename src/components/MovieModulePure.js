@@ -1,380 +1,568 @@
-import $ from 'jquery'
-import {TweenMax} from 'gsap'
-import MovieController from './gameui/MovieController.js'
-import {LoadingAnimation} from './gameui/GameManager.js'
-import {AudioManager, Debugs} from "./Utils";
 import GameMenuBars from "./gameui/GameMenuBar";
-
-// const PIXI = require('pixi.js')
-// require('pixi-spine')
-
+import {LoadingAnimation} from "./gameui/GameManager";
+import FormatDate from "dateformat";
+import {PIXIAudio} from "./EasyPIXI";
+import {Debugs} from "./Utils";
 
 class MovieModulePure extends PIXI.Container {
-  constructor($options) {
+  constructor($option) {
     super();
-    this.gameConfig = $options.json;
-    this.app = $options.app;
-
-
-
-    this.vueInstance = $options.vueInstance;
-
-
-
-    this.videoSprite = null;
-    this.videoDom = null;
-
-    this.videoIsComplete = false;
-
-    this.backBtn = this.homeBtn = null;
-    this.topMenuIsShow  = true;
-    this.topMenuFirstTimes = 0;
-
-    this.topMenuIsAnimating = false;
-
-    this.gameStat = 0;//0表示返回舞台，1表示观看中
-
     this.gameMenuBar = null;
+    this.vueInstance = $option.vueInstance;
+    this.myVideo = null;
+    this._G = {
+      headBtnIsDown: false,//娃娃头是否点击
+      progressPercent: 0,
+      progresslineHitArea: null,
+      movieBg:null,//背景；
+      hideProgressTime:41,//鼠标不触发点击多久后隐藏进度
+      getInterval_hideprogress:null,//间隔回调，点击隐藏进度,
+      progressIsHide:false,//初始化当前进度条是隐藏状态,
+      currentModeStatus:0, //当前所在都页面位置，0为准备页面，1为正在观看页面；
+      upperMaskFilter:null,//上部但黑条,
+      videoIsEnd:false
 
+    };
 
-
-
-    this.goplayBtn = null;
-    this.movieBg = null;
-
-    this.grandScene = null;
-    this.videoController = null;
-
-    //上部分导航回到过去的页面backbtn
-    this.upponMenu = null;
-    //todo:是否显示动画;
-    this.controllerIsShow = false;
-    //todo:当前切换模式,0:小窗,1:全屏;
-    this.currentMode = 0;
-    //控制器停留时间：5；
-    this.controllerStayTime = 5;
-
-
-
-
-    this.on('added', this.addedToStage, this)
+    this.on('added', this.initial, this);
   }
 
-  addedToStage() {
+  initial() {
     const self = this;
-    self.interactive = true;
-    this.grandScene = new PIXI.Container();
-    /**
-     *
-     * @上部分导航
-     */
-    this.upponMenu = new PIXI.Container();
+    //TODO：添加背景；
+    this._G.movieBg = new PIXI.Sprite(PIXI.loader.resources['moviebg'].texture);
+    this.addChild(this._G.movieBg);
+    this._G.movieBg.scale.x = this._G.movieBg.scale.y = 1;
+    this._G.movieBg.pivot.x = this._G.movieBg.width/2;
+    this._G.movieBg.pivot.y = this._G.movieBg.height/2;
+    this._G.movieBg.x = 1920/2;
+    this._G.movieBg.y = 1080/2;
+    //TODO:顶部导航逻辑-----
+    //GameMenuBars.freeze = false;
 
-    var upponMenuBg = new PIXI.Graphics();
-    upponMenuBg.beginFill(0x000000,0.6);
-    upponMenuBg.drawRect(0,0,1920,120);
-    upponMenuBg.endFill();
-    let shadow = new PIXI.filters.BlurFilter();
-    shadow.blurY = 30;
-    upponMenuBg.filters = [shadow]
-   // var backBtn = new PIXI.Sprite(PIXI.Texture.from("backBtn"));
-    this.upponMenu.addChild(upponMenuBg);
+    self.gameMenuBar = new GameMenuBars();
+    self.addChild(self.gameMenuBar);
 
-    this.upponMenu.y = -145;
-    /**
-     * @视屏实体
-     */
+    ////
+    self.gameMenuBar.setBackBtn_tapHandler(() => {
 
+      self.changeModeHome();
+      setTimeout(() => {
+        self.myVideo.pause();
+      }, 5);
+      self.hideProgressBar();
+      self.gameMenuBar.foldDown()
 
-    initVideo.call(self)
+      self.hideMovieBgAnime();
+      self._G.currentModeStatus = 0;
 
-    function initVideo(){
-      this.videoDom = document.getElementById('myVideo')
+    });
+    self.gameMenuBar.setHomeBtn_tapHandler(() => {
+      if (self.vueInstance.$route.meta.completed == 0) {
+        self.vueInstance.popupType = 'shutback';
+        self.vueInstance.showCongra = true;
+      } else {
+        setTimeout(() => {
+          self.vueInstance.$router.push('/index/')
+        }, 1000);
+        LoadingAnimation.setMaskShow(true);
 
+        let arr = self.vueInstance.$route.fullPath.split('/');
+        let index = self.vueInstance.allPartNames.indexOf(arr[2]);
+        self.vueInstance.SET_INDEXPAGEINITIALSLIDE(Number(index));
+      }
+    })
+    self.gameMenuBar.backBtnShow = false;
+    self.gameMenuBar.homeBtnShow = true;
+    self.gameMenuBar.bookBtnShow = false;
+    self.gameMenuBar.updateGameMenu();
 
-      this.videoSprite = new PIXI.Graphics();
-      this.videoSprite.beginFill(0xff0000,0);
-      this.videoSprite.drawRect(220,90,1920,1080);
-      this.videoSprite.endFill();
-      this.addChild(this.videoSprite);
-      this.videoSprite.interactive = true;
-      this.videoSprite.width = 1920 * 0.725;
-      this.videoSprite.height = 1080 * 0.725;
+    self.vueInstance.$watch(() => {
+      return self.vueInstance.energyCurrentNum
+    }, (newval) => {
+      this.gameMenuBar.energy = newval;
+      this.gameMenuBar.playStars();
+    });
 
-      this.videoSprite.pivot.x = -112
-      this.videoSprite.pivot.y = -69
-
-
-
-
-      this.movieBg = new PIXI.Sprite(PIXI.Texture.from("moviebg"));
-      this.movieBg.pivot.x = this.movieBg.width / 2;
-      this.movieBg.pivot.y = this.movieBg.height / 2;
-      this.movieBg.x = 1920 / 2;
-      this.movieBg.y = 1080 / 2;
-      this.grandScene.addChild(this.movieBg)
-      this.addChild(this.grandScene)
-      this.addChild(this.upponMenu);
-
-
-
-
-      this.goplayBtn = new PIXI.Sprite(PIXI.Texture.from("goplaybtn_png"));
-      this.addChild(this.goplayBtn)
-
-      this.goplayBtn.pivot.x = this.goplayBtn.width / 2;
-      this.goplayBtn.pivot.y = this.goplayBtn.height / 2;
-      this.goplayBtn.x = 1920 / 2;
-      this.goplayBtn.y = 1080 / 2;
-      this.goplayBtn.interactive = true;
-      this.goplayBtn.on('pointerdown', this.goplayBtnHandler, this);
+    self.vueInstance.$watch(() => {
+      return self.vueInstance.currentGameLevel
+    }, (newval) => {
+      if (newval > 0) {
+        self.gameMenuBar.backBtnShow = true;
+        self.gameMenuBar.homeBtnShow = true;
 
 
+      } else {
+        self.gameMenuBar.backBtnShow = false;
+        self.gameMenuBar.homeBtnShow = true;
 
-      //TODO:顶部导航逻辑-----
-      GameMenuBars.freeze = false;
-
-      self.gameMenuBar = new GameMenuBars();
-      self.addChild(self.gameMenuBar)
-      self.gameMenuBar.setBackBtn_tapHandler(()=>{
-        self.gobackHandler();
-      });
-      self.gameMenuBar.setHomeBtn_tapHandler(() => {
-        if (self.vueInstance.$route.meta.completed == 0) {
-          self.vueInstance.popupType = 'shutback';
-          self.vueInstance.showCongra = true;
-        } else {
-          setTimeout(() => {
-            self.vueInstance.$router.push('/index/')
-          }, 1000);
-          LoadingAnimation.setMaskShow(true)
-
-          let arr = self.vueInstance.$route.fullPath.split('/');
-          let index = self.vueInstance.allPartNames.indexOf(arr[2]);
-          self.vueInstance.SET_INDEXPAGEINITIALSLIDE(Number(index));
-
-        }
-      });
-      self.gameMenuBar.backBtnShow = false;
-      self.gameMenuBar.homeBtnShow = true;
-      self.gameMenuBar.bookBtnShow =false;
+      }
       self.gameMenuBar.updateGameMenu();
-      self.vueInstance.$watch(()=>{
-        return self.vueInstance.energyCurrentNum
-      },(newval)=>{
-        this.gameMenuBar.energy = newval;
-        this.gameMenuBar.playStars();
-      });
-      this.gameMenuBar.energyOnce = self.vueInstance.energyCurrentNum;
 
-    }
+    })
 
-
+    this.gameMenuBar.energyOnce = self.vueInstance.energyCurrentNum;
     //顶部导航逻辑END
-    this.videoDom.oncanplay = function(){
-      Debugs.log('oncanplay')
-    }
-    this.videoDom.onloadedmetadata = function(){
-      Debugs.log('onloadedmetadata')
-    }
-    this.videoDom.oncanplaythrough = function(){
-      Debugs.log('oncanplaythrough')
-    }
 
-    this.videoDom.addEventListener('loadedmetadata', this.videoCompleted.bind(this),this);
-    this.videoDom.addEventListener('canplaythrough',this.videoCompleted.bind(this),this)
 
 
   }
-  videoCompleted() {
+
+  toClockTime($second) {
+    if (Math.floor($second) == 0) {
+      return '00:00';
+    } else {
+      return FormatDate(Math.floor($second) * 1000, "MM:ss")
+    }
+  }
+
+  //TODO:当前为播放中
+  changeModeBack() {
     const self = this;
-
-    if (self.videoIsComplete == false) {
-
-      self.videoController = new MovieController({
-        gameConfig: self.gameConfig,
-        video: self.videoDom,
-        vueInstance:self.vueInstance,
-        gameMenu:self.gameMenuBar
-      });
-
-
-      self.videoSprite.interactive = true;
-      self.videoSprite.on('pointerdown',self.videoClickedHandler,self);
-      self.videoController.interactive = true;
-      self.videoController.on('pointermove',self.videoControllerHandler_pointermove,self);
-      self.videoController.on('pointerdown',self.videoControllerHandler_pointerdown,self)
-
-      self.addChild(self.videoController);
-      self.videoController.y = (1080 - 120)+125;
-
-    }
-    self.videoIsComplete = true;
-  }
-
-  videoControllerHandler_pointermove(){
-    this.controllerStayTime = 2;
-  }
-  videoControllerHandler_pointerdown(){
-    this.controllerStayTime = 2;
-  }
-
-  destroyed(){
-    this.gameMenuBar.clearGameMenuEvents();
-    this.gameMenuBar.destroy();
-    this.gameMenuBar = null;
-    this.videoDom.pause();
-    this.videoDom.removeEventListener('loadedmetadata', this.videoCompleted.bind(self))
-    this.videoController.clearAllDomListener();
-    this.videoSprite.removeListener('pointerdown',this.videoClickedHandler,this);
-    this.videoController.removeListener('pointermove',this.videoControllerHandler_pointermove,this);
-    this.videoController.removeListener('pointerdown',this.videoControllerHandler_pointerdown,this)
-    this.controllerStayTime = 0;
-  }
-  /**
-   * @点击视屏区域开启控件
-   */
-  videoClickedHandler(){
-
-    if(this.currentMode==0){
-      return;
-    }else{
-      this.controllerStayTime = 2;
-      this.showMovieControl.call(this)
-    }
-
-  }
-  /**
-   * @返回上一级按钮
-   */
-  gobackHandler(event){
-    if(this.topMenuIsAnimating)return;
-    this.topMenuIsAnimating = true;
-    this.smallerMovie.call(this);
-    this.hideMovieControl.call(this);
-    this.gameMenuBar.foldDown()
-
-    this.gameMenuBar.homeBtnShow = true;
-    this.gameMenuBar.backBtnShow = false;
-    this.gameMenuBar.updateGameMenu();
-
-    if(this.videoDom){
-      this.videoDom.pause();
-    }
-    this.gameStat = 0;
-  }
-
-  showAllMovie() {
-    const self = this;
-    TweenMax.to(this.movieBg.scale, 0.6, {x: 1.5, y: 1.5,onComplete:function(){
-      self.topMenuIsAnimating = false;
-      }});
-    TweenMax.to(this.movieBg, 0.5, {alpha: 0, delay: .3});
-
-
-    TweenMax.to(this.videoSprite, 0.3, {width: 1921, height: 1081, x: -338, y: -210});
-
-
     this.gameMenuBar.homeBtnShow = false;
     this.gameMenuBar.backBtnShow = true;
     this.gameMenuBar.updateGameMenu();
+    self.vueInstance.$refs.videoPlayBtn.style.opacity = 0;
+    self.vueInstance.$refs.videoPlayBtn.style.pointerEvents = 'none';
+
+    self._G.currentModeStatus = 1;
+
+  }
+
+  //TODO:当前会回到首页等待播放中
+  changeModeHome() {
+    const self = this;
+    this.gameMenuBar.homeBtnShow = true;
+    this.gameMenuBar.backBtnShow = false;
+    this.gameMenuBar.updateGameMenu();
+    self.vueInstance.$refs.videoPlayBtn.style.opacity = 1;
+    self.vueInstance.$refs.videoPlayBtn.style.pointerEvents = 'auto';
 
 
   }
 
-  smallerMovie() {
+  initProgressBar() {
     const self = this;
 
-    this.currentMode = 0;
-    TweenMax.to(this.movieBg.scale, 0.6, {x: 1, y: 1,onComplete:()=>{
-        self.goplayBtn.alpha = 1;
-        self.goplayBtn.interactive = true;
-        self.topMenuIsAnimating = false;
-      }});
-    TweenMax.to(this.movieBg, 0.3, {alpha: 1});
+    self._G.progressBarHeight = 120;//Container黑色区域高度
+    self._G.progresslineBgWidth = 1400;//播放进度条长度
+    self._G.progressBarCtn = new PIXI.Container();//设置进度条的Container；
+    self._G.progressHead = new PIXI.Sprite(PIXI.loader.resources['headbtn_png'].texture);//进度条标头
+    self._G.progressPlayBtn = new PIXI.Sprite();
+    self._G.progressBarBg = new PIXI.Graphics();//进度条背景
+
+    self._G.progresslineHitArea = null;
 
 
-
-    this.videoController.playbtn.texture = PIXI.Texture.from('pausebtn_png');
-    this.videoController.video.pause();
-    this.videoController.isPlaying = false;
-
-
-    TweenMax.to(this.videoSprite, 0.6, {width: 1921*0.725, height: 1081*0.725, x: 0, y: 0,delay:0.1});
-
-
-
-  }
-  showMovieControl(){
-    const self = this;
-
-    if(self.controllerIsShow)return;
-    self.controllerIsShow = true;
-    this.currentMode = 1;
-    if(self.videoController){
-      let settime =null;
-      self.controllerStayTime = 1;
-      TweenMax.to(self.videoController,0.4,{y:1080-120,onComplete:()=>{
-
-          settime = setInterval(()=>{
-            if(self.controllerStayTime<=0){
-              clearInterval(settime);
-              self.hideMovieControl.call(self);
-              settime = null;
-              return;
-            }
-            self.controllerStayTime--;
-          },1000)
+    self._G.videoTimeFormat = self.toClockTime(self.myVideo.currentTime) + " / " + self.toClockTime(self.myVideo.duration);
+    self._G.controlTimes = new PIXI.Text(self._G.videoTimeFormat, {
+      fontFamily: 'Arial',
+      fontSize: 32,
+      fontWeight: 'bold',
+      align: 'center',
+      fill: ['#ffffff'], // gradient
+      stroke: '#4a1850',
+      strokeThickness: 1,
+    });
 
 
-        }});
+    //设置背景黑色区域
+    self._G.progressBarBg.beginFill(0x000000, 0.6);
+    self._G.progressBarBg.drawRect(0, 0, 1920, self._G.progressBarHeight);
+    self._G.progressBarBg.endFill();
+    //设置播放时间的显示信息 ；
+    self._G.controlTimes.pivot.x = self._G.controlTimes.width;
+    self._G.controlTimes.pivot.y = self._G.controlTimes.height / 2;
+    self._G.controlTimes.x = 1920 - 60;
+    self._G.controlTimes.y = self._G.progressBarHeight / 2;
+    //设置Container；
 
-      TweenMax.to(self.upponMenu,0.4,{y:0});
+    self._G.progressBarCtn.y = 1080 - 120;
+    //设置播放按钮；
+    self._G.progressPlayBtn.interactive = true;
+    self._G.progressPlayBtn.texture = PIXI.loader.resources['pausebtn_png'].texture;
+    self._G.progressPlayBtn.pivot.y = self._G.progressPlayBtn.height / 2;
+    self._G.progressPlayBtn.y = self._G.progressBarHeight / 2;
+    self._G.progressPlayBtn.x = 60;
 
-        // self.vueInstance.$parent.$parent.$refs.gameMenu.foldDown();
-      self.gameMenuBar.foldDown()
-     // }
-      self.topMenuFirstTimes++;
+
+    //设置进度条；
+    self._G.progressbgline = new PIXI.Graphics();
+    //进度条边缘颜色
+    switch (GameMenuBars.vueInstance.gameThemeType) {
+      case 1:
+        self._G.progressbgline.lineStyle(4, 0xc34a8b)
+        break;
+      case 2:
+        self._G.progressbgline.lineStyle(4, 0xc6730f)
+        break;
+      case 3:
+        self._G.progressbgline.lineStyle(4, 0x3da44c)
+        break;
+      case 4:
+        self._G.progressbgline.lineStyle(4, 0x008bfb)
+        break;
+      case 5:
+        self._G.progressbgline.lineStyle(4, 0x9758ea)
+        break;
+      default:
+        break;
     }
 
-  }
-  hideMovieControl(){
-    const self = this;
+    self._G.progressbgline.beginFill(0xd1e0ee);
+    self._G.progressbgline.drawRoundedRect(0, 0, self._G.progresslineBgWidth, 18, 10);
+    self._G.progressbgline.endFill();
+    self._G.progressbgline.pivot.y = 9;
+    self._G.progressbgline.y = 60;
+    self._G.progressbgline.x = 190;
+    self._G.progressbgline.shadowBox = new PIXI.Graphics();
+    self._G.progressbgline.shadowBox.beginFill(0x000000, 0.5);
+    self._G.progressbgline.shadowBox.drawRoundedRect(0, 0, self._G.progresslineBgWidth, 18, 9);
+    self._G.progressbgline.shadowBox.endFill();
+    self._G.progressbgline.interactive = true;
+    let colorMatrix = new PIXI.filters.BlurFilter();
+    colorMatrix.blur = 5;
+    self._G.progressbgline.shadowBox.filters = [colorMatrix];
+    self._G.progressbgline.shadowBox.scale.y = 0.5;
 
-    if(self.videoController){
-      TweenMax.to(self.videoController,0.4,{y:1080-120+125})
-      //  self.videoController.y = (1080 - 120)+125;
+
+    ////
+
+    self._G.progressMaskBar = new PIXI.Graphics();
+    self._G.progressMaskBar.beginFill(0xd1e0ee);
+    self._G.progressMaskBar.drawRoundedRect(2, 2, self._G.progresslineBgWidth-4, 15, 9);
+    self._G.progressMaskBar.endFill();
+    self._G.progressMaskBar.x = self._G.progressbgline.x;
+    self._G.progressMaskBar.y = self._G.progressbgline.y-9.5;
+
+    self._G.playedProgressBar = new PIXI.Graphics();
+
+    //进度条内部颜色
+    switch (GameMenuBars.vueInstance.gameThemeType) {
+      case 1:
+        self._G.playedProgressBar.beginFill(0xe97aba);
+        break;
+      case 2:
+        self._G.playedProgressBar.beginFill(0xffd659);
+        break;
+      case 3:
+        self._G.playedProgressBar.beginFill(0x57e26a);
+        break;
+      case 4:
+        self._G.playedProgressBar.beginFill(0x00b2ff);
+        break;
+      case 5:
+        self._G.playedProgressBar.beginFill(0xc094f9);
+        break;
+      default:
+        break;
     }
-    if(self.videoController){
-      TweenMax.to(self.upponMenu,0.4,{y:-145,onComplete:function(){
-          self.controllerIsShow = false;
-          self.topMenuFirstTimes = 0;
 
-      }})
-      //  self.videoController.y = (1080 - 120)+125;
-    }
-    if(self.gameStat ==1){
-      // self.vueInstance.$parent.$parent.$refs.gameMenu.foldUpll();
+    self._G.playedProgressBar.drawRect(0, -18, self._G.progresslineBgWidth, 38);
+    self._G.playedProgressBar.endFill();
+    self._G.playedProgressBar.x = self._G.progressbgline.x;
+    self._G.playedProgressBar.y = self._G.progressbgline.y;
 
-      self.gameMenuBar.foldUp()
-    }
-  }
+    self._G.playedProgressBar.mask =self._G.progressMaskBar;
+    self._G.playedProgressBar.width = self._G.progresslineBgWidth * self._G.progressPercent;
 
 
 
-  goplayBtnHandler(event) {
-    if(this.topMenuIsAnimating)return;
-    this.topMenuIsAnimating = true;
-    event.currentTarget.interactive = false;
-    this.showAllMovie();
-    this.showMovieControl();
-    event.currentTarget.alpha = 0;
+
+
+    //设置娃娃头；
+    self._G.progressHead.x = 190;
+    self._G.progressHead.y = 26;
+    self._G.progressHead.interactive = true;
+
+
+    self._G.progresslineHitArea = new PIXI.Rectangle(0, -50, self._G.progresslineBgWidth, 100);
+    self._G.progressbgline.hitArea = self._G.progresslineHitArea;
+
+
+    self._G.progressBarCtn.addChild(self._G.progressBarBg)
+
+
+    self._G.progressBarCtn.addChild(self._G.controlTimes);
+    self._G.progressBarCtn.addChild(self._G.progressPlayBtn)
+
+    self._G.progressBarCtn.addChild( self._G.progressMaskBar);
+
+
+    self._G.progressBarCtn.addChild(self._G.progressbgline);
+    self._G.progressBarCtn.addChild(self._G.playedProgressBar);
+    self._G.progressBarCtn.addChild(self._G.progressHead);
+
+
+
+
+    this.addChild(self._G.progressBarCtn);
+    self._G.progressBarCtn.alpha = 0;
+    self._G.progressBarCtn.y = 1080+150;
+
+    //上部分头部黑色区域；
+
+    // self._G.upperMaskFilter = new PIXI.Graphics();
+    // self._G.upperMaskFilter.beginFill(0xff0000);
+    // self._G.upperMaskFilter.drawRect(0,0,1920,150);
+    // self._G.upperMaskFilter.endFill();
+    // let fl = new PIXI.filters.BlurYFilter();
+    // fl.blur = 30;
+    // fl.quality = 5;
+    // self._G.upperMaskFilter.filters = [fl];
     //
-    if(this.videoDom){
-      this.videoDom.play()
-    };
+    // self.addChild(self._G.upperMaskFilter)
 
-    this.gameStat = 1;
+
+    //EventHandler;
+
+    self.interactive = true;
+
+
+   // this.hideProgressBar(0)
+
+
+  }
+  initEvents(){
+    const self = this;
+
+    this.myVideo.ontimeupdate = this.videTimeupDateHandler.bind(self);
+    self._G.progressPlayBtn.on('pointertap', self.changeVideoStatus, self);
+    self._G.progressHead.on('pointerdown', self.progressHeadPointerDown_Hdr, self);
+    //self.on('pointerup', self.progressHeadPointerUp_Hdr, self);
+    self.on('pointermove', self.progressHeadPointerMove_Hdr, self);
+    self._G.progressHead.on('pointerupoutside', self.progressHeadPointerUp_Hdr, self);
+    self._G.progressHead.on('pointerup', self.progressHeadPointerUp_Hdr, self);
+    self._G.progressbgline.on('pointerdown', self.progresslineTap_Hdr, self);
+    self.on('pointertap',self.checkProgressTimeTask,self);
+    self.checkProgressTimeTask.call(self);
+
+
+  }
+
+  checkProgressTimeTask(){
+
+    const self = this;
+    if(self._G.progressIsHide){
+      self.showProgressBar()
+    }
+    let totalTime = self._G.hideProgressTime;
+
+    if(self._G && self._G.getInterval_hideprogress){
+      clearInterval(self._G.getInterval_hideprogress);
+    }
+    self._G.getInterval_hideprogress = setInterval(()=>{
+
+      if(totalTime<=0){
+
+        if(self._G && self._G.getInterval_hideprogress){
+          clearInterval(self._G.getInterval_hideprogress);
+        }
+
+        self.hideProgressBar()
+
+        return;
+      };
+
+      totalTime--;
+
+    },1000);
+  }
+
+
+  //清除Events以及一切;
+  destroyed() {
+    const self = this;
+    if (this._G.progressPlayBtn) {
+      this._G.progressPlayBtn.removeAllListeners()
+    }
+    if (this._G.progressHead) {
+      this._G.progressHead.removeAllListeners();
+    }
+    if (this._G.progressbgline) {
+      this._G.progressbgline.removeAllListeners();
+    }
+    if (this.myVideo) {
+      this.myVideo.ontimeupdate = null;
+    }
+    if(this._G.getInterval_hideprogress){
+      clearInterval(self._G.getInterval_hideprogress);
+      self._G.getInterval_hideprogress = null;
+    }
+    if(this.gameMenuBar){
+      this.gameMenuBar.clearGameMenuEvents();
+      this.gameMenuBar.destroy();
+    }
+    this.removeAllListeners();
+
+    this.myVideo = null;
+    this.vueInstance = null;
+    this._G = null;
+    this.removeChildren();
+    this.destroy();
+
+
+  }
+
+  //TODO:更改播放器播放状态；
+  changeVideoStatus() {
+    const self = this;
+    if (self.myVideo.paused) {
+      self.myVideo.play();
+      self._G.progressPlayBtn.texture = PIXI.loader.resources['pausebtn_png'].texture;
+    } else {
+      self.myVideo.pause();
+
+      self._G.progressPlayBtn.texture = PIXI.loader.resources['playbtn_png'].texture;
+    }
+  }
+
+  progressHeadPointerDown_Hdr() {
+    this._G.headBtnIsDown = true;
+    this.myVideo.pause();
+
+
+  }
+
+  progressHeadPointerUp_Hdr() {
+    if(this._G.currentModeStatus==0)return;
+    this._G.headBtnIsDown = false;
+
+    this.myVideo.play();
+  }
+
+  //TODO:滑动进度播放娃娃头触发
+  progressHeadPointerMove_Hdr(event) {
+    if (this._G.headBtnIsDown) {
+      this.checkProgressTimeTask();
+
+      this.myVideo.pause();
+
+      let moved = event.data.getLocalPosition(this._G.progressbgline).x;
+
+      if (moved >= 10 && moved < this._G.progresslineBgWidth-10) {
+
+
+        this._G.progressPercent = moved / this._G.progresslineBgWidth;
+        this._G.progressHead.x = moved - (this._G.progressHead.width / 2 - 25)+190;
+        this.myVideo.currentTime = this._G.progressPercent * this.myVideo.duration;
+        this._G.playedProgressBar.width = (this.myVideo.currentTime / this.myVideo.duration + 0.01) * this._G.progresslineBgWidth;
+
+      }
+
+    }
+
+  }
+
+  //TODO:点击设置当前播放位置
+  progresslineTap_Hdr(event) {
+
+
+    this.myVideo.play();
+
+    let moved = event.data.getLocalPosition(this._G.progressbgline).x;
+
+    if (moved >= 0 && moved < this._G.progresslineBgWidth) {
+
+
+      this._G.progressPercent = moved / this._G.progresslineBgWidth;
+      this._G.progressHead.x = moved - this._G.progressHead.width / 2+190;
+      this.myVideo.currentTime = this._G.progressPercent * this.myVideo.duration;
+
+    }
+
+
+  }
+  //TODO:展现背景过度动画；
+  showMovieBgAnime($time=.5){
+    TweenMax.to(this._G.movieBg.scale,$time,{x:1.5})
+    TweenMax.to(this._G.movieBg.scale,$time,{y:1.5})
+    TweenMax.to(this._G.movieBg,$time,{alpha:0})
+  }
+  hideMovieBgAnime($time=.5){
+    TweenMax.to(this._G.movieBg.scale,$time,{x:1})
+    TweenMax.to(this._G.movieBg.scale,$time,{y:1})
+    TweenMax.to(this._G.movieBg,$time,{alpha:1})
+  }
+  hideProgressBar($time=0.5){
+    const self = this;
+    self.gameMenuBar.foldUp()
+    if(self._G.progressBarCtn){
+      TweenMax.to(self._G.progressBarCtn,$time,{y:1080+150})
+      TweenMax.to(self._G.progressBarCtn,$time,{alpha:0,onComplete:()=>{
+          self._G.progressIsHide = true;
+        }});
+    }
+
+  }
+
+  showProgressBar($time=0.5){
+    const self = this;
+    if( self._G.currentModeStatus ==0){
+
+      return;
+    }
+    self.gameMenuBar.foldDown()
+    if(self._G.progressBarCtn){
+      TweenMax.to(self._G.progressBarCtn,$time,{y:1080-120})
+      TweenMax.to(self._G.progressBarCtn,$time,{alpha:1,onComplete:()=>{
+        self._G.progressIsHide = false;
+        }})
+    }
+
+
+  }
+
+  videTimeupDateHandler() {
+    const self = this;
+    if (self.myVideo.paused) return;
+    if(self._G.videoIsEnd)return;
+    self._G.videoTimeFormat = self.toClockTime(self.myVideo.currentTime) + " / " + self.toClockTime(self.myVideo.duration);
+    self._G.controlTimes.text = self._G.videoTimeFormat;
+    self._G.progressHead.x = (self.myVideo.currentTime / self.myVideo.duration) * (self._G.progresslineBgWidth - self._G.progressHead.width +30)+190;
+
+    self._G.playedProgressBar.width = (self.myVideo.currentTime / self.myVideo.duration + 0.01) * self._G.progresslineBgWidth;
+
+
+    //显示完成;
+    if (Math.floor(this.myVideo.currentTime) >= Math.floor(this.myVideo.duration)) {
+      self._G.videoIsEnd = true;
+
+
+//TODO:开始设置清算界面逻辑全套;
+      self.vueInstance.$route.meta.completed = 1;
+      self.vueInstance.setOwnLessonComplete();
+      if (self.vueInstance.gameHasBeenCompleted == false) {
+        window.parent.postMessage({
+          type: "stepSubmit",
+          page: self.vueInstance.lessonCurrentPageIndex
+        }, "*");
+      }
+      setTimeout(() => {
+        let isQingsuan = self.vueInstance.$route.name == self.vueInstance.restArrangementStat[self.vueInstance.restArrangementStat.length - 1];//开始清算;
+        setTimeout(() => {
+          if (isQingsuan && !self.vueInstance.gameHasBeenCompleted) {
+            Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.vueInstance.gameHasBeenCompleted)
+            self.gameMenuBar.bookScene.openEnergyCan(false);
+
+          } else if (isQingsuan == false && !self.vueInstance.gameHasBeenCompleted) {
+            self.vueInstance.showCongra = true;
+            Debugs.log('游戏没有完成，并且也不是清算页')
+            PIXIAudio.audios['win_jump'].play();
+          }  else if (self.vueInstance.gameHasBeenCompleted && !self.vueInstance.gameSecondPlayed) {
+            self.gameMenuBar.bookScene.openEnergyCan(true);
+            PIXIAudio.audios['win_jump'].play();
+            Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
+          }else if(self.vueInstance.gameHasBeenCompleted && self.vueInstance.gameSecondPlayed){
+            self.vueInstance.showCongra = true;
+            Debugs.log('游戏第二周目，继续玩')
+            PIXIAudio.audios['win_jump'].play();
+          }
+        }, self.vueInstance.showPopupDelay);
+        self.vueInstance.updateRestArrangementStat();
+      }, 1);
+      //TODO:开始设置清算界面逻辑全套---END;
+    }
   }
 }
 

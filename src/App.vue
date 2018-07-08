@@ -21,6 +21,8 @@
 
   import {LoadingAnimation} from './components/gameui/GameManager.js'
   import masker from './components/masker.vue'
+  import {Broswer} from "./components/EasyPIXI";
+  import Bowser from 'bowser'
 
   import 'swiper/dist/css/swiper.css'
 
@@ -31,7 +33,7 @@
   export default {
     name: 'App',
     created() {
-      new VConsole();
+     // new VConsole();
       Debugs.locked = false;
       document.oncontextmenu = function(){
         return false;
@@ -53,22 +55,18 @@
       this.SET_CURRENTPAGE(1);
       GameHand.init();
       GameHand.setAnimation('normal')
-      if (IsPC()==true) {
-        self.SET_PLATFORM('pc');
-        GameHand.hand.css('visibility', 'visible')
-      } else if (bowser.mobile) {
+      if (Bowser.mobile ) {
         self.SET_PLATFORM('mobile');
         GameHand.hand.css('visibility', 'hidden')
+      } else {
+        self.SET_PLATFORM('pc');
+        GameHand.hand.css('visibility', 'visible')
       }
-      function IsPC(){
-        var userAgentInfo = navigator.userAgent;
-        var Agents = new Array("Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod");
-        var flag = true;
-        for (var v = 0; v < Agents.length; v++) {
-          if (userAgentInfo.indexOf(Agents[v]) > 0) { flag = false; break; }
-        }
-        return flag;
-      }
+
+      Debugs.log(navigator.userAgent)
+      Debugs.log(Bowser)
+      Debugs.log('iphoneX:',navigator.userAgent.indexOf('Mac OS X')>0)
+
 
       document.documentElement.addEventListener('mousedown',handDown);
       document.documentElement.addEventListener('mouseup',handUp);

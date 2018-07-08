@@ -6,10 +6,10 @@
                  @enter="enter"
                  @leave="leave">
       <congraPopup :showType="popupType" v-if="showCongra"
-                   @quitGame="quitGame()"
-                   @continueGame="continueGame()"
-                   @continueClicked="clickContinue()"
-                   @againClicked="againClicked"></congraPopup>
+                   @quitGame.once="quitGame_hdr()"
+                   @continueGame.once="continueGame_hdr()"
+                   @continueClicked.once="clickContinue_hdr()"
+                   @againClicked.once="againClicked_hdr"></congraPopup>
     </transition>
   </div>
 
@@ -48,19 +48,19 @@
 
 
     computed:{
-      ...mapState(['lessonPartsIndex','alreadyHasOneCard','showPopupDelay','allPartNames','lessonPartsList','assetsPages','assetsGameConfig', 'assetsResources','completedLessonNum','allLessonsNum','allLessonComponentsNames','restArrangementStat','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
+      ...mapState(['lessonPartsIndex','gameSecondPlayed','alreadyHasOneCard','showPopupDelay','allPartNames','lessonPartsList','assetsPages','completedLessonNum','allLessonsNum','allLessonComponentsNames','restArrangementStat','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
 
     },
     components:{congraPopup},
     methods: {
-      ...mapActions(['SET_CANVASPAGE','SET_INDEXPAGEINITIALSLIDE','SET_ASSETSPAGES','SET_ASSETSRESOURCES','SET_ASSETSGAMECONFIG', 'PUSH_GAMES','SET_LESSONCOMPLETESTAT','SET_RESTARRANGEMENTSTAT','SET_LESSONCURRENTPAGEINDEX']),
-      againClicked(){
+      ...mapActions(['SET_CANVASPAGE','SET_INDEXPAGEINITIALSLIDE','SET_ASSETSPAGES','PUSH_GAMES','SET_LESSONCOMPLETESTAT','SET_RESTARRANGEMENTSTAT','SET_LESSONCURRENTPAGEINDEX']),
+      againClicked_hdr(){
         if(pixiScene){
           //this.$parent.$parent.$refs.gameMenu.showGrandMask = false;
           pixiScene.playAgain()
         }
       },
-      clickContinue(){
+      clickContinue_hdr(){
 
         if(pixiScene){
         //  this.$parent.$parent.$refs.gameMenu.showGrandMask = false;
@@ -69,7 +69,7 @@
         }
 
       },
-      quitGame(){
+      quitGame_hdr(){
         const self = this;
         setTimeout(() => {
           self.$router.push('/index/')
@@ -82,7 +82,7 @@
       },
 
 
-      continueGame(){
+      continueGame_hdr(){
         this.showCongra = false;
       },
 
