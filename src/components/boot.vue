@@ -5,18 +5,11 @@
 
 </template>
 <script>
-  import Vue from 'vue'
-  import $ from 'jquery'
   import {mapActions, mapState} from 'vuex'
-  import IndexPage from './indexpage.js'
-  import GameHand from './gameui/Gamehand.js'
   import {LoadingAnimation} from './gameui/GameManager.js'
-  import {Debugs, myVueMixin, TextureCache, AudioManager} from "./Utils";
+  import {Debugs, myVueMixin} from "./Utils";
   import {PIXIAudio} from "./EasyPIXI";
   import {TweenMax} from 'gsap'
-  import GameMenuBars from './gameui/GameMenuBar.js'
-
-
   export default {
     name: "module1",
     mixins: [myVueMixin],
@@ -146,8 +139,6 @@
       },
       getStuAnswerPromise() {
         const self = this;
-        // let isgo = true;
-        // let getIdAlready = true;
         return new Promise(function (resolve, reject) {
           window.parent.postMessage({
             type: "indexcomplete"
@@ -159,7 +150,7 @@
             } else {
               if (self.isgo) {
 
-                resolve({detail: [0,1,2,3,4], card: 1, opened: 1, isOpenBook: 0});
+                resolve({detail: [], card: 1, opened: 1, isOpenBook: 0});
                 self.isgo = false;
               }
             }
