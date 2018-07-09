@@ -170,14 +170,14 @@
               self.showCongra = true;
               Debugs.log('游戏没有完成，并且也不是清算页')
               PIXIAudio.audios['win_jump'].play();
-            }  else if (self.gameHasBeenCompleted && !self.gameSecondPlayed) {
-              self.gameMenuBar.bookScene.openEnergyCan(true);
-              PIXIAudio.audios['win_jump'].play();
-              Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.gameHasBeenCompleted)
             }else if(self.gameHasBeenCompleted && self.gameSecondPlayed){
               self.showCongra = true;
               Debugs.log('游戏第二周目，继续玩')
               PIXIAudio.audios['win_jump'].play();
+            }  else if (self.gameHasBeenCompleted && !self.gameSecondPlayed) {
+              self.gameMenuBar.bookScene.openEnergyCan(true);
+              PIXIAudio.audios['win_jump'].play();
+              Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.gameHasBeenCompleted)
             }
           }, self.showPopupDelay);
           self.updateRestArrangementStat();

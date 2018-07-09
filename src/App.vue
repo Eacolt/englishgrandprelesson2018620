@@ -40,7 +40,7 @@
       }
       document.onmousedown = function(e){
         if ( e.which == 2 ){// 鼠标滚轮的按下，滚动不触发
-          return false;
+          return false;12
         }
         if( e.which==3 ){// 鼠标右键
           return false;

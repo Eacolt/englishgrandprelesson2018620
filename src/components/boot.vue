@@ -60,7 +60,7 @@
     //todo:观察者;
 
     methods: {
-      ...mapActions(['PUSH_GAMES', 'SET_BOOKOPENED', 'SET_GAMETHEMETYPE', 'SET_MAGICBOOKBYGAMEINDEX', 'SET_SHOWMAGICBOOK', 'SET_INDEXPAGEINITIALSLIDE', 'SET_ALREADYHASONECARD',  'SET_ALLASSETSPACKAGE', 'SET_ASSETSPAGES', 'SET_COMPLETEDLESSONNUM', 'SET_GAMEHASBEENCOMPLETED', 'SET_ENERGY', 'SET_ALLPARTNAMES', 'SET_GAMEINITRESPONSE', 'SET_ALLLESSONNUM', 'SET_GAMECARDS',
+      ...mapActions(['PUSH_GAMES', 'SET_BOOKOPENED', 'SET_GAMESECONDPLAYED','SET_GAMETHEMETYPE', 'SET_MAGICBOOKBYGAMEINDEX', 'SET_SHOWMAGICBOOK', 'SET_INDEXPAGEINITIALSLIDE', 'SET_ALREADYHASONECARD',  'SET_ALLASSETSPACKAGE', 'SET_ASSETSPAGES', 'SET_COMPLETEDLESSONNUM', 'SET_GAMEHASBEENCOMPLETED', 'SET_ENERGY', 'SET_ALLPARTNAMES', 'SET_GAMEINITRESPONSE', 'SET_ALLLESSONNUM', 'SET_GAMECARDS',
         'SET_PREPARATION', 'SET_LESSONPARTSINDEX',
         'SET_LESSONPARTSLIST', 'SET_BASEASSETSCOMPLETE', 'SET_LESSONCOMPLETESTAT', 'SET_RESTARRANGEMENTSTAT', 'SET_ALLLESSONCOMPONENTSNAMES']),
       gameInit(response) {
@@ -130,6 +130,7 @@
           //是否完成了所有游戏；
           if(getId_response.detail.length>=self.allLessonsNum){
             Debugs.log('所有课程都已经完成了')
+            self.SET_GAMESECONDPLAYED(true);//
           }
 
 
@@ -158,7 +159,7 @@
             } else {
               if (self.isgo) {
 
-                resolve({detail: [], card: 1, opened: 1, isOpenBook: 0});
+                resolve({detail: [0,1,2,3,4], card: 1, opened: 1, isOpenBook: 0});
                 self.isgo = false;
               }
             }
