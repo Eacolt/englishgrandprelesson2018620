@@ -164,7 +164,8 @@
           setTimeout(() => {
             if (isQingsuan && !self.gameHasBeenCompleted) {
               Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.gameHasBeenCompleted)
-              self.gameMenuBar.bookScene.openEnergyCan(false);
+              // self.gameMenuBar.bookScene.openEnergyCan(false);
+              self.openEnergyed = 0;
 
             } else if (isQingsuan == false && !self.gameHasBeenCompleted) {
               self.showCongra = true;
@@ -175,7 +176,7 @@
               Debugs.log('游戏第二周目，继续玩')
               PIXIAudio.audios['win_jump'].play();
             }  else if (self.gameHasBeenCompleted && !self.gameSecondPlayed) {
-              self.gameMenuBar.bookScene.openEnergyCan(true);
+              self.openEnergyed = 1;
               PIXIAudio.audios['win_jump'].play();
               Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.gameHasBeenCompleted)
             }

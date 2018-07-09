@@ -34,7 +34,7 @@
     name: 'App',
     created() {
      // new VConsole();
-      Debugs.locked = false;
+      Debugs.locked = true;
       document.oncontextmenu = function(){
         return false;
       }
