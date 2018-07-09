@@ -14,13 +14,13 @@ class MovieModulePure extends PIXI.Container {
       headBtnIsDown: false,//娃娃头是否点击
       progressPercent: 0,
       progresslineHitArea: null,
-      movieBg:null,//背景；
-      hideProgressTime:41,//鼠标不触发点击多久后隐藏进度
-      getInterval_hideprogress:null,//间隔回调，点击隐藏进度,
-      progressIsHide:false,//初始化当前进度条是隐藏状态,
-      currentModeStatus:0, //当前所在都页面位置，0为准备页面，1为正在观看页面；
-      upperMaskFilter:null,//上部但黑条,
-      videoIsEnd:false
+      movieBg: null,//背景；
+      hideProgressTime: 41,//鼠标不触发点击多久后隐藏进度
+      getInterval_hideprogress: null,//间隔回调，点击隐藏进度,
+      progressIsHide: false,//初始化当前进度条是隐藏状态,
+      currentModeStatus: 0, //当前所在都页面位置，0为准备页面，1为正在观看页面；
+      upperMaskFilter: null,//上部但黑条,
+      videoIsEnd: false
 
     };
 
@@ -33,10 +33,10 @@ class MovieModulePure extends PIXI.Container {
     this._G.movieBg = new PIXI.Sprite(PIXI.loader.resources['moviebg'].texture);
     this.addChild(this._G.movieBg);
     this._G.movieBg.scale.x = this._G.movieBg.scale.y = 1;
-    this._G.movieBg.pivot.x = this._G.movieBg.width/2;
-    this._G.movieBg.pivot.y = this._G.movieBg.height/2;
-    this._G.movieBg.x = 1920/2;
-    this._G.movieBg.y = 1080/2;
+    this._G.movieBg.pivot.x = this._G.movieBg.width / 2;
+    this._G.movieBg.pivot.y = this._G.movieBg.height / 2;
+    this._G.movieBg.x = 1920 / 2;
+    this._G.movieBg.y = 1080 / 2;
     //TODO:顶部导航逻辑-----
     //GameMenuBars.freeze = false;
 
@@ -103,7 +103,6 @@ class MovieModulePure extends PIXI.Container {
 
     this.gameMenuBar.energyOnce = self.vueInstance.energyCurrentNum;
     //顶部导航逻辑END
-
 
 
   }
@@ -230,10 +229,10 @@ class MovieModulePure extends PIXI.Container {
 
     self._G.progressMaskBar = new PIXI.Graphics();
     self._G.progressMaskBar.beginFill(0xd1e0ee);
-    self._G.progressMaskBar.drawRoundedRect(2, 2, self._G.progresslineBgWidth-4, 15, 9);
+    self._G.progressMaskBar.drawRoundedRect(2, 2, self._G.progresslineBgWidth - 4, 15, 9);
     self._G.progressMaskBar.endFill();
     self._G.progressMaskBar.x = self._G.progressbgline.x;
-    self._G.progressMaskBar.y = self._G.progressbgline.y-9.5;
+    self._G.progressMaskBar.y = self._G.progressbgline.y - 9.5;
 
     self._G.playedProgressBar = new PIXI.Graphics();
 
@@ -263,11 +262,8 @@ class MovieModulePure extends PIXI.Container {
     self._G.playedProgressBar.x = self._G.progressbgline.x;
     self._G.playedProgressBar.y = self._G.progressbgline.y;
 
-    self._G.playedProgressBar.mask =self._G.progressMaskBar;
+    self._G.playedProgressBar.mask = self._G.progressMaskBar;
     self._G.playedProgressBar.width = self._G.progresslineBgWidth * self._G.progressPercent;
-
-
-
 
 
     //设置娃娃头；
@@ -286,7 +282,7 @@ class MovieModulePure extends PIXI.Container {
     self._G.progressBarCtn.addChild(self._G.controlTimes);
     self._G.progressBarCtn.addChild(self._G.progressPlayBtn)
 
-    self._G.progressBarCtn.addChild( self._G.progressMaskBar);
+    self._G.progressBarCtn.addChild(self._G.progressMaskBar);
 
 
     self._G.progressBarCtn.addChild(self._G.progressbgline);
@@ -294,11 +290,9 @@ class MovieModulePure extends PIXI.Container {
     self._G.progressBarCtn.addChild(self._G.progressHead);
 
 
-
-
     this.addChild(self._G.progressBarCtn);
     self._G.progressBarCtn.alpha = 0;
-    self._G.progressBarCtn.y = 1080+150;
+    self._G.progressBarCtn.y = 1080 + 150;
 
     //上部分头部黑色区域；
 
@@ -319,11 +313,12 @@ class MovieModulePure extends PIXI.Container {
     self.interactive = true;
 
 
-   // this.hideProgressBar(0)
+    // this.hideProgressBar(0)
 
 
   }
-  initEvents(){
+
+  initEvents() {
     const self = this;
 
     this.myVideo.ontimeupdate = this.videTimeupDateHandler.bind(self);
@@ -334,39 +329,40 @@ class MovieModulePure extends PIXI.Container {
     self._G.progressHead.on('pointerupoutside', self.progressHeadPointerUp_Hdr, self);
     self._G.progressHead.on('pointerup', self.progressHeadPointerUp_Hdr, self);
     self._G.progressbgline.on('pointerdown', self.progresslineTap_Hdr, self);
-    self.on('pointertap',self.checkProgressTimeTask,self);
+    self.on('pointertap', self.checkProgressTimeTask, self);
     self.checkProgressTimeTask.call(self);
 
 
   }
 
-  checkProgressTimeTask(){
+  checkProgressTimeTask() {
 
     const self = this;
-    if(self._G.progressIsHide){
+    if (self._G.progressIsHide) {
       self.showProgressBar()
     }
     let totalTime = self._G.hideProgressTime;
 
-    if(self._G && self._G.getInterval_hideprogress){
+    if (self._G && self._G.getInterval_hideprogress) {
       clearInterval(self._G.getInterval_hideprogress);
     }
-    self._G.getInterval_hideprogress = setInterval(()=>{
+    self._G.getInterval_hideprogress = setInterval(() => {
 
-      if(totalTime<=0){
+      if (totalTime <= 0) {
 
-        if(self._G && self._G.getInterval_hideprogress){
+        if (self._G && self._G.getInterval_hideprogress) {
           clearInterval(self._G.getInterval_hideprogress);
         }
 
         self.hideProgressBar()
 
         return;
-      };
+      }
+      ;
 
       totalTime--;
 
-    },1000);
+    }, 1000);
   }
 
 
@@ -385,11 +381,11 @@ class MovieModulePure extends PIXI.Container {
     if (this.myVideo) {
       this.myVideo.ontimeupdate = null;
     }
-    if(this._G.getInterval_hideprogress){
+    if (this._G.getInterval_hideprogress) {
       clearInterval(self._G.getInterval_hideprogress);
       self._G.getInterval_hideprogress = null;
     }
-    if(this.gameMenuBar){
+    if (this.gameMenuBar) {
       this.gameMenuBar.clearGameMenuEvents();
       this.gameMenuBar.destroy();
     }
@@ -425,7 +421,7 @@ class MovieModulePure extends PIXI.Container {
   }
 
   progressHeadPointerUp_Hdr() {
-    if(this._G.currentModeStatus==0)return;
+    if (this._G.currentModeStatus == 0) return;
     this._G.headBtnIsDown = false;
 
     this.myVideo.play();
@@ -440,11 +436,11 @@ class MovieModulePure extends PIXI.Container {
 
       let moved = event.data.getLocalPosition(this._G.progressbgline).x;
 
-      if (moved >= 10 && moved < this._G.progresslineBgWidth-10) {
+      if (moved >= 10 && moved < this._G.progresslineBgWidth - 10) {
 
 
         this._G.progressPercent = moved / this._G.progresslineBgWidth;
-        this._G.progressHead.x = moved - (this._G.progressHead.width / 2 - 25)+190;
+        this._G.progressHead.x = moved - (this._G.progressHead.width / 2 - 25) + 190;
         this.myVideo.currentTime = this._G.progressPercent * this.myVideo.duration;
         this._G.playedProgressBar.width = (this.myVideo.currentTime / this.myVideo.duration + 0.01) * this._G.progresslineBgWidth;
 
@@ -466,48 +462,55 @@ class MovieModulePure extends PIXI.Container {
 
 
       this._G.progressPercent = moved / this._G.progresslineBgWidth;
-      this._G.progressHead.x = moved - this._G.progressHead.width / 2+190;
+      this._G.progressHead.x = moved - this._G.progressHead.width / 2 + 190;
       this.myVideo.currentTime = this._G.progressPercent * this.myVideo.duration;
 
     }
 
 
   }
+
   //TODO:展现背景过度动画；
-  showMovieBgAnime($time=.5){
-    TweenMax.to(this._G.movieBg.scale,$time,{x:1.5})
-    TweenMax.to(this._G.movieBg.scale,$time,{y:1.5})
-    TweenMax.to(this._G.movieBg,$time,{alpha:0})
+  showMovieBgAnime($time = .5) {
+    TweenMax.to(this._G.movieBg.scale, $time, {x: 1.5})
+    TweenMax.to(this._G.movieBg.scale, $time, {y: 1.5})
+    TweenMax.to(this._G.movieBg, $time, {alpha: 0})
   }
-  hideMovieBgAnime($time=.5){
-    TweenMax.to(this._G.movieBg.scale,$time,{x:1})
-    TweenMax.to(this._G.movieBg.scale,$time,{y:1})
-    TweenMax.to(this._G.movieBg,$time,{alpha:1})
+
+  hideMovieBgAnime($time = .5) {
+    TweenMax.to(this._G.movieBg.scale, $time, {x: 1})
+    TweenMax.to(this._G.movieBg.scale, $time, {y: 1})
+    TweenMax.to(this._G.movieBg, $time, {alpha: 1})
   }
-  hideProgressBar($time=0.5){
+
+  hideProgressBar($time = 0.5) {
     const self = this;
     self.gameMenuBar.foldUp()
-    if(self._G.progressBarCtn){
-      TweenMax.to(self._G.progressBarCtn,$time,{y:1080+150})
-      TweenMax.to(self._G.progressBarCtn,$time,{alpha:0,onComplete:()=>{
+    if (self._G.progressBarCtn) {
+      TweenMax.to(self._G.progressBarCtn, $time, {y: 1080 + 150})
+      TweenMax.to(self._G.progressBarCtn, $time, {
+        alpha: 0, onComplete: () => {
           self._G.progressIsHide = true;
-        }});
+        }
+      });
     }
 
   }
 
-  showProgressBar($time=0.5){
+  showProgressBar($time = 0.5) {
     const self = this;
-    if( self._G.currentModeStatus ==0){
+    if (self._G.currentModeStatus == 0) {
 
       return;
     }
     self.gameMenuBar.foldDown()
-    if(self._G.progressBarCtn){
-      TweenMax.to(self._G.progressBarCtn,$time,{y:1080-120})
-      TweenMax.to(self._G.progressBarCtn,$time,{alpha:1,onComplete:()=>{
-        self._G.progressIsHide = false;
-        }})
+    if (self._G.progressBarCtn) {
+      TweenMax.to(self._G.progressBarCtn, $time, {y: 1080 - 120})
+      TweenMax.to(self._G.progressBarCtn, $time, {
+        alpha: 1, onComplete: () => {
+          self._G.progressIsHide = false;
+        }
+      })
     }
 
 
@@ -516,53 +519,61 @@ class MovieModulePure extends PIXI.Container {
   videTimeupDateHandler() {
     const self = this;
     if (self.myVideo.paused) return;
-    if(self._G.videoIsEnd)return;
+
     self._G.videoTimeFormat = self.toClockTime(self.myVideo.currentTime) + " / " + self.toClockTime(self.myVideo.duration);
     self._G.controlTimes.text = self._G.videoTimeFormat;
-    self._G.progressHead.x = (self.myVideo.currentTime / self.myVideo.duration) * (self._G.progresslineBgWidth - self._G.progressHead.width +30)+190;
+    self._G.progressHead.x = (self.myVideo.currentTime / self.myVideo.duration) * (self._G.progresslineBgWidth - self._G.progressHead.width + 30) + 190;
 
     self._G.playedProgressBar.width = (self.myVideo.currentTime / self.myVideo.duration + 0.01) * self._G.progresslineBgWidth;
 
 
     //显示完成;
-    if (Math.floor(this.myVideo.currentTime) >= Math.floor(this.myVideo.duration)) {
-      self._G.videoIsEnd = true;
+    if (Math.floor(this.myVideo.currentTime) >= Math.floor(this.myVideo.duration)-2) {
+      if(!self._G.videoIsEnd){
+        this.againStar.call(self);
+        self._G.videoIsEnd = true;
+      }
 
+
+    }
+  }
+
+  againStar() {
+    const self = this;
 
 //TODO:开始设置清算界面逻辑全套;
-      self.vueInstance.$route.meta.completed = 1;
-      self.vueInstance.setOwnLessonComplete();
-      if (self.vueInstance.gameHasBeenCompleted == false) {
-        window.parent.postMessage({
-          type: "stepSubmit",
-          page: self.vueInstance.lessonCurrentPageIndex
-        }, "*");
-      }
-      setTimeout(() => {
-        let isQingsuan = self.vueInstance.$route.name == self.vueInstance.restArrangementStat[self.vueInstance.restArrangementStat.length - 1];//开始清算;
-        setTimeout(() => {
-          if (isQingsuan && !self.vueInstance.gameHasBeenCompleted) {
-            Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.vueInstance.gameHasBeenCompleted)
-            self.gameMenuBar.bookScene.openEnergyCan(false);
-
-          } else if (isQingsuan == false && !self.vueInstance.gameHasBeenCompleted) {
-            self.vueInstance.showCongra = true;
-            Debugs.log('游戏没有完成，并且也不是清算页')
-            PIXIAudio.audios['win_jump'].play();
-          }else if(self.vueInstance.gameHasBeenCompleted && self.vueInstance.gameSecondPlayed){
-            self.vueInstance.showCongra = true;
-            Debugs.log('游戏第二周目，继续玩')
-            PIXIAudio.audios['win_jump'].play();
-          }  else if (self.vueInstance.gameHasBeenCompleted && !self.vueInstance.gameSecondPlayed) {
-            self.gameMenuBar.bookScene.openEnergyCan(true);
-            PIXIAudio.audios['win_jump'].play();
-            Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
-          }
-        }, self.vueInstance.showPopupDelay);
-        self.vueInstance.updateRestArrangementStat();
-      }, 1);
-      //TODO:开始设置清算界面逻辑全套---END;
+    self.vueInstance.$route.meta.completed = 1;
+    self.vueInstance.setOwnLessonComplete();
+    if (self.vueInstance.gameHasBeenCompleted == false) {
+      window.parent.postMessage({
+        type: "stepSubmit",
+        page: self.vueInstance.lessonCurrentPageIndex
+      }, "*");
     }
+    setTimeout(() => {
+      let isQingsuan = self.vueInstance.$route.name == self.vueInstance.restArrangementStat[self.vueInstance.restArrangementStat.length - 1];//开始清算;
+      setTimeout(() => {
+        if (isQingsuan && !self.vueInstance.gameHasBeenCompleted) {
+          Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.vueInstance.gameHasBeenCompleted)
+          self.gameMenuBar.bookScene.openEnergyCan(false);
+
+        } else if (isQingsuan == false && !self.vueInstance.gameHasBeenCompleted) {
+          self.vueInstance.showCongra = true;
+          Debugs.log('游戏没有完成，并且也不是清算页')
+          PIXIAudio.audios['win_jump'].play();
+        } else if (self.vueInstance.gameHasBeenCompleted && self.vueInstance.gameSecondPlayed) {
+          self.vueInstance.showCongra = true;
+          Debugs.log('游戏第二周目，继续玩')
+          PIXIAudio.audios['win_jump'].play();
+        } else if (self.vueInstance.gameHasBeenCompleted && !self.vueInstance.gameSecondPlayed) {
+          self.gameMenuBar.bookScene.openEnergyCan(true);
+          PIXIAudio.audios['win_jump'].play();
+          Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
+        }
+      }, self.vueInstance.showPopupDelay);
+      self.vueInstance.updateRestArrangementStat();
+    }, 1);
+    //TODO:开始设置清算界面逻辑全套---END;
   }
 }
 

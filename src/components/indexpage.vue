@@ -4,17 +4,11 @@
   </div>
 </template>
 <script>
-  import Vue from 'vue'
-  import $ from 'jquery'
   import {mapActions, mapState} from 'vuex'
   import IndexPage from './indexpage.js'
-  import GameHand from './gameui/Gamehand.js'
   import {LoadingAnimation} from './gameui/GameManager.js'
-  import {Debugs, myVueMixin, TextureCache, AudioManager} from "./Utils";
+  import {Debugs, myVueMixin} from "./Utils";
   import {PIXIAudio} from "./EasyPIXI";
-  import GameMenuBars from './gameui/GameMenuBar.js'
-  var pixiScene = null;
-
   export default {
     name: "module1",
     mixins: [myVueMixin],
