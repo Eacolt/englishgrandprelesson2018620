@@ -213,12 +213,9 @@ class ChoicePicModule extends PIXI.Container {
       x: 1100 + rightOffset, onComplete: () => {
         self.isAnimating = false;
         self.soundSpeakText.text = self.gameConfig.levels[self.gameLevel].content;
-        self.soundSpeakText.pivot.y = self.soundSpeakText.height / 2;
-        self.soundSpeakText.text = self.gameConfig.levels[self.gameLevel].content;
-        self.soundSpeakText.y = 290
-
-        self.playSpeakSound();
         self.checksTiGan.call(self);
+        self.playSpeakSound();
+
 
       },onStart:()=>{
         self.arrangePicCards.call(self);
@@ -233,7 +230,16 @@ class ChoicePicModule extends PIXI.Container {
     if (_.trim(this.gameConfig.levels[self.gameLevel].audioSrc) == "" && _.trim(this.gameConfig.levels[self.gameLevel].content) != "") {
       this.soundButton.alpha = 0;
       this.soundSpeakText.alpha = 1;
-      this.soundSpeakText.style.align = 'center'
+      //文字杭高逻辑判断
+      if(this.soundSpeakText.height>70){
+        this.soundSpeakText.style.align = 'left';
+        self.soundSpeakText.y = 260;
+      }else{
+        this.soundSpeakText.style.align = 'center';
+        self.soundSpeakText.y = 290;
+      }
+      //END
+
       this.soundSpeakText.pivot.x = this.soundSpeakText.width / 2;
       this.soundSpeakText.x = 1920 / 2;
       this.soundButton.x = 410;
@@ -242,7 +248,15 @@ class ChoicePicModule extends PIXI.Container {
     } else if (_.trim(this.gameConfig.levels[self.gameLevel].audioSrc) != "" && _.trim(this.gameConfig.levels[self.gameLevel].content) == "") {
       this.soundButton.alpha = 1;
       this.soundSpeakText.alpha = 0;
-      this.soundSpeakText.style.align = 'left'
+      //文字杭高逻辑判断
+      if(this.soundSpeakText.height>70){
+        this.soundSpeakText.style.align = 'left';
+        self.soundSpeakText.y = 260;
+      }else{
+        this.soundSpeakText.style.align = 'center';
+        self.soundSpeakText.y = 290;
+      }
+      //END
       this.soundSpeakText.pivot.x = 0;
       this.soundSpeakText.x = 620;
       this.soundButton.x = 870;
@@ -250,7 +264,15 @@ class ChoicePicModule extends PIXI.Container {
     } else {
       this.soundButton.alpha = 1;
       this.soundSpeakText.alpha = 1;
-      this.soundSpeakText.style.align = 'left';
+      //文字杭高逻辑判断
+      if(this.soundSpeakText.height>70){
+        this.soundSpeakText.style.align = 'left';
+        self.soundSpeakText.y = 260;
+      }else{
+        this.soundSpeakText.style.align = 'center';
+        self.soundSpeakText.y = 290;
+      }
+      //END
       this.soundSpeakText.pivot.x = 0;
       this.soundSpeakText.x = 620;
       this.soundButton.x = 410;
@@ -274,9 +296,7 @@ class ChoicePicModule extends PIXI.Container {
       x: self.btnsContainer.x + rightOffset, onStart: () => {
         self.isAnimating = true;
         self.soundSpeakText.text = self.gameConfig.levels[self.gameLevel].content;
-        self.soundSpeakText.pivot.y = self.soundSpeakText.height / 2;
-          self.soundSpeakText.y = 290
-        // self.soundSpeakText.y = 290;
+
         self.checksTiGan.call(self);
         self.arrangePicCards.call(self);
       }, onComplete: function () {

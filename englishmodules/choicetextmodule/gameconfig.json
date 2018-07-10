@@ -75,21 +75,42 @@
           "cardpicture":"cardpicture002",
           "rightAnswer":1,
           "cardlist":["A: Last Tuesday","C：Last Monday"],
-          "audioSrc":"",
-          "content":"When did you go shopping？"
+          "audioSrc":"sound002.mp3",
+          "content":"-When did you go shopping? \n-I am on Saturday."
         },
         {
           "cardpicture":"cardpicture002",
           "rightAnswer":1,
           "cardlist":["A: Last Tuesday","C：Last Monday"],
           "audioSrc":"sound002.mp3",
-          "content":""
+          "content":"sdfsdfsdfsdfsdf"
         },
         {
           "cardpicture":"cardpicture003",
           "rightAnswer":1,
           "cardlist":["A: Last Tuesday","C：Last Monday"],
-          "audioSrc":"sound003.mp3",
+          "audioSrc":"",
+          "content":"adfasdfasdfasdfasdf"
+        },
+        {
+          "cardpicture":"cardpicture002",
+          "rightAnswer":1,
+          "cardlist":["A: Last Tuesday","C：Last Monday"],
+          "audioSrc":"sound002.mp3",
+          "content":"-When did you go shopping? \n-I am on Saturday."
+        },
+        {
+          "cardpicture":"cardpicture002",
+          "rightAnswer":1,
+          "cardlist":["A: Last Tuesday","C：Last Monday"],
+          "audioSrc":"",
+          "content":"-When did you go shopping? \n-I am on Saturday."
+        },
+        {
+          "cardpicture":"cardpicture003",
+          "rightAnswer":1,
+          "cardlist":["A: Last Tuesday","C：Last Monday"],
+          "audioSrc":"sound002.mp3",
           "content":""
         }
       ]

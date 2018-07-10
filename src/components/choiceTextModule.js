@@ -235,14 +235,10 @@ class ChoiceTextModule extends PIXI.Container {
       x: rightOffset, onComplete: () => {
         self.isAnimating = false;
         self.soundSpeakText.text = self.gameConfig.levels[self.gameLevel].content;
-
-        self.soundSpeakText.pivot.y = self.soundSpeakText.height / 2;
-        self.soundSpeakText.text = self.gameConfig.levels[self.gameLevel].content;
-        self.soundSpeakText.y = 290;
-
+        self.checksTiGan.call(self);
         self.playSpeakSound();
 
-        self.checksTiGan.call(self);
+
 
 
       }, onStart: () => {
@@ -266,11 +262,23 @@ class ChoiceTextModule extends PIXI.Container {
     if (_.trim(this.gameConfig.levels[self.gameLevel].audioSrc) == "" && _.trim(this.gameConfig.levels[self.gameLevel].content) != "") {
       this.soundButton.alpha = 0;
       this.soundSpeakText.alpha = 1;
+      //文字杭高逻辑判断
+      if(this.soundSpeakText.height>70){
+        this.soundSpeakText.style.align = 'left';
+        self.soundSpeakText.y = 260;
+      }else{
+        this.soundSpeakText.style.align = 'center';
+        self.soundSpeakText.y = 290;
+      }
+      //END
 
-      this.soundSpeakText.style.align = 'center'
+
+
+
       this.soundSpeakText.pivot.x = this.soundSpeakText.width / 2;
-
       this.soundSpeakText.x = 1920 / 2;
+
+
       this.soundButton.x = 410;
 
 
@@ -279,16 +287,36 @@ class ChoiceTextModule extends PIXI.Container {
       this.soundSpeakText.alpha = 0;
       this.soundSpeakText.x = 620;
       this.soundButton.x = 870;
-      this.soundSpeakText.style.align = 'left'
+      //文字杭高逻辑判断
+      if(this.soundSpeakText.height>70){
+        this.soundSpeakText.style.align = 'left';
+        self.soundSpeakText.y = 260;
+      }else{
+        this.soundSpeakText.style.align = 'center';
+        self.soundSpeakText.y = 290;
+      }
+      //END
       this.soundSpeakText.pivot.x = 0;
+
+
 
     } else {
       this.soundButton.alpha = 1;
       this.soundSpeakText.alpha = 1;
       this.soundSpeakText.x = 620;
       this.soundButton.x = 410;
-      this.soundSpeakText.style.align = 'left'
+      //文字杭高逻辑判断
+      if(this.soundSpeakText.height>70){
+        this.soundSpeakText.style.align = 'left';
+        self.soundSpeakText.y = 260;
+      }else{
+        this.soundSpeakText.style.align = 'center';
+        self.soundSpeakText.y = 290;
+      }
+      //END
       this.soundSpeakText.pivot.x = 0;
+
+      Debugs.log('douyou::',this.soundSpeakText.height)
     }
   };
 
@@ -309,11 +337,7 @@ class ChoiceTextModule extends PIXI.Container {
       x: self.picBand.x + rightOffset, onStart: () => {
         self.isAnimating = true;
         self.soundSpeakText.text = self.gameConfig.levels[self.gameLevel].content;
-        self.soundSpeakText.pivot.y = self.soundSpeakText.height / 2;
-        self.soundSpeakText.text = self.gameConfig.levels[self.gameLevel].content;
-        self.soundSpeakText.y = 290;
         self.checksTiGan.call(self);
-
 
         self.picBand.setPages(self.gameConfig.levels[self.gameLevel].cardlist.length, self.gameConfig.levels[self.gameLevel].cardlist)
 
@@ -436,13 +460,14 @@ class ChoiceTextModule extends PIXI.Container {
     self.addChild(self.soundSpeakText);
     self.soundSpeakText.pivot.y = self.soundSpeakText.height / 2;
     self.soundSpeakText.text = self.gameConfig.levels[self.gameLevel].content;
+    Debugs.log('文字高：',self.soundSpeakText.height)
     //核心判断垂直逻辑
     if(self.soundSpeakText.height>70){
       self.soundSpeakText.y = 260;
     }else{
       self.soundSpeakText.y = 290;
     }
-    // self.soundSpeakText.width = 200;
+
     self.soundSpeakText.x = 620;
     self.soundSpeakText.y = 290;
     //TODO:顶部导航逻辑-----
