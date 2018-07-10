@@ -150,7 +150,7 @@
             } else {
               if (self.isgo) {
 
-                resolve({detail: [0,2,3,4,5], card: 11, opened: 1, isOpenBook: 0});
+                resolve({detail: [], card: 12, opened: 1, isOpenBook: 0});
                 self.isgo = false;
               }
             }

@@ -183,7 +183,7 @@ class BookScene extends PIXI.Container{
 
     this.page1StartBtn = new PIXI.Graphics();
     this.page1StartBtn.beginFill(0xff0000,0);
-    this.page1StartBtn.drawRect(0,0,240,80);
+    this.page1StartBtn.drawRect(-10,-30,260,150);
     this.page1StartBtn.endFill();
     this.page1StartBtn.x = 150;
     this.page1StartBtn.y = 75;
@@ -191,7 +191,7 @@ class BookScene extends PIXI.Container{
 
     this.page2StartBtn = new PIXI.Graphics();
     this.page2StartBtn.beginFill(0xff0000,0);
-    this.page2StartBtn.drawRect(0,0,240,80);
+    this.page2StartBtn.drawRect(-10,-30,260,150);
     this.page2StartBtn.endFill();
     this.page2StartBtn.x = -390;
     this.page2StartBtn.y = 80;
@@ -208,11 +208,6 @@ class BookScene extends PIXI.Container{
     closeBtn.x = 1710;
     closeBtn.y = 20;
 
-    // var slots = book.skeleton.findSlot('page_imgs1');
-    // var myAttach =  book.skeleton.getAttachment(slots.data.index,'page_imgs1-3')
-    // slots.setAttachment(myAttach);
-
-    // book.interactive = true;
     self.rightBtn = new PIXI.Graphics();
 
     self.rightBtn.beginFill(0xff0000,0.2);
@@ -225,7 +220,7 @@ class BookScene extends PIXI.Container{
     this.bookAn.addChild(self.rightBtn);
     this.bookAn.addChild(self.leftBtn);
 
-    this.bookAn.addChild(this.page1StartBtn)
+    this.bookAn.addChild(this.page1StartBtn);
     this.bookAn.addChild(this.page2StartBtn);
     this.page1StartBtn.interactive = this.page2StartBtn.interactive = false;
     this.page1StartBtn.on('pointerdown',this.page1StartBtn_tapHandler,this);
@@ -457,6 +452,14 @@ class BookScene extends PIXI.Container{
   closeBtnHandler($callback = function(){}){
     const self = this;
 
+
+    if(self.page1StartBtn && self.page2StartBtn){
+      self.page1StartBtn.interactive = false;
+      self.page2StartBtn.interactive = false;
+      self.page2StartBtn.alpha = self.page1StartBtn.alpha = 0;
+
+    }
+
     if(this.closeBookAnimating==false){
       this.closeBookAnimating = true;
       PIXIAudio.audios['bgSound'].play();
@@ -505,6 +508,7 @@ class BookScene extends PIXI.Container{
     const self = this;
 
 
+
     if(this.bookAn && this.openBookAnimating==false){
       self.showBlackMask();
       self.backGroundMask.interactive = true;
@@ -548,9 +552,6 @@ class BookScene extends PIXI.Container{
       self.menuCloseBtn.removeListener('pointertap',self.menuCloseBtn_tapHandler,self);
 
 
-      if(self.parent.parent.swiperHammer){
-        self.parent.parent.swiperHammer.lock = true;
-      }
 
     });
   }
