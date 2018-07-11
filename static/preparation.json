@@ -56,6 +56,18 @@
           "pageResourceId": "bookreadingmodule"
         }
       ]
+    },
+    {
+      "name": "story",
+      "pageModuleId": "choiceInterface",
+      "pageResourceId": "choiceinterface",
+      "menus": [
+        {
+          "name": "learning",
+          "pageModuleId": "bookReadingModule",
+          "pageResourceId": "bookreadingmodule"
+        }
+      ]
     }
 
   ]

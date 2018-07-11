@@ -284,9 +284,7 @@ class ChoiceInterface extends PIXI.Container {
       case 'story':
         monsterData = self.resources['indexMonster4_json'].spineData;
         break;
-      case 'reading':
-        monsterData = self.resources['indexMonster4_json'].spineData;
-        break;
+
       case 'grammar':
         monsterData = self.resources['indexMonster5_json'].spineData;
         break;
@@ -295,6 +293,9 @@ class ChoiceInterface extends PIXI.Container {
         break;
       case 'ketpet':
         monsterData = self.resources['indexMonster7_json'].spineData;
+        break;
+      case 'reading':
+        monsterData = self.resources['indexMonster8_json'].spineData;
         break;
       default:
         break;

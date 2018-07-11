@@ -185,8 +185,6 @@
         var _Ga = {};
         LoadingAnimation.loading = self.$parent.$refs.masker;
         LoadingAnimation.setMaskShow(false, 0);
-
-        let tt = 0;
         _Ga.monster = document.getElementById('starmonster');
         _Ga.planet1 = document.getElementById('load_planet1');//8
         _Ga.planet2 = document.getElementById('load_planet2');
