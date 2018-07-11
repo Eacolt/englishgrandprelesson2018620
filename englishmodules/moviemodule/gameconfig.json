@@ -20,13 +20,6 @@
     {
       "name":"moviebg",
       "url":"static/themetypeui/videobg.png"
-    },
-    {
-      "name": "mymovie_mp4",
-      "url": "static/moviemodule/001.mp4"
     }
-  ],
-  "gameData": {
-    "movie":  "static/moviemodule/001.mp4"
-  }
+  ]
 }

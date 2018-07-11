@@ -118,6 +118,7 @@
           } else {
             self.SET_GAMECARDS(Number(getId_response.card));
           }
+          Debugs.log('是否打开过宝箱？opened：',getId_response.opened);
           self.SET_BOOKOPENED(getId_response.opened);
 
           //是否完成了所有游戏；
@@ -150,7 +151,7 @@
             } else {
               if (self.isgo) {
 
-                resolve({detail: [], card: 12, opened: 1, isOpenBook: 0});
+                resolve({detail: [0,1,2,3,4], card: 12, opened: 1, isOpenBook: 0});
                 self.isgo = false;
               }
             }
@@ -166,6 +167,7 @@
        */
       gameStart(app) {
         const self = this;
+        var monsterLoaders = [];
 
         var _Ga = {};
         LoadingAnimation.loading = self.$parent.$refs.masker;
@@ -224,22 +226,17 @@
             TweenMax.to(_Ga.progressBar,0.3,{
               width:6.78 * (_Ga.progress / 100) + 'rem'
             })
-
           }
-
         }, 10);
 
 
         self.axios.get('static/assetsConfig.json').then((response) => {
           self.axios.get('static/allSounds.json').then((soundRes) => {
-            PIXIAudio.reset();
-
             PIXIAudio.init(soundRes.data, 'static/sound/', function () {
-
+              Debugs.log('开始进入加载小怪物逻辑');
               /**
                * 判断所有对小怪物的资源加载
                */
-              let monsterLoaders = [];
               for(let i=0;i<self.allPartNames.length;i++){
                 switch (self.allPartNames[i]){
                   case 'song':
@@ -287,7 +284,6 @@
                     break;
                   case 'text':
                     monsterLoaders.push(
-
                       {
                         "name": "indexMonster6_json",
                         "url": "static/themetypeui/monster6_text.json"
@@ -301,9 +297,8 @@
                       });
                     break;
                 }
-              }
-
-
+              };
+              Debugs.log(monsterLoaders,'小怪物列表《<');
 
               PIXI.loader.add(response.data)
                 .add(monsterLoaders)
@@ -363,11 +358,12 @@
                   _Ga.tm_plane2.kill();
                   _Ga = null;
 
-                  if (Number(self.openMagicBookByGameIndex > 0)) {
+                  if (Number(self.openMagicBookByGameIndex) > 0) {
                     self.$router.push('/index');
                   }
+                  Debugs.log('sound init all')
                 });
-            });
+            },'mainloadsound');
           })
         });
         //END

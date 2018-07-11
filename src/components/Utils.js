@@ -94,12 +94,15 @@ const loaderAssetsByValided = function(modulesUrl,$newAssets,GameStart,$otherAss
         url: item.url
       }
     });
+
     if(getValidedAssets(assets).length<=0){
       GameStart.call(self,PIXI.loader.resources,gameConfigData.data);
       return;
     }
+
     PIXI.loader.add(getValidedAssets(assets))
       .load(function (loader,resources) {
+
         GameStart.call(self,resources,gameConfigData.data);
       });
   });

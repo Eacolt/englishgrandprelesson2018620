@@ -100,6 +100,7 @@
       gameStart(app) {
         const self = this;
 
+
         var modulesUrl = this.$route.meta.assetsUrl;
         //var gameConfig;
         var urls = 'static/' + modulesUrl + '/resource.json';
@@ -107,6 +108,17 @@
         LoadingAnimation.setMaskShow(true, 0)
 
         ////加载逻辑
+        // self.axios.get('static/' + modulesUrl + '/gameconfig.json').then((gameConfigData) => {
+        //   var assets = gameConfigData.data.assets.map((item, index) => {
+        //     return {
+        //       name: '' + item.name,
+        //       url: item.url
+        //     }
+        //   });
+        //   loaderAssetsByValided.call(self, modulesUrl, assets, GameStart);
+        //   Debugs.log('loaderByValidedon..');
+        // });
+
         self.axios.get('static/' + modulesUrl + '/gameconfig.json').then((gameConfigData) => {
           var assets = gameConfigData.data.assets.map((item, index) => {
             return {
@@ -114,12 +126,27 @@
               url: item.url
             }
           });
-          loaderAssetsByValided.call(self, modulesUrl, assets, GameStart);
+          console.log(PIXI.loader.resources['headbtn_png'])
+          if(!PIXI.loader.resources['headbtn_png']){
+            Debugs.log('enter in loading')
+            PIXI.loader.add(assets)
+              .load(function(){
+                Debugs.log('loading Video!!');
+                GameStart.call(self,PIXI.loader.resources);
+              });
+          }else{
+            GameStart.call(self,PIXI.loader.resources);
+          }
+
+          Debugs.log('loaderByValidedon..');
         });
 
-        ///End加载逻辑
 
+
+
+        ///End加载逻辑
         function GameStart(resources, gameConfigData) {
+          Debugs.log('视频已经打开')
           let _G = {};
           _G.movieModule = null;
           _G.videoDuration = 0;
@@ -153,6 +180,7 @@
               self.$refs.videoPlayBtn.style.opacity = 1;
               _G.movieModule.myVideo = self.$refs.myVideo;
               _G.movieModule.initProgressBar();
+              Debugs.log('intervals')
               clearInterval(_G.tickerment);
             }
           }, 10)
@@ -185,10 +213,12 @@
 
 
           }
+          LoadingAnimation.setMaskShow(false);
+          Debugs.log('show all....')
 
           app.stage.addChild(_G.movieModule);
           pixiScene = _G.movieModule;
-          LoadingAnimation.setMaskShow(false);
+
 
         }
       }

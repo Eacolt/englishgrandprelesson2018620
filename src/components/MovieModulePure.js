@@ -314,8 +314,24 @@ class MovieModulePure extends PIXI.Container {
 
 
     // this.hideProgressBar(0)
-
-
+    // if (Math.floor(this.myVideo.currentTime) >= Math.floor(this.myVideo.duration)-6) {
+    //   if(!self._G.videoIsEnd){
+    //     this.againStar.call(self);
+    //     self._G.videoIsEnd = true;
+    //     Debugs.log('视频播放完毕》》')
+    //   }
+    //
+    // }
+    self._G.intervalVideo = setInterval(()=> {
+      Debugs.log('_G.intervalVideo')
+      if(self.myVideo.duration>3){
+        if (Math.floor(self.myVideo.currentTime) >= Math.floor(self.myVideo.duration)-6) {
+          self._G.videoIsEnd = true;
+          self.againStar.call(self);
+          clearInterval(self._G.intervalVideo);
+        }
+      }
+    },1);
   }
 
   initEvents() {
@@ -347,6 +363,7 @@ class MovieModulePure extends PIXI.Container {
       clearInterval(self._G.getInterval_hideprogress);
     }
     self._G.getInterval_hideprogress = setInterval(() => {
+      Debugs.log('interval_getIntervalHide')
 
       if (totalTime <= 0) {
 
@@ -528,19 +545,19 @@ class MovieModulePure extends PIXI.Container {
 
 
     //显示完成;
-    if (Math.floor(this.myVideo.currentTime) >= Math.floor(this.myVideo.duration)-2) {
+    if (Math.floor(this.myVideo.currentTime) >= Math.floor(this.myVideo.duration)-6) {
       if(!self._G.videoIsEnd){
         this.againStar.call(self);
         self._G.videoIsEnd = true;
+        Debugs.log('视频播放完毕》》')
       }
-
 
     }
   }
 
   againStar() {
     const self = this;
-
+   // if(self._G.videoIsEnd)return;
 //TODO:开始设置清算界面逻辑全套;
     self.vueInstance.$route.meta.completed = 1;
     self.vueInstance.setOwnLessonComplete();

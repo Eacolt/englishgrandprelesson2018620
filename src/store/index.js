@@ -18,7 +18,7 @@ const store = new Vuex.Store({
     alreadyHasOneCard:false,//获得了一张卡片;
     gameSecondPlayed:false,//游戏已经二周目
 
-    openMagicBookByGameIndex:false,//从游戏返回翻开魔法书;
+    openMagicBookByGameIndex:0,//从游戏返回翻开魔法书;
 
     bookOpened:-1,//是否打开宝箱后就退出页面了？
 

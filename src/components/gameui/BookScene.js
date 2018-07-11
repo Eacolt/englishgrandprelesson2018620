@@ -391,7 +391,6 @@ class BookScene extends PIXI.Container{
                //todo:打开魔法书后，页面及时跳转到主界面//
                setTimeout(()=>{
 
-
                  if(GameMenuBars.vueInstance.$route.fullPath=='/index'){
                    self.isGoIndex = true;
                  }else{
@@ -400,22 +399,19 @@ class BookScene extends PIXI.Container{
                  GameMenuBars.vueInstance.$router.push('/index')
                  TweenMax.to(self.treasureBoxUI,.5,{alpha:0});
                  TweenMax.to(EventTarget,.5,{alpha:0});
+
+                 self.openBook();
                  if(self.isGoIndex){
-                   self.openBook();
-
+                  // self.openBook();
+                   Debugs.log('跳转宝箱')
                  }else{
-
                    GameMenuBars.vueInstance.SET_SHOWMAGICBOOK(true);
                  }
-
-
                  if(self.parent.parent.swiperHammer){
                    self.parent.parent.swiperHammer.lock = true;
                  }
 
                },1000);
-
-
              },1400);
            }})
 

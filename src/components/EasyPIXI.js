@@ -12,7 +12,7 @@ class PIXIAudio{
     PIXIAudio.audios = {};
   }
 
-  static init($manifest=[],$soundPath='static/sound/',$callback=function(){},$soundClassName='mainload',){
+  static init($manifest=[],$soundPath='static/sound/',$callback=function(){},$soundClassName='mainload'){
     var audioNum = 0;
 
     createjs.Sound.alternateExtensions = ["mp3"];	// if the passed extension is not supported, try this extension
@@ -35,7 +35,7 @@ class PIXIAudio{
     }
   }
   //add new audio;
-  static addAudio($manifest,$soundPath='static/sound/',$callback=function(){},$soundClassName='subClass',){
+  static addAudio($manifest,$soundPath='static/sound/',$callback=function(){},$soundClassName='subClass'){
     var audioNum = 0;
     createjs.Sound.on("fileload",(e)=>{
       if(PIXIAudio.loadedStatus[$soundClassName] == 'completed')return;

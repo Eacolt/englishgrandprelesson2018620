@@ -33,8 +33,8 @@
   export default {
     name: 'App',
     created() {
-     // new VConsole();
-      Debugs.locked = true;
+     new VConsole();
+      Debugs.locked = false;
       document.oncontextmenu = function(){
         return false;
       }
@@ -50,19 +50,20 @@
     },
     mounted() {
       const self = this;
-
-
       this.SET_CURRENTPAGE(1);
-      GameHand.init();
-      GameHand.setAnimation('normal')
-      if (Bowser.mobile ) {
-        self.SET_PLATFORM('mobile');
-        GameHand.hand.css('visibility', 'hidden')
-      } else {
+      if (Broswer.IsPC()) {
         self.SET_PLATFORM('pc');
+        GameHand.isPC = true;
+      } else {
+        self.SET_PLATFORM('mobile');
+        GameHand.isPC = false;
+      }
+      GameHand.init();
+      if(GameHand.hand){
         GameHand.hand.css('visibility', 'visible')
       }
 
+      GameHand.setAnimation('normal')
       Debugs.log(navigator.userAgent)
       Debugs.log(Bowser)
       Debugs.log('iphoneX:',navigator.userAgent.indexOf('Mac OS X')>0)

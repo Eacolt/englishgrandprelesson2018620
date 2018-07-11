@@ -3,11 +3,13 @@ import $ from 'jquery'
 class GameHand {
   static hand = null;
   static locked = false;
+  static isPC = false;
   static animateTicker = null;
   static animateIndex = 0;
 
   static init() {
     if (GameHand.hand) return;
+    if(!GameHand.isPC)return;
 
     var handsArr = [
       $('<img src="static/img/hand1.png" />'),
@@ -54,6 +56,7 @@ class GameHand {
     })
   }
   static setStepAnimation($index){
+    if(!GameHand.isPC)return;
     if (GameHand.locked) {
       if (GameHand.animateTicker) {
         clearInterval(GameHand.animateTicker);
@@ -71,6 +74,7 @@ class GameHand {
   }
 
   static setAnimation($type) {
+    if(!GameHand.isPC)return;
     if (GameHand.locked) {
       if (GameHand.animateTicker) {
         clearInterval(GameHand.animateTicker);

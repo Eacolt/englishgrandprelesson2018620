@@ -3,6 +3,7 @@ import {TextureCache} from './Utils.js'
 import PixiHammer from './gameui/PixiHammer.js'
 import GameMenuBars from "./gameui/GameMenuBar.js";
 import {PIXIAudio} from "./EasyPIXI";
+import {Debugs} from "./Utils";
 
 
 class PixiScene1 extends PIXI.Container {
@@ -166,9 +167,10 @@ class PixiScene1 extends PIXI.Container {
     for (let i = 0; i < this.vueInstance.$store.state.lessonPartsList.length; i++) {
 
       let slideUfo = new PIXI.Container();
+      let monsterData="",lessonPartName=this.vueInstance.$store.state.lessonPartsList[i].name;
       slideUfo.myIndex = i;
-      var monsterData;
-      switch (this.vueInstance.$store.state.lessonPartsList[i].name) {
+
+      switch (lessonPartName) {
         case 'song':
           monsterData = self.resource['indexMonster1_json'].spineData;
           break;
@@ -196,6 +198,7 @@ class PixiScene1 extends PIXI.Container {
         default:
           break;
       }
+      Debugs.log('monsterData',monsterData)
       let monsters = new PIXI.spine.Spine(monsterData);
       monsters.state.setAnimation(0, 'standing', true);
       monsters.x = 308;
@@ -327,19 +330,19 @@ class PixiScene1 extends PIXI.Container {
         self.swiperHammer.lock = true;
         self.gameMenuBar.bookScene.openBook();
         GameMenuBars.gameHasOpendBook = true;
-      };
-
-      if(self.vueInstance.bookOpened == 0 && self.vueInstance.gameHasBeenCompleted){
+        Debugs.log('首次打开翻书')
+      }else if(Number(self.vueInstance.bookOpened) == 0 && self.vueInstance.gameHasBeenCompleted){
         self.gameMenuBar.bookScene.openEnergyCan(true);
-      };
-
-      //从游戏回来的逻辑>>
-      if(Number(self.vueInstance.openMagicBookByGameIndex)>=1){
+        Debugs.log('再次打开能量条，因为宝箱未开就进来了',self.vueInstance.bookOpened,self.vueInstance.gameHasBeenCompleted)
+      }else if(Number(self.vueInstance.openMagicBookByGameIndex)>=1){
+        //从游戏回来的逻辑>>
         self.gameMenuBar.bookScene.openBook();
         self.swiperHammer.lock = true;
-
+        self.vueInstance.SET_MAGICBOOKBYGAMEINDEX(-1);
+        Debugs.log('从游戏回来打开翻书')
       }
-    },300);
+
+    },200);
     this.gameMenuBar.setBackBtn_tapHandler(() => {
       //返回主目录;
 
