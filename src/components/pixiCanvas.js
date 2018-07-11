@@ -1,4 +1,6 @@
 // const PIXI = require('pixi.js')
+import {Debugs} from "./Utils";
+
 var pixiCanvas = {};
 var myApps =null;
 pixiCanvas.install = function (Vue) {
@@ -19,6 +21,14 @@ pixiCanvas.install = function (Vue) {
       zOrder:{
         type:Number,
         default:0
+      },
+      autoRender:{
+        type:Boolean,
+        default:true
+      },
+      emitRender:{
+        type:Boolean,
+        default:false
       }
     },
     template: `<div :style="pixiCanvasStyle" ref="pixicanvas"></div>`,
@@ -43,8 +53,23 @@ pixiCanvas.install = function (Vue) {
         myApp.view.style.margin = '0px auto';
         self.$refs.pixicanvas.appendChild(myApp.view);
 
-        self.$emit('startGame', myApp);
-        myApps.push(myApp)
+
+        myApps.push(myApp);
+        if(self.autoRender){
+          self.$emit('startGame', myApp);
+        }else{
+          let unwatch = self.$watch(()=>{
+            return self.emitRender;
+          },(newval)=>{
+            if(newval==true){
+              self.$emit('startGame', myApp);
+              Debugs.log('在此调用成功')
+              unwatch();
+            }
+          })
+
+        }
+
 
     },
     computed:{

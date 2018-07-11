@@ -161,14 +161,15 @@ class PixiScene1 extends PIXI.Container {
     //
     self.addChild(ground);
     self.addChild(boy)
-    self.addChild(bgGround)
+    self.addChild(bgGround);
+    Debugs.log('怪物列表：',this.vueInstance.$store.state.lessonPartsList)
 
-
+    var monsterData="",lessonPartName="";
     for (let i = 0; i < this.vueInstance.$store.state.lessonPartsList.length; i++) {
-
       let slideUfo = new PIXI.Container();
-      let monsterData="",lessonPartName=this.vueInstance.$store.state.lessonPartsList[i].name;
+
       slideUfo.myIndex = i;
+      lessonPartName = self.vueInstance.$store.state.lessonPartsList[i].name;
 
       switch (lessonPartName) {
         case 'song':
@@ -183,9 +184,6 @@ class PixiScene1 extends PIXI.Container {
         case 'story':
           monsterData = self.resource['indexMonster4_json'].spineData;
           break;
-        case 'reading':
-          monsterData = self.resource['indexMonster4_json'].spineData;
-          break;
         case 'grammar':
           monsterData = self.resource['indexMonster5_json'].spineData;
           break;
@@ -194,6 +192,9 @@ class PixiScene1 extends PIXI.Container {
           break;
         case 'ketpet':
           monsterData = self.resource['indexMonster7_json'].spineData;
+          break;
+        case 'reading':
+          monsterData = self.resource['indexMonster8_json'].spineData;
           break;
         default:
           break;

@@ -1,6 +1,6 @@
 <template>
   <div class="bgContainer">
-    <pixi-canvas @startGame="gameStart"></pixi-canvas>
+    <pixi-canvas :auto-render="autoRender" :emit-render="emitRender" @startGame="gameStart"></pixi-canvas>
   </div>
 
 </template>
@@ -18,6 +18,8 @@
         isgo:true,
         getIdAlready:true,
         gameConfig: "static/module1/gameconfig.json",
+        autoRender:false,
+        emitRender:false
       }
     },
     computed: {
@@ -31,6 +33,7 @@
       }
     },
     created() {
+
 
     },
     mounted: function () {
@@ -49,6 +52,8 @@
       }
 
 
+
+
     },
     //todo:观察者;
 
@@ -59,6 +64,7 @@
       gameInit(response) {
         const self = this;
         var allEnergy = [], allComponentsNames = [], allCompletes = [], allcompletedNum = [];
+        var slideLists = [];
         self.getStuAnswerPromise().then((getId_response) => {
 
           self.$router.options.routes.forEach((item, index) => {
@@ -83,7 +89,7 @@
           allcompletedNum = allCompletes.filter((item) => {
             return item.meta.completed == 1;
           });
-          self.slideLists = response.menus.map((item) => {
+          slideLists = response.menus.map((item) => {
             return item.name
           });
 
@@ -108,7 +114,7 @@
             Debugs.log('初始化成功')
           }
           self.SET_LESSONPARTSLIST(response.menus);
-          self.SET_ALLPARTNAMES(self.slideLists);
+          self.SET_ALLPARTNAMES(slideLists);
           if (self.completedLessonNum >= self.allLessonsNum) {
             self.SET_GAMEHASBEENCOMPLETED(true);
             //  console.log("初始化课程全部完成")
@@ -131,7 +137,14 @@
           //是否从游戏过来;
           if (getId_response.isOpenBook && getId_response.isOpenBook) {
             self.SET_MAGICBOOKBYGAMEINDEX(getId_response.isOpenBook);
-          }
+          };
+
+
+          setTimeout(()=>{
+            self.emitRender = true;
+          },400);
+
+
         }, (error) => {
           console.log('error:', error)
         });
@@ -151,7 +164,7 @@
             } else {
               if (self.isgo) {
 
-                resolve({detail: [0,1,2,3,4], card: 12, opened: 1, isOpenBook: 0});
+                resolve({detail: [], card: 12, opened: 1, isOpenBook: 0});
                 self.isgo = false;
               }
             }
@@ -234,6 +247,7 @@
           self.axios.get('static/allSounds.json').then((soundRes) => {
             PIXIAudio.init(soundRes.data, 'static/sound/', function () {
               Debugs.log('开始进入加载小怪物逻辑');
+              Debugs.log('allPartNames:',self.allPartNames)
               /**
                * 判断所有对小怪物的资源加载
                */
@@ -266,15 +280,6 @@
                         "url": "static/themetypeui/monster4_story.json"
                       });
                     break;
-
-                  case 'reading':
-                    monsterLoaders.push(
-                      {
-                        "name": "indexMonster4_json",
-                        "url": "static/themetypeui/monster4_story.json"
-                      });
-                    break;
-
                   case 'grammar':
                     monsterLoaders.push(
                       {
@@ -295,6 +300,16 @@
                         "name": "indexMonster7_json",
                         "url": "static/themetypeui/monster7_ketpet.json"
                       });
+                    break;
+                  case 'reading':
+                    Debugs.log("REDING>>>>")
+                    monsterLoaders.push(
+                      {
+                        "name": "indexMonster8_json",
+                        "url": "static/themetypeui/monster8_reading.json"
+                      });
+                    break;
+                  default:
                     break;
                 }
               };

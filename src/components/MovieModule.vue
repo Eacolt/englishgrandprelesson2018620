@@ -180,7 +180,7 @@
               self.$refs.videoPlayBtn.style.opacity = 1;
               _G.movieModule.myVideo = self.$refs.myVideo;
               _G.movieModule.initProgressBar();
-              Debugs.log('intervals')
+
               clearInterval(_G.tickerment);
             }
           }, 10)

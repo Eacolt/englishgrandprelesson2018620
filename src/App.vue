@@ -54,39 +54,31 @@
       if (Broswer.IsPC()) {
         self.SET_PLATFORM('pc');
         GameHand.isPC = true;
-      } else {
-        self.SET_PLATFORM('mobile');
-        GameHand.isPC = false;
-      }
-      GameHand.init();
-      if(GameHand.hand){
-        GameHand.hand.css('visibility', 'visible')
-      }
-
-      GameHand.setAnimation('normal')
-      Debugs.log(navigator.userAgent)
-      Debugs.log(Bowser)
-      Debugs.log('iphoneX:',navigator.userAgent.indexOf('Mac OS X')>0)
-
-
-      document.documentElement.addEventListener('mousedown',handDown);
-      document.documentElement.addEventListener('mouseup',handUp);
-      function handDown(event){
-        if(GameHand.hand){
-          GameHand.setStepAnimation(1)
+        GameHand.init();
+        GameHand.setAnimation('normal');
+        document.documentElement.addEventListener('mousedown',handDown);
+        document.documentElement.addEventListener('mouseup',handUp);
+        function handDown(event){
+          if(GameHand.hand){
+            GameHand.setStepAnimation(1)
+          }
+        };
+        function handUp(){
+          if(GameHand.hand){
+            GameHand.setStepAnimation(0)
+          }
         }
-      };
-      function handUp(){
-       if(GameHand.hand){
-         GameHand.setStepAnimation(0)
-       }
+      }else{
+        self.SET_PLATFORM('mobile')
       }
+
+
+
+
+
     },
     methods: {
       ...mapActions(['SET_CURRENTPAGE','SET_COMPLETEDLESSONNUM', 'SET_PLATFORM', 'SET_ENERGY','SET_GAMEHASBEENCOMPLETED']),
-      openBook() {
-        this.bookShow = false;
-      },
 
 
     },

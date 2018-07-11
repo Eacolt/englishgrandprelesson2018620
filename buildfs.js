@@ -184,11 +184,6 @@ function copyTheme() {
         copyIt('./englishmodules/themetypeui/monster4_story.json','./static/themetypeui/monster4_story.json');
         copyIt('./englishmodules/themetypeui/monster4_story.png','./static/themetypeui/monster4_story.png')
         break;
-      case 'reading':
-        copyIt('./englishmodules/themetypeui/monster4_story.atlas','./static/themetypeui/monster4_story.atlas');
-        copyIt('./englishmodules/themetypeui/monster4_story.json','./static/themetypeui/monster4_story.json');
-        copyIt('./englishmodules/themetypeui/monster4_story.png','./static/themetypeui/monster4_story.png')
-        break;
       case 'grammar':
         copyIt('./englishmodules/themetypeui/monster5_grammar.atlas','./static/themetypeui/monster5_grammar.atlas');
         copyIt('./englishmodules/themetypeui/monster5_grammar.json','./static/themetypeui/monster5_grammar.json');
@@ -204,6 +199,11 @@ function copyTheme() {
         copyIt('./englishmodules/themetypeui/monster7_ketpet.atlas','./static/themetypeui/monster7_ketpet.atlas');
         copyIt('./englishmodules/themetypeui/monster7_ketpet.json','./static/themetypeui/monster7_ketpet.json');
         copyIt('./englishmodules/themetypeui/monster7_ketpet.png','./static/themetypeui/monster7_ketpet.png')
+        break;
+      case 'reading':
+        copyIt('./englishmodules/themetypeui/monster8_reading.atlas','./static/themetypeui/monster8_reading.atlas');
+        copyIt('./englishmodules/themetypeui/monster8_reading.json','./static/themetypeui/monster8_reading.json');
+        copyIt('./englishmodules/themetypeui/monster8_reading.png','./static/themetypeui/monster8_reading.png')
         break;
       default:
         break;

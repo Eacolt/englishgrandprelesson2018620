@@ -109,7 +109,7 @@
     },
     components:{congraPopup,masker},
     computed: {
-      ...mapState(['lessonPartsList','gameSecondPlayed','allPartNames','lessonPartsIndex','allLessonsNum','showPopupDelay','allLessonComponentsNames','energyCurrentNum','restArrangementStat','lessonCurrentPageIndex','gameHasBeenCompleted']),
+      ...mapState(['lessonPartsList','appPlatform','gameSecondPlayed','allPartNames','lessonPartsIndex','allLessonsNum','showPopupDelay','allLessonComponentsNames','energyCurrentNum','restArrangementStat','lessonCurrentPageIndex','gameHasBeenCompleted']),
       leftTriangleShow(){
         return this.currentPaginationPages>=4
       },
@@ -226,16 +226,28 @@
       },
 
       swiperMainMouseEnter(){
-        GameHand.setAnimation('swipe')
+        if(this.appPlatform=='pc'){
+          GameHand.setAnimation('swipe')
+        }
+
       },
       swiperMainMouseLeave(){
-        GameHand.setAnimation('normal')
+        if(this.appPlatform=='pc'){
+          GameHand.setAnimation('normal')
+        }
+
       },
       paginationBallMouseLeave(){
-        GameHand.setAnimation('normal')
+        if(this.appPlatform == 'pc'){
+          GameHand.setAnimation('normal')
+        }
+
       },
       paginationBallMouseEnter(){
-        GameHand.setAnimation('click')
+        if(this.appPlatform=='pc'){
+          GameHand.setAnimation('click')
+        }
+
       },
       paginationBallClick(index){
         const self = this;
@@ -337,8 +349,6 @@
 
             function GameStart(resource,gameConfigData){
 
-
-
               Object.assign(self.paginationballs_style,{
                 backgroundImage:"url("+self.globalStatic+'/pagiball1.png'+")",
                 backgroundRepeat:'no-repeat',
@@ -376,10 +386,13 @@
                   resistanceRatio:0,
                   on:{
                     sliderMove:function(e){
-                      GameHand.hand.css({
-                        left:e.pageX,
-                        top:e.pageY
-                      })
+                      if(self.appPlatform=='pc'){
+                        GameHand.hand.css({
+                          left:e.pageX,
+                          top:e.pageY
+                        })
+                      }
+
                     },
                     init(){
                       this.update();
@@ -401,10 +414,13 @@
                   },
                   on: {
                     sliderMove:function(e){
-                      GameHand.hand.css({
-                        left:e.pageX,
-                        top:e.pageY
-                      });
+                      if(self.appPlatform=='pc'){
+                        GameHand.hand.css({
+                          left:e.pageX,
+                          top:e.pageY
+                        });
+                      }
+
                     },
                     slideChangeTransitionStart: function () {
                       const _swiper = this;
@@ -526,8 +542,11 @@
     },
 
     destroyed(){
+        if(this.appPlatform=='pc'){
+          GameHand.setAnimation('normal')
+        }
 
-        GameHand.setAnimation('normal')
+
         mySwiper.destroy(true,true);
         mySwiperPagination.destroy(true,true);
         if(pixiScene){

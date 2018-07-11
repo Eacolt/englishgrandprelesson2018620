@@ -39,11 +39,6 @@
       "pageResourceId": "choiceinterface",
       "menus": [
         {
-          "name": "learning",
-          "pageModuleId": "picSwipeModule",
-          "pageResourceId": "picswipemodule"
-        },
-        {
           "name": "practice",
           "pageModuleId": "choicePicModule",
           "pageResourceId": "choicepicmodule"
@@ -62,5 +57,6 @@
         }
       ]
     }
+
   ]
 }

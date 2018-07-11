@@ -3,14 +3,11 @@ import $ from 'jquery'
 class GameHand {
   static hand = null;
   static locked = false;
-  static isPC = false;
   static animateTicker = null;
   static animateIndex = 0;
 
   static init() {
     if (GameHand.hand) return;
-    if(!GameHand.isPC)return;
-
     var handsArr = [
       $('<img src="static/img/hand1.png" />'),
       $('<img src="static/img/hand2.png" />'),
@@ -36,7 +33,6 @@ class GameHand {
       zIndex: 999999,
       top: '-6rem',
       left: '0',
-      visibility:'hidden',
       pointerEvents: 'none',
       transformOrigin: 'center center'
     });
@@ -56,7 +52,6 @@ class GameHand {
     })
   }
   static setStepAnimation($index){
-    if(!GameHand.isPC)return;
     if (GameHand.locked) {
       if (GameHand.animateTicker) {
         clearInterval(GameHand.animateTicker);
@@ -74,7 +69,6 @@ class GameHand {
   }
 
   static setAnimation($type) {
-    if(!GameHand.isPC)return;
     if (GameHand.locked) {
       if (GameHand.animateTicker) {
         clearInterval(GameHand.animateTicker);
