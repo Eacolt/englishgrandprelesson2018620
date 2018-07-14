@@ -1,13 +1,13 @@
 import GameMenuBars from "./gameui/GameMenuBar";
-import {LoadingAnimation} from "./gameui/GameManager";
+
 import FormatDate from "dateformat";
 import {PIXIAudio} from "./EasyPIXI";
 import {Debugs} from "./Utils";
-
+var gameMenuBar = null;
 class MovieModulePure extends PIXI.Container {
   constructor($option) {
     super();
-    this.gameMenuBar = null;
+
     this.vueInstance = $option.vueInstance;
     this.myVideo = null;
     this._G = {
@@ -15,7 +15,8 @@ class MovieModulePure extends PIXI.Container {
       progressPercent: 0,
       progresslineHitArea: null,
       movieBg: null,//背景；
-      hideProgressTime: 41,//鼠标不触发点击多久后隐藏进度
+      hideProgressTime: 4,//鼠标不触发点击多久后隐藏进度
+			timeEndSec:2,
       getInterval_hideprogress: null,//间隔回调，点击隐藏进度,
       progressIsHide: false,//初始化当前进度条是隐藏状态,
       currentModeStatus: 0, //当前所在都页面位置，0为准备页面，1为正在观看页面；
@@ -39,69 +40,69 @@ class MovieModulePure extends PIXI.Container {
     this._G.movieBg.y = 1080 / 2;
     //TODO:顶部导航逻辑-----
     //GameMenuBars.freeze = false;
-
-    self.gameMenuBar = new GameMenuBars();
-    self.addChild(self.gameMenuBar);
+    gameMenuBar = new GameMenuBars();
+    self.addChild(gameMenuBar);
 
     ////
-    self.gameMenuBar.setBackBtn_tapHandler(() => {
+    gameMenuBar.setBackBtn_tapHandler(() => {
 
       self.changeModeHome();
       setTimeout(() => {
         self.myVideo.pause();
       }, 5);
       self.hideProgressBar();
-      self.gameMenuBar.foldDown()
+      gameMenuBar.foldDown()
 
       self.hideMovieBgAnime();
       self._G.currentModeStatus = 0;
 
     });
-    self.gameMenuBar.setHomeBtn_tapHandler(() => {
+    gameMenuBar.setHomeBtn_tapHandler(() => {
       if (self.vueInstance.$route.meta.completed == 0) {
         self.vueInstance.popupType = 'shutback';
         self.vueInstance.showCongra = true;
       } else {
-        setTimeout(() => {
-          self.vueInstance.$router.push('/index/')
-        }, 1000);
-        LoadingAnimation.setMaskShow(true);
+        // setTimeout(() => {
+        //   self.vueInstance.$router.push('/index/')
+        // }, 1000);
 
         let arr = self.vueInstance.$route.fullPath.split('/');
         let index = self.vueInstance.allPartNames.indexOf(arr[2]);
         self.vueInstance.SET_INDEXPAGEINITIALSLIDE(Number(index));
+
+        self.vueInstance.$router.push('/index/')
       }
     })
-    self.gameMenuBar.backBtnShow = false;
-    self.gameMenuBar.homeBtnShow = true;
-    self.gameMenuBar.bookBtnShow = false;
-    self.gameMenuBar.updateGameMenu();
+    gameMenuBar.backBtnShow = false;
+    gameMenuBar.homeBtnShow = true;
+    gameMenuBar.bookBtnShow = false;
+    gameMenuBar.updateGameMenu();
 
     self.vueInstance.$watch(() => {
       return self.vueInstance.energyCurrentNum
     }, (newval) => {
-      this.gameMenuBar.energy = newval;
-      this.gameMenuBar.playStars();
+      gameMenuBar.energy = newval;
+      gameMenuBar.playStars();
     });
 
     self.vueInstance.$watch(() => {
       return self.vueInstance.currentGameLevel
     }, (newval) => {
       if (newval > 0) {
-        self.gameMenuBar.backBtnShow = true;
-        self.gameMenuBar.homeBtnShow = true;
+        gameMenuBar.backBtnShow = true;
+        gameMenuBar.homeBtnShow = true;
 
 
       } else {
-        self.gameMenuBar.backBtnShow = false;
-        self.gameMenuBar.homeBtnShow = true;
+        gameMenuBar.backBtnShow = false;
+        gameMenuBar.homeBtnShow = true;
 
       }
-      self.gameMenuBar.updateGameMenu();
+      gameMenuBar.updateGameMenu();
 
     })
 
-    this.gameMenuBar.energyOnce = self.vueInstance.energyCurrentNum;
+    gameMenuBar.energyOnce = self.vueInstance.energyCurrentNum;
     //顶部导航逻辑END
 
 
@@ -118,9 +119,9 @@ class MovieModulePure extends PIXI.Container {
   //TODO:当前为播放中
   changeModeBack() {
     const self = this;
-    this.gameMenuBar.homeBtnShow = false;
-    this.gameMenuBar.backBtnShow = true;
-    this.gameMenuBar.updateGameMenu();
+    gameMenuBar.homeBtnShow = false;
+    gameMenuBar.backBtnShow = true;
+    gameMenuBar.updateGameMenu();
     self.vueInstance.$refs.videoPlayBtn.style.opacity = 0;
     self.vueInstance.$refs.videoPlayBtn.style.pointerEvents = 'none';
 
@@ -131,9 +132,9 @@ class MovieModulePure extends PIXI.Container {
   //TODO:当前会回到首页等待播放中
   changeModeHome() {
     const self = this;
-    this.gameMenuBar.homeBtnShow = true;
-    this.gameMenuBar.backBtnShow = false;
-    this.gameMenuBar.updateGameMenu();
+    gameMenuBar.homeBtnShow = true;
+    gameMenuBar.backBtnShow = false;
+    gameMenuBar.updateGameMenu();
     self.vueInstance.$refs.videoPlayBtn.style.opacity = 1;
     self.vueInstance.$refs.videoPlayBtn.style.pointerEvents = 'auto';
 
@@ -323,15 +324,15 @@ class MovieModulePure extends PIXI.Container {
     //
     // }
     self._G.intervalVideo = setInterval(()=> {
-      Debugs.log('_G.intervalVideo')
-      if(self.myVideo.duration>3){
-        if (Math.floor(self.myVideo.currentTime) >= Math.floor(self.myVideo.duration)-6) {
+
+      if(self.myVideo && self.myVideo.duration>3){
+        if (Math.floor(self.myVideo.currentTime) >= Math.floor(self.myVideo.duration)-self._G.timeEndSec) {
           self._G.videoIsEnd = true;
           self.againStar.call(self);
           clearInterval(self._G.intervalVideo);
         }
       }
-    },1);
+    },10);
   }
 
   initEvents() {
@@ -387,13 +388,15 @@ class MovieModulePure extends PIXI.Container {
   destroyed() {
     const self = this;
     if (this._G.progressPlayBtn) {
-      this._G.progressPlayBtn.removeAllListeners()
+      this._G.progressPlayBtn.destroy();
+
     }
     if (this._G.progressHead) {
-      this._G.progressHead.removeAllListeners();
+      this._G.progressHead.destroy();
+
     }
     if (this._G.progressbgline) {
-      this._G.progressbgline.removeAllListeners();
+      this._G.progressbgline.destroy();
     }
     if (this.myVideo) {
       this.myVideo.ontimeupdate = null;
@@ -402,17 +405,17 @@ class MovieModulePure extends PIXI.Container {
       clearInterval(self._G.getInterval_hideprogress);
       self._G.getInterval_hideprogress = null;
     }
-    if (this.gameMenuBar) {
-      this.gameMenuBar.clearGameMenuEvents();
-      this.gameMenuBar.destroy();
+    if (gameMenuBar) {
+      gameMenuBar.clearGameMenuEvents();
+      gameMenuBar.destroy();
+      gameMenuBar = null;
     }
-    this.removeAllListeners();
+    this.destroy();
+
 
     this.myVideo = null;
     this.vueInstance = null;
     this._G = null;
-    this.removeChildren();
-    this.destroy();
 
 
   }
@@ -502,7 +505,7 @@ class MovieModulePure extends PIXI.Container {
 
   hideProgressBar($time = 0.5) {
     const self = this;
-    self.gameMenuBar.foldUp()
+    gameMenuBar.foldUp()
     if (self._G.progressBarCtn) {
       TweenMax.to(self._G.progressBarCtn, $time, {y: 1080 + 150})
       TweenMax.to(self._G.progressBarCtn, $time, {
@@ -520,7 +523,7 @@ class MovieModulePure extends PIXI.Container {
 
       return;
     }
-    self.gameMenuBar.foldDown()
+    gameMenuBar.foldDown()
     if (self._G.progressBarCtn) {
       TweenMax.to(self._G.progressBarCtn, $time, {y: 1080 - 120})
       TweenMax.to(self._G.progressBarCtn, $time, {
@@ -545,7 +548,7 @@ class MovieModulePure extends PIXI.Container {
 
 
     //显示完成;
-    if (Math.floor(this.myVideo.currentTime) >= Math.floor(this.myVideo.duration)-6) {
+    if (Math.floor(this.myVideo.currentTime) >= Math.floor(this.myVideo.duration)-self._G.timeEndSec) {
       if(!self._G.videoIsEnd){
         this.againStar.call(self);
         self._G.videoIsEnd = true;
@@ -572,7 +575,7 @@ class MovieModulePure extends PIXI.Container {
       setTimeout(() => {
         if (isQingsuan && !self.vueInstance.gameHasBeenCompleted) {
           Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.vueInstance.gameHasBeenCompleted)
-          self.gameMenuBar.bookScene.openEnergyCan(false);
+          gameMenuBar.bookScene.openEnergyCan(false);
 
         } else if (isQingsuan == false && !self.vueInstance.gameHasBeenCompleted) {
           self.vueInstance.showCongra = true;
@@ -583,7 +586,7 @@ class MovieModulePure extends PIXI.Container {
           Debugs.log('游戏第二周目，继续玩')
           PIXIAudio.audios['win_jump'].play();
         } else if (self.vueInstance.gameHasBeenCompleted && !self.vueInstance.gameSecondPlayed) {
-          self.gameMenuBar.bookScene.openEnergyCan(true);
+          gameMenuBar.bookScene.openEnergyCan(true);
           PIXIAudio.audios['win_jump'].play();
           Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
         }

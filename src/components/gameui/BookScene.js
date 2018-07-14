@@ -92,17 +92,21 @@ class BookScene extends PIXI.Container{
     if(this.backGroundMask){
      // Tween
       this.backGroundMask.interactive = true;
-      TweenMax.to(this.backGroundMask,$time,{alpha:.8})
+      // TweenMax.to(this.backGroundMask,$time,{alpha:.8})
+
+      this.backGroundMask.alpha = 0.8;
     }
   };
   hideBlackMask($time=.3){
     const self = this;
     if(this.backGroundMask){
       // Tween
+      this.backGroundMask.alpha = 0;
+      self.backGroundMask.interactive = false;
 
-      TweenMax.to(this.backGroundMask,$time,{alpha:0,onComplete:()=>{
-          self.backGroundMask.interactive = false;
-        }})
+      // TweenMax.to(this.backGroundMask,$time,{alpha:0,onComplete:()=>{
+      //     self.backGroundMask.interactive = false;
+      //   }})
     }
   }
 
@@ -342,7 +346,6 @@ class BookScene extends PIXI.Container{
 
 
   //这个地方立即判断是否中奖;
-
      let mypromise = new Promise(function(resolve,reject){
        window.parent.postMessage({
          type: "stepSubmit",
@@ -357,7 +360,7 @@ class BookScene extends PIXI.Container{
            resolve(Number(e.data.getCard));
          }else{
            if(self.isGo){
-             resolve(1);
+             resolve(1);//TODO：中奖
              self.isGo = false;
            }
          }
@@ -381,8 +384,8 @@ class BookScene extends PIXI.Container{
                  TweenMax.to(item,1,{alpha:0})
                }
              });
-             let sound = new Audio('static/sound/box_right.mp3');
-             sound.play();
+
+             PIXIAudio.audios['box_right'].play();
            },onComplete:function(){
              EventTarget.state.setAnimation(0,'open1',false);
              //todo:让宝箱的UI消失
@@ -422,8 +425,8 @@ class BookScene extends PIXI.Container{
                  TweenMax.to(item,1,{alpha:0})
                }
              });
-             let sound = new Audio('static/sound/box_wrong.mp3');
-             sound.play();
+
+             PIXIAudio.audios['box_wrong'].play();
            },onComplete:function(){
              EventTarget.state.setAnimation(0,'open2',false);
              //todo:让宝箱的UI消失
@@ -601,6 +604,7 @@ class BookScene extends PIXI.Container{
     ticker.start();
     if($isEnd){
       GameMenuBars.vueInstance.SET_GAMEHASBEENCOMPLETED(true);
+      GameMenuBars.vueInstance.SET_SHOWPOPUPDELAY(1);
 
     }
     function showText($isCompleted=false){
@@ -654,10 +658,13 @@ class BookScene extends PIXI.Container{
 
         self.energyCanCtn1.addChild(text1);
         self.addChild(self.energyCanCtn1)
-        self.energyCanCtn1.alpha= 0;
-        TweenMax.to(self.energyCanCtn1,1,{alpha:1,onComplete:function(){
-            continueBtn.interactive = goHomeBtn.interactive = true;
-          }});
+        // self.energyCanCtn1.alpha= 0;
+        self.energyCanCtn1.alpha = 1;
+        continueBtn.interactive = goHomeBtn.interactive = true;
+
+        // TweenMax.to(self.energyCanCtn1,1,{alpha:1,onComplete:function(){
+        //     continueBtn.interactive = goHomeBtn.interactive = true;
+        //   }});
 
       }
     }
@@ -672,10 +679,11 @@ class BookScene extends PIXI.Container{
       this.energyCanCtn2.alpha = 0;
     }
   }
-  //Interacitve Handler;
+  //TODO:开启宝箱；
   openBox_pointerDown_handler(){
     this.hideAll_EnergyElement();
     this.openBoxes();
+    GameMenuBars.vueInstance.SET_BOOKOPENED(1);//让书打开；
     GameMenuBars.vueInstance.SET_GAMESECONDPLAYED(true);//
     this.boxes.forEach((item)=>{
       item.interactive = true;

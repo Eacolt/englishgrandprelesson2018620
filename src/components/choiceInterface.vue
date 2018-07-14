@@ -91,6 +91,7 @@
             GameStart.call(self);
             self.SET_ASSETSPAGES({assetsName: 'choicePages', completedStat: 1});
               LoadingAnimation.setMaskShow(false);
+
           });
 
         }

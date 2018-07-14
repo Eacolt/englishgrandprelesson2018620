@@ -12,8 +12,8 @@ class BookReadingModule extends PIXI.Container {
   constructor($options) {
     super();
     this.gameConfig = $options.json;
-    this.resources = PIXI.loader.resources;
     this.vueInstance = $options.vueInstance;
+    this.resources = PIXI.loader.resources;
     ///
     this.book = null;
     this.pageturn = null;
@@ -51,7 +51,7 @@ class BookReadingModule extends PIXI.Container {
 
   addedToStage() {
     const self = this;
-    var gameBg = new PIXI.Sprite(PIXI.loader.resources['backbg_jpg'].texture);
+    var gameBg = new PIXI.Sprite(self.resources['backbg_jpg'].texture);
     this.addChild(gameBg)
 
 
@@ -108,7 +108,7 @@ class BookReadingModule extends PIXI.Container {
       const self = this;
       let coverPageCtn = new PIXI.Container();
 
-      let coverPage = new PIXI.Sprite(PIXI.loader.resources['pagefengmian'].texture);
+      let coverPage = new PIXI.Sprite(self.resources['pagefengmian'].texture);
 
       var tl = new TimelineMax({
         onComplete: () => {
@@ -199,7 +199,7 @@ class BookReadingModule extends PIXI.Container {
     }
 
 
-    var pageturn2 = new PIXI.Sprite(PIXI.loader.resources['pageturn2_png'].texture);
+    var pageturn2 = new PIXI.Sprite(self.resources['pageturn2_png'].texture);
 
     this.pageturn.pivot.x = this.pageturn.width;
     pageturn2.pivot.x = pageturn2.width;
@@ -432,19 +432,42 @@ class BookReadingModule extends PIXI.Container {
   };
 
   destroyed() {
+    super.destroy();
     if (this.gameAudio) {
-      this.gameAudio.stop();
-      this.gameAudio = null;
-      this.boySpine = null;
+      this.stopAudios();
+
     }
     if (this.gameMenuBar) {
       this.gameMenuBar.clearGameMenuEvents();
       this.gameMenuBar.destroy();
+      this.gameMenuBar = null;
     }
-    if (this.boySpine) {
-      this.boySpine.removeAllListeners()
-    }
-    this.removeChildren();
+    this.gameConfig = null;
+    this.resources = null;
+
+    this.book = null;
+    this.pageturn = null;
+    this.pageturn2 = null;
+    this.leftBtn = null;
+    this.rightBtn = null;
+    this.pageMaskUpper = null;
+    this.pageMaskDown = null;
+    this.pageUpper = null;
+    this.pageDown = null;
+    this.swiperHammer = null;
+    this.boySpine.destroy();
+    //封面;
+    this.coverPageTl = null;
+    this.coverPageTl_reserve = null;
+    this.isCoverPageTime = true;//当前是封面的时候;
+    this.isCoverPageTime_reserve = false;
+    this.myAn_pageTurns = null;
+
+
+
+    this.gameAudio = null;
+    this.boySpine = null;
+    this.vueInstance = null;
     this.destroy();
   }
 

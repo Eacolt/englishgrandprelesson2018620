@@ -1,34 +1,34 @@
 <template>
-  <div class="gameContainer">
-    <pixi-canvas @startGame="gameStart"></pixi-canvas>
+  <div class="gameContainer" ref="pixicanvas">
 
-    <transition @before-enter="beforeEnter"
-                @enter="enter"
-                @leave="leave">
       <congraPopup :showType="popupType" v-if="showCongra"
-                   @quitGame.once="quitGame_handler()"
-                   @continueGame.once="continueGame()"
-                   @continueClicked.once="clickContinue_handler()"
-                   @againClicked.once="againClicked_handler"></congraPopup>
-    </transition>
+                   @quitGame="quitGame_handler()"
+                   @continueGame="continueGame()"
+                   @continueClicked="clickContinue_handler()"
+                   @againClicked="againClicked_handler">
+
+      </congraPopup>
+
   </div>
 
 </template>
 
 <script>
-  import Vue from 'vue'
-  import {ResourceMent, myVueMixin, myVueMixin_Popup,loaderAssetsByValided} from './Utils.js'
 
+  import {ResourceMent, myVueMixin, myVueMixin_Popup} from './Utils.js'
   import {mapActions, mapState} from 'vuex'
- import {LoadingAnimation} from "./gameui/GameManager";
   import congraPopup from './gameui/congraPopup.vue'
   import PixiScene1 from './choiceTextModule.js'
   import {PIXIAudio,AnimationSprite} from "./EasyPIXI";
+  import {checkForJumpRoute} from "./Utils";
   import {TweenMax} from 'gsap'
+
   // const _ = require('lodash');
+  // import {Debugs} from "./Utils";
 
   var pixiScene = null;
   var modulesUrl = null;
+  var canvasApp = null;
   export default {
     name: "module1",
     mixins: [myVueMixin, myVueMixin_Popup],
@@ -67,25 +67,41 @@
       },
       clickContinue_handler() {
 
-        if (pixiScene) {
-         // this.$parent.$parent.$refs.gameMenu.showGrandMask = false;
-
-          pixiScene.playContinue();
+        // if (this.gameHasBeenCompleted) {
+        //   checkForJumpRoute.call(this, false);
+        //
+        //
+        // } else {
+        //   checkForJumpRoute.call(this, true);
+        // }
+        if (this.gameHasBeenCompleted) {
+          /////////////////////
+          let restArrangmentArr = this.$store.state.restArrangementStat;
+          if (restArrangmentArr.length > 0) {
+            this.$router.push({name: restArrangmentArr[0]});
+            let d = Number(restArrangmentArr[0].split('-')[1]);
+            this.$store.dispatch('SET_LESSONPARTSINDEX', d);
+          }
+        } else {
+          let allLessonComponentsNames = this.$store.state.allLessonComponentsNames;
+          let b = Number(allLessonComponentsNames[0].split('-')[1]);
+          let currentPageIndex = this.lessonCurrentPageIndex;
+          if (currentPageIndex < allLessonComponentsNames.length - 1) {
+            this.$router.push({name: allLessonComponentsNames[currentPageIndex + 1]});
+          } else {
+            this.$router.push({name: allLessonComponentsNames[0]});
+          }
         }
       },
       quitGame_handler(){
         const self = this;
-        setTimeout(() => {
-          self.$router.push('/index/')
-        }, 1000);
-         LoadingAnimation.setMaskShow(true);
+
+
 
         let arr = this.$route.fullPath.split('/');
         let index = self.allPartNames.indexOf(arr[2]);
         self.SET_INDEXPAGEINITIALSLIDE(Number(index));
-
-
-
+        self.$router.push('/index/')
 
       },
       continueGame_handler(){
@@ -96,6 +112,8 @@
         const self = this;
          modulesUrl = this.$route.meta.assetsUrl;
 
+         console.log('这是什么情况，输出两次？？？？')
+
 
           ////加载逻辑
         self.axios.get('static/' + modulesUrl + '/gameconfig.json').then((gameConfigData) => {
@@ -105,17 +123,39 @@
               url: item.url
             }
           });
-          loaderAssetsByValided.call(self,modulesUrl,assets,GameStart);
+
+          //PIXI 加载逻辑
+          var avalidiAssets = [];
+          assets.forEach((item)=>{
+            if(!PIXI.loader.resources[item.name]){
+              avalidiAssets.push({
+                name:item.name,
+                url:item.url
+              })
+            };
+          });
+          if(avalidiAssets.length>0){
+            PIXI.loader.add(avalidiAssets)
+              .load(function(){
+                GameStart.call(self,gameConfigData.data);
+              });
+          }else{
+            GameStart.call(self,gameConfigData.data);
+          }
+          //PIXI加载逻辑 ---END
         });
+
+
+
         ///End加载逻辑
 
         //加载页面小人END
-        LoadingAnimation.setMaskShow(true,0);
+        // LoadingAnimation.setMaskShow(true,0);
         //end
 
 
 
-        function GameStart(resource,gameConfigData){
+        function GameStart(gameConfigData){
 
           let audioManifest = [];
           for(let i=0;i<gameConfigData.gameData.levels.length;i++){
@@ -136,43 +176,32 @@
 
           if(PIXIAudio.loadedStatus[modulesUrl]==undefined && audioManifest.length>0){
             PIXIAudio.addAudio(audioManifest, 'static/' + modulesUrl+'/', ()=>{
-
-              var scene1 = new PixiScene1({
+              //加载声音；
+              pixiScene= new PixiScene1({
                 json: gameConfigData.gameData,
-                app: app,
-                ticker: app.ticker,
-                resources: resource,
                 vueInstance: self
               });
-              app.stage.addChild(scene1);
-
-              pixiScene = scene1;
-              LoadingAnimation.setMaskShow(false);
+              app.stage.addChild(pixiScene);
 
 
             },modulesUrl);
-          }else{
-
-            var scene1 = new PixiScene1({
-              json: gameConfigData.gameData,
-              app: app,
-              ticker: app.ticker,
-              resources: resource,
-              vueInstance: self
-            });
-            app.stage.addChild(scene1);
-
-            pixiScene = scene1;
-            LoadingAnimation.setMaskShow(false);
           }
+
+
+
+
         }
       }
     },
     beforeDestroy() {
+      if(canvasApp){
+        canvasApp.destroy();
+        canvasApp = null;
+      }
       if(pixiScene){
-
         pixiScene.destroyed();
         pixiScene.destroy();
+        pixiScene = null;
       }
     },
 
@@ -183,9 +212,25 @@
       this.$on('changeGameLevel', function (n) {
         self.currentGameLevel = n;
 
+      });
 
 
-      })
+      canvasApp  = new PIXI.Application({
+        width: 1920,
+        height: 1080,
+        antialias: false,
+      });
+
+      canvasApp.view.style.position = 'absolute';
+      canvasApp.view.style.width = '100%';
+      canvasApp.view.style.height = '100%';
+      canvasApp.view.style.top = '0px';
+      canvasApp.view.style.left = '0px';
+      canvasApp.view.style.right = '0px';
+      canvasApp.view.style.margin = '0px auto';
+      self.$refs.pixicanvas.appendChild(canvasApp.view);
+
+      this.gameStart(canvasApp);
 
 
 

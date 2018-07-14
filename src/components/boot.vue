@@ -132,14 +132,10 @@
             Debugs.log('所有课程都已经完成了')
             self.SET_GAMESECONDPLAYED(true);//
           }
-
-
           //是否从游戏过来;
           if (getId_response.isOpenBook && getId_response.isOpenBook) {
             self.SET_MAGICBOOKBYGAMEINDEX(getId_response.isOpenBook);
           };
-
-
           setTimeout(()=>{
             self.emitRender = true;
           },400);
@@ -164,7 +160,7 @@
             } else {
               if (self.isgo) {
 
-                resolve({detail: [], card: 12, opened: 1, isOpenBook: 0});
+                resolve({detail: [], card: 11, opened: 0, isOpenBook: 0});
                 self.isgo = false;
               }
             }
@@ -184,7 +180,7 @@
 
         var _Ga = {};
         LoadingAnimation.loading = self.$parent.$refs.masker;
-        LoadingAnimation.setMaskShow(false, 0);
+        // LoadingAnimation.setMaskShow(false, 0);
         _Ga.monster = document.getElementById('starmonster');
         _Ga.planet1 = document.getElementById('load_planet1');//8
         _Ga.planet2 = document.getElementById('load_planet2');
@@ -342,19 +338,19 @@
                   gameCtn.addChild(gameStartPage);
                   gameCtn.addChild(gameStartBtn);
                   gameStartBtn.on('pointertap', () => {
-                    gameStartBtn.destroy();
-                    gameStartPage.destroy(true);
-                    gameBg.destroy();
+                    // gameStartBtn.destroy();
+                    // gameStartPage.destroy(true);
+                    // gameBg.destroy();
                     PIXIAudio.audios.bgSound.play();
                     PIXIAudio.audios.bgSound.loop = -1;
                     PIXIAudio.audios.bgSound.volume = 1;
                     self.$router.push('/index');
-                    gameStartBtn.removeListener('pointertap')
+                    // gameStartBtn.removeListener('pointertap')
 
                   });
                   app.stage.addChild(gameCtn)
                   self.SET_ASSETSPAGES({assetsName: 'indexPage', completedStat: 1});
-                  LoadingAnimation.setMaskShow(false);
+                  // LoadingAnimation.setMaskShow(false);
 
 
                   _Ga.loading = document.getElementsByClassName('container')[0];

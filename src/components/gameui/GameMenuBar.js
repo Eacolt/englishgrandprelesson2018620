@@ -478,24 +478,33 @@ class GameMenuBars extends PIXI.Container {
   //
   //TODO:事件分发部分;
   clearGameMenuEvents(){
+
+    this.rightMenuUI = [];
+    if(this.bookScene){
+      this.bookScene.destroy()
+    }
+    if(this.starsLight){
+
+      this.starsLight.destroy();
+    }
     if(this.closeBtnHandler){
-      this.closeBtn.removeListener('pointertap',this.closeBtnHandler,this);
+      this.closeBtn.removeAllListeners();
       this.closeBtnHandler = null;
     }
     if(this.backBtnHandler){
-      this.backBtn.removeListener('pointertap',this.backBtnHandler,this);
+      this.backBtn.removeAllListeners();
       this.backBtnHandler = null;
     }
     if(this.homeBtnHandler){
-      this.homeBtn.removeListener('pointertap',this.homeBtnHandler,this);
+      this.homeBtn.removeAllListeners();
       this.homeBtnHandler = null;
     }
     if(this.soundBtnHandler){
-      this.soundBtn.removeListener('pointertap',this.soundBtnHandler,this);
+      this.soundBtn.removeAllListeners();
       this.soundBtnHandler = null;
     }
     if(this.bookBtnHandler){
-      this.bookBtn.removeListener('pointertap',this.bookBtnHandler,this);
+      this.bookBtn.removeAllListeners();
       this.bookBtnHandler = null;
     }
   }

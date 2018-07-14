@@ -1,18 +1,14 @@
 <template>
-  <div class="gameContainer">
-    <pixi-canvas @startGame="gameStart"></pixi-canvas>
+  <div class="gameContainer" ref="pixicanvas">
 
-    <transition @before-enter="beforeEnter"
-                @enter="enter"
-                @leave="leave">
-      <!--<congraPopup showType="popup2" v-show="showCongra" @continueClicked="clickContinue()" @againClicked="againClicked"></congraPopup>-->
+
 
       <congraPopup :showType="popupType" v-if="showCongra"
-                   @quitGame.once="quitGame()"
-                   @continueGame.once="continueGame()"
-                   @continueClicked.once="clickContinue()"
-                   @againClicked.once="againClicked"></congraPopup>
-    </transition>
+                   @quitGame="quitGame()"
+                   @continueGame="continueGame()"
+                   @continueClicked="clickContinue()"
+                   @againClicked="againClicked"></congraPopup>
+    <!--</transition>-->
   </div>
 
 </template>
@@ -29,6 +25,7 @@
 
   var pixiScene = null;
   var modulesUrl = null;
+  var canvasApp = null;
 
   export default {
     name: "module1",
@@ -54,13 +51,33 @@
       ...mapActions(['SET_CANVASPAGE','SET_INDEXPAGEINITIALSLIDE','SET_COMPLETEDLESSONNUM', 'SET_ASSETSPAGES','PUSH_GAMES', 'SET_LESSONCOMPLETESTAT','SET_RESTARRANGEMENTSTAT','SET_LESSONCURRENTPAGEINDEX']),
 
       clickContinue() {
-        //
-        // this.$parent.$parent.$refs.gameMenu.showGrandMask = false;
+
         if(this.gameHasBeenCompleted){
           checkForJumpRoute.call(this,false);
         }else{
           checkForJumpRoute.call(this,true);
         }
+
+        // if (this.gameHasBeenCompleted) {
+        //   /////////////////////
+        //   let restArrangmentArr = this.$store.state.restArrangementStat;
+        //   if (restArrangmentArr.length > 0) {
+        //     this.$router.push({name: restArrangmentArr[0]});
+        //     let d = Number(restArrangmentArr[0].split('-')[1]);
+        //     this.$store.dispatch('SET_LESSONPARTSINDEX', d);
+        //   }
+        // } else {
+        //   let allLessonComponentsNames = this.$store.state.allLessonComponentsNames;
+        //   let b = Number(allLessonComponentsNames[0].split('-')[1]);
+        //   let currentPageIndex = this.lessonCurrentPageIndex;
+        //   if (currentPageIndex < allLessonComponentsNames.length - 1) {
+        //     this.$router.push({name: allLessonComponentsNames[currentPageIndex + 1]});
+        //   } else {
+        //     this.$router.push({name: allLessonComponentsNames[0]});
+        //   }
+        // }
+
+
       },
       againClicked() {
         this.showCongra = false;
@@ -108,11 +125,31 @@
               url: item.url
             }
           });
-          loaderAssetsByValided.call(self,modulesUrl,assets,GameStart);
+          //PIXI 加载逻辑
+          var avalidiAssets = [];
+          assets.forEach((item)=>{
+            if(!PIXI.loader.resources[item.name]){
+              avalidiAssets.push({
+                name:item.name,
+                url:item.url
+              })
+            };
+          });
+          if(avalidiAssets.length>0){
+            PIXI.loader.add(avalidiAssets)
+              .load(function(){
+                GameStart.call(self,gameConfigData.data);
+              });
+          }else{
+            GameStart.call(self,gameConfigData.data);
+          }
+          //PIXI加载逻辑 ---END
+
+
         });
         ///End加载逻辑
 
-        function GameStart(resource,gameConfigData){
+        function GameStart(gameConfigData){
 
 
 
@@ -151,9 +188,6 @@
           }else{
             var scene1 = new PixiScene1({
               json: gameConfigData.gameData,
-              app: app,
-              ticker: app.ticker,
-              resources: resource,
               vueInstance:self,
             });
             app.stage.addChild(scene1);
@@ -178,6 +212,10 @@
         pixiScene.destroy()
         pixiScene = null;
       }
+      if(canvasApp){
+        canvasApp.destroy();
+        canvasApp = null;
+      }
 
 
     },
@@ -191,6 +229,24 @@
       this.$on('showCongra', function () {
         self.showCongra = true;
       });
+
+      canvasApp  = new PIXI.Application({
+        width: 1920,
+        height: 1080,
+        antialias: false,
+        transparent:true
+      });
+
+      canvasApp.view.style.position = 'absolute';
+      canvasApp.view.style.width = '100%';
+      canvasApp.view.style.height = '100%';
+      canvasApp.view.style.top = '0px';
+      canvasApp.view.style.left = '0px';
+      canvasApp.view.style.right = '0px';
+      canvasApp.view.style.margin = '0px auto';
+      self.$refs.pixicanvas.appendChild(canvasApp.view);
+      this.gameStart(canvasApp)
+
 
     },
   }

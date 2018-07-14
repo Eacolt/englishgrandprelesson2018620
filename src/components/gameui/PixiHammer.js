@@ -120,6 +120,26 @@ class PixiHammer{
     }
     return swiperX;
   }
+  destroy(){
+    this.swiperContainer.destroy();
+    this.swiperArea = null;
+    this.swiperDirection = null;
+
+    this.swiperIsDown = false;
+    this.swiperX_arr = [];
+
+    this.swiperTimes = null;
+    this.swiperTicker = null;
+    this.swiperMovedX = null;
+
+    this.lock  = false;
+
+
+
+    this.moveToLeft = null;
+    this.moveToRight = function(){};
+
+  }
 }
 
 

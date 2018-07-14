@@ -28,7 +28,7 @@ class PIXIAudio{
       for(let i =0;i<$manifest.length;i++){
         if(PIXIAudio.audios[$manifest[i].id] == undefined){
           let myaudio  = createjs.Sound.createInstance($manifest[i].id);
-          PIXIAudio.audios[$manifest[i].id] =myaudio;
+          PIXIAudio.audios[$manifest[i].id] = myaudio;
         }
       }
       audioNum++;
@@ -83,9 +83,12 @@ class AnimationSprite extends PIXI.Container {
   }
 
   play() {
+    if(this.soundTrumpet){
 
-    this.soundTrumpet.play();
-    this.status = 'playing';
+      this.soundTrumpet.play();
+      this.status = 'playing';
+    }
+
 
   }
 

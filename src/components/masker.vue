@@ -27,7 +27,8 @@
     pointer-events: none;
     padding:0;
     margin:0;
-    opacity:0;
+    visibility: hidden;
+
   }
   .loadingUI {
     position: absolute;

@@ -1,7 +1,8 @@
 {
   "menuModuleId": "string",
-  "themeType":3,
+  "themeType":2,
   "menus": [
+
     {
       "name": "song",
       "pageModuleId": "choiceInterface",
@@ -12,7 +13,6 @@
           "pageModuleId": "movieModule",
           "pageResourceId": "moviemodule"
         }
-
       ]
     },
     {
@@ -27,25 +27,31 @@
         },
         {
           "name": "practice",
-          "pageModuleId": "choiceTextModule",
-          "pageResourceId": "choicetextmodule"
-        }
-
-      ]
-    },
-    {
-      "name": "sentences",
-      "pageModuleId": "choiceInterface",
-      "pageResourceId": "choiceinterface",
-      "menus": [
-        {
-          "name": "practice",
           "pageModuleId": "choicePicModule",
           "pageResourceId": "choicepicmodule"
         }
       ]
     },
     {
+
+      "name": "sentences",
+      "pageModuleId": "choiceInterface",
+      "pageResourceId": "choiceinterface",
+      "menus": [
+        {
+          "name": "learning",
+          "pageModuleId": "picSwipeModule",
+          "pageResourceId": "picswipemodule2"
+        },
+        {
+          "name": "practice",
+          "pageModuleId": "choiceTextModule",
+          "pageResourceId": "choicetextmodule"
+        }
+      ]
+    },
+    {
+
       "name": "reading",
       "pageModuleId": "choiceInterface",
       "pageResourceId": "choiceinterface",
@@ -55,7 +61,9 @@
           "pageModuleId": "bookReadingModule",
           "pageResourceId": "bookreadingmodule"
         }
+
       ]
     }
+
   ]
 }

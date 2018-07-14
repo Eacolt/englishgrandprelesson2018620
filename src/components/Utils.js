@@ -14,7 +14,7 @@ class Debugs {
 
   static log() {
     if (Debugs.locked) return;
-    console.log.call(null, ...arguments)
+    console.log.call(null, ...arguments);
 
   }
 }

@@ -1,13 +1,12 @@
 <template>
   <div>
-    <div  class="bg"></div>
-    <pixi-canvas  @startGame="gameStart"></pixi-canvas>
-    <!--<pixi-canvas :gameConfig="gameConfig" @startGame="gameStart"></pixi-canvas>-->
+    <div  class="bg" :style="bgStyle"></div>
+
     <div  id="swiperContainerMain" class="swiper-container">
       <div v-cloak id="swiperWrapperMain" class="swiper-wrapper" @mouseenter="swiperMainMouseEnter()" @mouseleave="swiperMainMouseLeave()">
         <div   v-for="(item,index) in slideLists" class="swiper-slide swiper-slide-main">
           <div class="slideInnerPic" :style="item.styles">
-            {{item.slideName}}
+
           </div>
         </div>
       </div>
@@ -20,8 +19,13 @@
       <div  id="paginationdiy" class=" swiper-container ">
         <div v-cloak class="swiper-wrapper swiper-wrapper-paginationdiv ">
           <div v-for="(item,index) in slideLists" class="swiper-slide swiper-slide-paginationdiy">
-            <div @mouseenter='paginationBallMouseEnter()'
-                 @mouseleave='paginationBallMouseLeave()'
+            <!--<div @mouseenter='paginationBallMouseEnter()'-->
+                 <!--@mouseleave='paginationBallMouseLeave()'-->
+                 <!--@click="paginationBallClick(index)" class="paginationballs" :style="paginationballs_style">-->
+              <!--{{index+1}}-->
+            <!--</div>-->
+
+            <div
                  @click="paginationBallClick(index)" class="paginationballs" :style="paginationballs_style">
               {{index+1}}
             </div>
@@ -33,30 +37,30 @@
         <div class="right"  @click="goNextPagi()" :style="rightTriangle_style" v-show="rightTriangleShow"></div>
       </div>
     </div>
-    <div ref="boyBtnArea" class="boyBtnArea" @click="boyBtnAreaClicked"></div>
-    <div :style="canvas2Style" class="canvas2">
-      <pixi-canvas :style="canvas2Style"  @startGame="gameStart2"></pixi-canvas>
-    </div>
 
-    <transition  @before-enter="beforeEnter"
-                 @enter="enter"
-                 @leave="leave">
+
+    <div class="canvasApp" :style="canvasAppLevel" ref="pixicanvas"></div>
+
+    <div ref="boyBtnArea" class="boyBtnArea" @click="boyBtnAreaClicked"></div>
+
       <congraPopup :showType="popupType" v-if="showCongra"
-                   @quitGame.once="quitGame_hdr()"
-                   @continueGame.once="continueGame_hdr()"
-                   @continueClicked.once="clickContinue_hdr()"
-                   @againClicked.once="againClicked_hdr"></congraPopup>
-    </transition>
+                   @quitGame="quitGame_hdr()"
+                   @continueGame="continueGame_hdr()"
+                   @continueClicked="clickContinue_hdr()"
+                   @againClicked="againClicked_hdr">
+
+      </congraPopup>
+
 
   </div>
 </template>
 <script>
-  import {myVueMixin,checkForJumpRoute,myVueMixin_Popup,loaderAssetsByValided} from './Utils.js'
+  import {myVueMixin,checkForJumpRoute,myVueMixin_Popup} from './Utils.js'
   import {mapActions, mapState} from 'vuex'
   import PixiScene1 from './picSwipeModule.js'
   import GameMenuBars from './gameui/GameMenuBar.js'
   import GameHand from './gameui/Gamehand.js'
-  import {LoadingAnimation} from "./gameui/GameManager";
+
 
   import congraPopup from './gameui/congraPopup.vue'
   import masker from './masker.vue'
@@ -65,16 +69,21 @@
 
   import 'swiper/dist/css/swiper.css'
   import {PIXIAudio} from './EasyPIXI.js'
+  var canvasApp = null;
+  var canvasApp2 = null;
   var pixiScene = null;
   var mySwiper = null;
   var mySwiperPagination = null;
   var modulesUrl = null;
-
+  var globalStatic = null;
   export default {
     name: "module1",
     mixins:[myVueMixin,myVueMixin_Popup],
     data: function () {
       return {
+        canvasAppLevel:{
+          zIndex:99
+        },
         slideLists: [],
         paginationLists: [],
         paginationPicture: {},
@@ -90,9 +99,6 @@
         currentGameLevel:0,
         showCongra:false,
 
-        globalStatic:null,
-        swiperX:[],
-        scaleArr:[],//缩放大小
         currentLessonCompleted:false,
 
         leftTriangle_style:{},
@@ -101,9 +107,11 @@
         boyCanClicked:true,
 
         currentPaginationPages:-1,
-        canvas2Style:{
-          pointerEvents:'none'
+        bgStyle:{
+          backgroundImage:'url("static/themetypeui/backbg.jpg")',
+          backgroundSize:'contain'
         }
+
 
       }
     },
@@ -137,15 +145,21 @@
       },
       boyBtnAreaClicked(){
         const self = this;
-        if(self.boyCanClicked==false)return;
-        self.boyCanClicked = false;
+        // if(self.boyCanClicked==false)return;
+        // self.boyCanClicked = false;
+        this.canvasAppLevel = {
+          zIndex:100
+        }
         Debugs.log('点到我了')
         if(mySwiper){
           if(mySwiper.activeIndex <mySwiper.slides.length-1){
             return;
           }
         }
-        pixiScene.stopAudios();
+        if(pixiScene){
+          pixiScene.stopAudios();
+        }
+
 
 
 
@@ -164,8 +178,8 @@
           setTimeout(() => {
             if (isQingsuan && !self.gameHasBeenCompleted) {
               Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.gameHasBeenCompleted)
-              // self.gameMenuBar.bookScene.openEnergyCan(false);
-              self.openEnergyed = 0;
+               pixiScene.gameMenuBar.bookScene.openEnergyCan(false);
+             // self.openEnergyed = 0;
 
             } else if (isQingsuan == false && !self.gameHasBeenCompleted) {
               self.showCongra = true;
@@ -176,7 +190,7 @@
               Debugs.log('游戏第二周目，继续玩')
               PIXIAudio.audios['win_jump'].play();
             }  else if (self.gameHasBeenCompleted && !self.gameSecondPlayed) {
-              self.openEnergyed = 1;
+              pixiScene.gameMenuBar.bookScene.openEnergyCan(true);
               PIXIAudio.audios['win_jump'].play();
               Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.gameHasBeenCompleted)
             }
@@ -191,17 +205,14 @@
       },
       quitGame_hdr(){
         const self = this;
-        setTimeout(() => {
-          self.$router.push('/index/')
-        }, 1000);
-
+        // setTimeout(() => {
+        //   self.$router.push('/index/')
+        // }, 1000);
         let arr = this.$route.fullPath.split('/');
         let index = self.allPartNames.indexOf(arr[2]);
         self.SET_INDEXPAGEINITIALSLIDE(Number(index));
 
-        LoadingAnimation.setMaskShow(true)
-
-
+        self.$router.push('/index/');
 
       },
       continueGame_hdr(){
@@ -209,12 +220,31 @@
       },
       clickContinue_hdr(){
 
-        if(this.gameHasBeenCompleted){
-          checkForJumpRoute.call(this,false);
-
-        }else{
-          checkForJumpRoute.call(this,true);
+        if (this.gameHasBeenCompleted) {
+          /////////////////////
+          let restArrangmentArr = this.$store.state.restArrangementStat;
+          if (restArrangmentArr.length > 0) {
+            this.$router.push({name: restArrangmentArr[0]});
+            let d = Number(restArrangmentArr[0].split('-')[1]);
+            this.$store.dispatch('SET_LESSONPARTSINDEX', d);
+          }
+        } else {
+          let allLessonComponentsNames = this.$store.state.allLessonComponentsNames;
+          let b = Number(allLessonComponentsNames[0].split('-')[1]);
+          let currentPageIndex = this.lessonCurrentPageIndex;
+          if (currentPageIndex < allLessonComponentsNames.length - 1) {
+            this.$router.push({name: allLessonComponentsNames[currentPageIndex + 1]});
+          } else {
+            this.$router.push({name: allLessonComponentsNames[0]});
+          }
         }
+
+        // if(this.gameHasBeenCompleted){
+        //   checkForJumpRoute.call(this,false);
+        //
+        // }else{
+        //   checkForJumpRoute.call(this,true);
+        // }
       },
       againClicked_hdr(){
         this.showCongra = false;
@@ -226,27 +256,27 @@
       },
 
       swiperMainMouseEnter(){
-        if(this.appPlatform=='pc'){
-          GameHand.setAnimation('swipe')
-        }
+        // if(this.appPlatform=='pc'){
+        //   GameHand.setAnimation('swipe')
+        // }
 
       },
       swiperMainMouseLeave(){
-        if(this.appPlatform=='pc'){
-          GameHand.setAnimation('normal')
-        }
+        // if(this.appPlatform=='pc'){
+        //   GameHand.setAnimation('normal')
+        // }
 
       },
       paginationBallMouseLeave(){
-        if(this.appPlatform == 'pc'){
-          GameHand.setAnimation('normal')
-        }
+        // if(this.appPlatform == 'pc'){
+        //   GameHand.setAnimation('normal')
+        // }
 
       },
       paginationBallMouseEnter(){
-        if(this.appPlatform=='pc'){
-          GameHand.setAnimation('click')
-        }
+        // if(this.appPlatform=='pc'){
+        //   GameHand.setAnimation('click')
+        // }
 
       },
       paginationBallClick(index){
@@ -265,7 +295,7 @@
 
          Array.prototype.forEach.call(this.slideLists,function(item,index){
            mySwiperPagination.slides.eq(index).find('.paginationballs').css({
-             backgroundImage:"url("+self.globalStatic+'/pagiball1.png'+")",
+             backgroundImage:"url("+globalStatic+'/pagiball1.png'+")",
              backgroundRepeat:'no-repeat',
              backgroundSize:'contain',
              color:"#539bc5"
@@ -273,7 +303,7 @@
          });
 
           mySwiperPagination.slides.eq(index).find('.paginationballs').css({
-            backgroundImage:"url("+self.globalStatic+'/pagiball2.png'+")",
+            backgroundImage:"url("+globalStatic+'/pagiball2.png'+")",
             backgroundRepeat:'no-repeat',
             backgroundSize:'contain',
             color:"white"
@@ -283,74 +313,33 @@
         }
 
       },
-      gameStart2(app){
-        const self = this;
 
-        var gameMenuBar = new GameMenuBars();
-
-         app.stage.addChild(gameMenuBar);
-        gameMenuBar.backBtnShow = false;
-        gameMenuBar.homeBtnShow = false;
-        gameMenuBar.bookBtnShow = false;
-        gameMenuBar.soundBtnShow = false;
-        gameMenuBar.updateGameMenu();
-        gameMenuBar.energyBar.alpha = 0;
-        gameMenuBar.soundBtn.alpha = 0;
-        self.$watch(()=>{
-          return self.openEnergyed
-        },(newval)=>{
-
-             if(Number(newval)==1){
-
-               gameMenuBar.bookScene.openEnergyCan(true);
-               self.canvas2Style = {
-                 pointerEvents:'auto'
-               }
-             }else if(Number(newval)==0){
-               gameMenuBar.bookScene.openEnergyCan(false);
-               self.canvas2Style = {
-                 pointerEvents:'auto'
-               }
-             }
-        });
-
-
-
-      },
 
       gameStart(app) {
         const self = this;
          modulesUrl = this.$route.meta.assetsUrl;
-         self.globalStatic = 'static/' + modulesUrl;
-
-
-        self.axios.get(self.globalStatic + '/gameconfig.json').then((gameConfigData) => {
-          var assets = gameConfigData.data.assets.map((item, index) => {
-            return {
-              name: '' + item.name,
-              url: item.url
-            }
-          });
-            self.slideLists =gameConfigData.data.gameData.pictureList.map((item, index) => {
-
+         globalStatic = 'static/' + modulesUrl;
+        self.axios.get(globalStatic + '/gameconfig.json').then((gameConfigData) => {
+            self.slideLists = gameConfigData.data.gameData.pictureList.map((item, index) => {
               return {
-                slideName: '',
                 styles:{
-                  backgroundImage: "url("+self.globalStatic+'/'+ gameConfigData.data.gameData.pictureList[index].picture+")",
+                  backgroundImage: "url("+globalStatic+'/'+ gameConfigData.data.gameData.pictureList[index].picture+")",
                   backgroundSize: "100% 100%",
                   backgroundRepeat: "no-repeat"
                 }
               }
             });
-          loaderAssetsByValided.call(self,modulesUrl,assets,GameStart);
+          //loaderAssetsByValided.call(self,modulesUrl,assets,GameStart);
+          self.axios.get('static/' + modulesUrl + '/gameconfig.json').then((gameConfigData) => {
 
+            GameStart.call(self,gameConfigData.data);
+          });
         });
 
-
-            function GameStart(resource,gameConfigData){
+            function GameStart(gameConfigData){
 
               Object.assign(self.paginationballs_style,{
-                backgroundImage:"url("+self.globalStatic+'/pagiball1.png'+")",
+                backgroundImage:"url("+globalStatic+'/pagiball1.png'+")",
                 backgroundRepeat:'no-repeat',
                 backgroundSize:'contain',
                 opacity:1
@@ -362,13 +351,13 @@
                 backgroundRepeat: "no-repeat"
               }
               self.leftTriangle_style = {
-                backgroundImage: "url("+self.globalStatic+'/sanjiao.png'+")",
+                backgroundImage: "url("+globalStatic+'/sanjiao.png'+")",
                 backgroundSize: "100% 100%",
                 backgroundRepeat: "no-repeat",
                 transform:"scaleX(-1)"
               }
               self.rightTriangle_style = {
-                backgroundImage: "url("+self.globalStatic+'/sanjiao.png'+")",
+                backgroundImage: "url("+globalStatic+'/sanjiao.png'+")",
                 backgroundSize: "100% 100%",
                 backgroundRepeat: "no-repeat",
 
@@ -385,19 +374,9 @@
                   slidesPerGroup: 4,
                   resistanceRatio:0,
                   on:{
-                    sliderMove:function(e){
-                      if(self.appPlatform=='pc'){
-                        GameHand.hand.css({
-                          left:e.pageX,
-                          top:e.pageY
-                        })
-                      }
-
-                    },
                     init(){
                       this.update();
                     }
-
                   }
                 });
                 mySwiper = new Swiper('#swiperContainerMain', {
@@ -406,37 +385,25 @@
                   slidesPerView: 1.3,
                   spcaeBetween: 15,
                   touchEventsTarget: 'wrapper',
-
                   // 如果需要前进后退按钮
                   navigation: {
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev',
                   },
                   on: {
-                    sliderMove:function(e){
-                      if(self.appPlatform=='pc'){
-                        GameHand.hand.css({
-                          left:e.pageX,
-                          top:e.pageY
-                        });
-                      }
-
-                    },
                     slideChangeTransitionStart: function () {
                       const _swiper = this;
-
                       Array.prototype.forEach.call(this.slides,function(item,index){
                         _swiper.slides.eq(index).removeClass('none-effect');
-
                         mySwiperPagination.slides.eq(index).find('.paginationballs').css({
-                          backgroundImage:"url("+self.globalStatic+'/pagiball1.png'+")",
+                          backgroundImage:"url("+globalStatic+'/pagiball1.png'+")",
                           backgroundRepeat:'no-repeat',
                           backgroundSize:'contain',
                           color:"#539bc5"
                         });
                       });
                       mySwiperPagination.slides.eq(_swiper.activeIndex).find('.paginationballs').css({
-                        backgroundImage:"url("+self.globalStatic+'/pagiball2.png'+")",
+                        backgroundImage:"url("+globalStatic+'/pagiball2.png'+")",
                         backgroundRepeat:'no-repeat',
                         backgroundSize:'contain',
                         color:"white"
@@ -445,19 +412,39 @@
                     },
                     slideChange(){
                       self.currentPage = this.activeIndex;
+                      console.log(pixiScene,'pixiScene')
 
                       if(this.activeIndex>=this.slides.length-1){
                         self.$refs.boyBtnArea.style.pointerEvents = 'auto';
-                        pixiScene.showBoy();
+                        if(pixiScene){
+                          pixiScene.showBoy();
+                        }
+
+                        // self.canvasAppStyle = {
+                        //   pointerEvents:'auto'
+                        // }
+
                         // PIXIAudio.audios['nextpart'].play();
                         self.currentLessonCompleted= true;
 
                       }else{
-                        pixiScene.hideBoy();
+                        if(pixiScene){
+                          pixiScene.hideBoy();
+                        }
+                        self.canvasAppLevel = {
+                          zIndex:1
+                        }
+                        // self.canvasAppStyle = {
+                        //   pointerEvents:'none'
+                        // }
+
                         self.$refs.boyBtnArea.style.pointerEvents = 'none';
                       }
-                      pixiScene.stopAudios();
-                      pixiScene.playAudios();
+                      if(pixiScene){
+                        pixiScene.stopAudios();
+                        pixiScene.playAudios();
+                      }
+
                       //self.$parent.$parent.$refs.gameMenu.showAudio = false;
                       //【重要】设置当前下部导航的索引;
                       self.currentPaginationPages = this.realIndex;
@@ -473,7 +460,7 @@
 
                       setTimeout(()=>{
                         mySwiperPagination.slides.eq(0).find('.paginationballs').css({
-                          backgroundImage:"url("+self.globalStatic+'/pagiball2.png'+")",
+                          backgroundImage:"url("+globalStatic+'/pagiball2.png'+")",
                           backgroundRepeat:'no-repeat',
                           backgroundSize:'contain',
                           color:"white"
@@ -481,13 +468,6 @@
                       },20)
                       GameHand.locked = false;
 
-
-                      let s = setInterval(()=>{
-                        if(pixiScene){
-                          pixiScene.playAudios();
-                          clearInterval(s);
-                        }
-                      },2)
                       this.update();
                     }
                   },
@@ -507,28 +487,28 @@
 
               };
               //加载页面小人END
-              LoadingAnimation.setMaskShow(true,0);
+
               //end
               if(PIXIAudio.loadedStatus[modulesUrl]==undefined && audioManifest.length>0){
-                PIXIAudio.addAudio(audioManifest, self.globalStatic+'/', ()=>{
+                PIXIAudio.addAudio(audioManifest, globalStatic+'/', ()=>{
                   PixiGameStart.call(self)
 
                 },modulesUrl)
               }else{
                 PixiGameStart.call(self)
               }
+
+
               function PixiGameStart(){
-                //app.stage.removeChildAt(0)
                 var scene1 = new PixiScene1({
                   json: gameConfigData.gameData,
                   app: app,
-                  resources: resource,
                   vueInstance:self,
-                  swiper:mySwiper
+                  // swiper:mySwiper
                 });
                 app.stage.addChild(scene1);
                 pixiScene = scene1;
-                LoadingAnimation.setMaskShow(false)
+                // LoadingAnimation.setMaskShow(false)
               }
               //END
             }
@@ -540,26 +520,43 @@
         window.location.reload()
       }
     },
-
-    destroyed(){
-        if(this.appPlatform=='pc'){
-          GameHand.setAnimation('normal')
-        }
-
-
+    beforeDestroy(){
+      this.slideLists = null;
+      this.paginationLists = null;
+      if(mySwiper && mySwiperPagination){
         mySwiper.destroy(true,true);
         mySwiperPagination.destroy(true,true);
-        if(pixiScene){
-          pixiScene.destroyed();
-          pixiScene.destroy();
-          pixiScene = null
+      };
 
-        }
-
+      if(pixiScene){
+        pixiScene.destroyed();
+        pixiScene.destroy();
+        pixiScene = null
+      }
     },
+
     mounted() {
       const self = this;
-      self.SET_LESSONCURRENTPAGEINDEX(Number(self.allLessonComponentsNames.indexOf(self.$route.name)))
+      self.SET_LESSONCURRENTPAGEINDEX(Number(self.allLessonComponentsNames.indexOf(self.$route.name)));
+
+
+      canvasApp  = new PIXI.Application({
+        width: 1920,
+        height: 1080,
+        antialias: false,
+         transparent:true
+      });
+
+      canvasApp.view.style.position = 'absolute';
+      canvasApp.view.style.width = '100%';
+      canvasApp.view.style.height = '100%';
+      canvasApp.view.style.top = '0px';
+      canvasApp.view.style.left = '0px';
+      canvasApp.view.style.right = '0px';
+      canvasApp.view.style.margin = '0px auto';
+      self.$refs.pixicanvas.appendChild(canvasApp.view);
+      this.gameStart(canvasApp)
+
 
 
     },
@@ -610,18 +607,13 @@
 
   }
   .swiper-slide-active, .swiper-slide-duplicate-active {
-    transform-origin: center center;
-    transform: scale(1) !important;
+
   }
   .swiper-slide-active.none-effect {
     /*color: green;*/
   }
   .none-effect {
-    -webkit-transition: transform !important;
-    -moz-transition: transform  !important;
-    -ms-transition: transform  !important;
-    -o-transition: transform  !important;
-    transition: transform  !important;
+
   }
   #swiperContainerMain {
     position: absolute;
@@ -638,6 +630,7 @@
     right: 0;
     top: 1.8rem;
     height: 8rem;
+    z-index: 100;
   }
   .paginationPicture {
     position: absolute;
@@ -648,6 +641,7 @@
     right: 0;
     margin: 0 auto;
     top: 8.8rem;
+    z-index: 120;
   }
 .pagi_triangles{
   position: absolute;
@@ -720,14 +714,14 @@
     position: relative;
     height: 7.8rem;
     top: 0rem;
-    transition: transform .1s;
-    -webkit-transition: transform 0.1s;
-    -moz-transition: transform .1s;
-    -ms-transition: transform .1s;
-    -o-transition: transform .1s;
-    transform-origin: center center;
-    -webkit-transform: scale(.9);
-    transform: scale(.9);
+    /*transition: transform .1s;*/
+    /*-webkit-transition: transform 0.1s;*/
+    /*-moz-transition: transform .1s;*/
+    /*-ms-transition: transform .1s;*/
+    /*-o-transition: transform .1s;*/
+    /*transform-origin: center center;*/
+    /*-webkit-transform: scale(.9);*/
+    /*transform: scale(.9);*/
     box-sizing: border-box;
     background: transparent;
   }
@@ -742,6 +736,15 @@
     width:100%;
     height:100%;
     z-index: 111;
+  }
+  .canvasApp{
+    position: absolute;
+
+    width:100%;
+    height:100%;
+    z-index: 9999;
+    top:0;
+    left:0;
   }
 
 </style>

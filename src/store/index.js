@@ -71,6 +71,10 @@ const store = new Vuex.Store({
     SET_GAMESECONDPLAYED({commit},payload){
       commit('setGameSecondPlayed',payload);
     },
+    //设置弹出框出现时间间隔;
+    SET_SHOWPOPUPDELAY({commit},payload){
+      commit('shouwPopupDelay',payload)
+    },
 
     SET_MAGICBOOKBYGAMEINDEX({commit},payload){
       commit('setMagicBookByGameIndex',payload)
@@ -302,6 +306,9 @@ const store = new Vuex.Store({
     setCurrentPage(state, payload) {
       state.currentPage = payload;
     },
+    shouwPopupDelay(state,payload){
+      state.shouwPopupDelay = payload
+    }
     // setCanvasPage(state, payload) {
     //   // state.canvasPages[payload] = true;
     //

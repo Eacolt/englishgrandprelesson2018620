@@ -1,21 +1,22 @@
 <template>
   <div ref="moduleMain">
-    <video id="myVideo" ref="myVideo" class="myVideo" src="static/moviemodule/001.mp4" v-show="showOriginVideo"
+    <video id="myVideo" ref="myVideo" class="myVideo" :src="movieUrl" v-show="showOriginVideo"
            webkit-playsinline playsinline x5-video-player-type='h5' x5-video-player-fullscreen=”true”>
 
     </video>
-    <pixi-canvas ref="myPixiCanvas" :z-order="canvasZOrder" :can-touch="canvasCanTouch"
-                 @startGame="gameStart"></pixi-canvas>
-    <transition @before-enter="beforeEnter"
-                @enter="enter"
-                @leave="leave">
+
+
+    <!--<div :style="pixiCanvasStyle" ref="pixicanvas" ></div>-->
+
+    <div :style="pixiCanvasStyle" ref="pixicanvas" ></div>
+
 
       <congraPopup style="z-index: 9999" :showType="popupType" v-if="showCongra"
                    @quitGame.once="quitGame_hdr()"
                    @continueGame.once="continueGame_hdr()"
                    @continueClicked.once="clickContinue_hdr()"
                    @againClicked.once="againClicked_hdr"></congraPopup>
-    </transition>
+
     <div id="videoPlayBtn"
          class="videoPlayBtn" ref="videoPlayBtn" v-show="videoPlayBtnShow">
         <img src="static/themetypeui/goplaybtn.png"/>
@@ -30,7 +31,19 @@
   import {LoadingAnimation} from "./gameui/GameManager";
   import MovieModulePure from "./MovieModulePure";
   import {Debugs} from "./Utils";
+
+
   var pixiScene = null;
+  var canvasApp = null;
+  var movieModule = null;
+  var videoDuration = 0;
+  var tickerment = null;
+  var movieModule = null;
+  var videoDuration = null;
+
+
+
+
   export default {
     name: "module1",
     mixins: [myVueMixin, myVueMixin_Popup],
@@ -43,10 +56,14 @@
         showOriginVideo: true,
         myVideoSrc: '#',
         canvasCanTouch: true,
-        canvasZOrder: 999,
+
         videoPlayBtnShow: true,
         videoPicPng:'static',
-        videoHasBeenLoaded:false//视频是否第一次加载过
+        movieUrl:"#",
+        videoHasBeenLoaded:false,//视频是否第一次加载过
+
+
+
 
 
       }
@@ -54,10 +71,17 @@
 
     components: {congraPopup},
     computed: {
-      ...mapState(['restArrangementStat', 'gameSecondPlayed','appPlatform', 'allPartNames', 'alreadyHasOneCard', 'assetsPages', 'assetsResources', 'completedLessonNum', 'allLessonsNum', 'showPopupDelay', 'allLessonComponentsNames', 'energyCurrentNum', 'lessonCurrentPageIndex', 'gameHasBeenCompleted'])
+      ...mapState(['restArrangementStat', 'gameSecondPlayed','appPlatform', 'allPartNames', 'alreadyHasOneCard', 'completedLessonNum', 'allLessonsNum', 'showPopupDelay', 'allLessonComponentsNames', 'energyCurrentNum', 'lessonCurrentPageIndex', 'gameHasBeenCompleted']),
+      pixiCanvasStyle(){
+        return {
+          pointerEvents:'auto',
+          zIndex:999
+        }
+      }
+
     },
     methods: {
-      ...mapActions(['SET_CANVASPAGE', 'SET_INDEXPAGEINITIALSLIDE', 'SET_ASSETSPAGES', 'PUSH_GAMES', 'SET_LESSONCOMPLETESTAT', 'SET_RESTARRANGEMENTSTAT', 'SET_LESSONCURRENTPAGEINDEX']),
+      ...mapActions(['SET_CANVASPAGE', 'SET_INDEXPAGEINITIALSLIDE',  'PUSH_GAMES', 'SET_LESSONCOMPLETESTAT', 'SET_RESTARRANGEMENTSTAT', 'SET_LESSONCURRENTPAGEINDEX']),
       clickContinue_hdr() {
         if (pixiScene) {
 
@@ -84,13 +108,16 @@
       },
       quitGame_hdr() {
         const self = this;
-        setTimeout(() => {
-          self.$router.push('/index/')
-        }, 1000);
-        LoadingAnimation.setMaskShow(true);
+        // setTimeout(() => {
+        //   self.$router.push('/index/')
+        // }, 1000);
+
+
         let arr = this.$route.fullPath.split('/');
         let index = self.allPartNames.indexOf(arr[2]);
         self.SET_INDEXPAGEINITIALSLIDE(Number(index));
+
+        self.$router.push('/index/')
 
       },
       continueGame_hdr() {
@@ -102,22 +129,6 @@
 
 
         var modulesUrl = this.$route.meta.assetsUrl;
-        //var gameConfig;
-        var urls = 'static/' + modulesUrl + '/resource.json';
-
-        LoadingAnimation.setMaskShow(true, 0)
-
-        ////加载逻辑
-        // self.axios.get('static/' + modulesUrl + '/gameconfig.json').then((gameConfigData) => {
-        //   var assets = gameConfigData.data.assets.map((item, index) => {
-        //     return {
-        //       name: '' + item.name,
-        //       url: item.url
-        //     }
-        //   });
-        //   loaderAssetsByValided.call(self, modulesUrl, assets, GameStart);
-        //   Debugs.log('loaderByValidedon..');
-        // });
 
         self.axios.get('static/' + modulesUrl + '/gameconfig.json').then((gameConfigData) => {
           var assets = gameConfigData.data.assets.map((item, index) => {
@@ -126,33 +137,35 @@
               url: item.url
             }
           });
-          console.log(PIXI.loader.resources['headbtn_png'])
-          if(!PIXI.loader.resources['headbtn_png']){
-            Debugs.log('enter in loading')
-            PIXI.loader.add(assets)
+          self.movieUrl = gameConfigData.data.gameData.movieUrl;
+
+          //PIXI 加载逻辑
+          var avalidiAssets = [];
+          assets.forEach((item)=>{
+            if(!PIXI.loader.resources[item.name]){
+              avalidiAssets.push({
+                name:item.name,
+                url:item.url
+              })
+            };
+          });
+          if(avalidiAssets.length>0){
+            PIXI.loader.add(avalidiAssets)
               .load(function(){
-                Debugs.log('loading Video!!');
-                GameStart.call(self,PIXI.loader.resources);
+                GameStart.call(self,gameConfigData.data);
               });
           }else{
-            GameStart.call(self,PIXI.loader.resources);
+            GameStart.call(self,gameConfigData.data);
           }
-
-          Debugs.log('loaderByValidedon..');
+          //PIXI加载逻辑 ---END
         });
 
 
-
-
         ///End加载逻辑
-        function GameStart(resources, gameConfigData) {
+        function GameStart() {
           Debugs.log('视频已经打开')
-          let _G = {};
-          _G.movieModule = null;
-          _G.videoDuration = 0;
-          _G.tickerment = null;
 
-          _G.movieModule = new MovieModulePure({
+          movieModule = new MovieModulePure({
             vueInstance: self
           });
           self.$refs.myVideo.load();
@@ -170,18 +183,18 @@
          // self.$refs.myVideo.onloadedmetadata = loadedmetadataHandler
 
           function durationChangeHandler() {
-            _G.videoDuration = self.$refs.myVideo.duration;
+            videoDuration = self.$refs.myVideo.duration;
 
           }
-          _G.tickerment = setInterval(() => {
-            if (_G.videoDuration > 0) {
+          tickerment = setInterval(() => {
+            if (videoDuration > 0) {
 
               self.$refs.videoPlayBtn.style.pointerEvents = 'auto';
               self.$refs.videoPlayBtn.style.opacity = 1;
-              _G.movieModule.myVideo = self.$refs.myVideo;
-              _G.movieModule.initProgressBar();
+              movieModule.myVideo = self.$refs.myVideo;
+              movieModule.initProgressBar();
 
-              clearInterval(_G.tickerment);
+              clearInterval(tickerment);
             }
           }, 10)
           let eventGet = false;
@@ -195,65 +208,72 @@
 
             self.$refs.myVideo.play();
             Debugs.log('888')
-            if(_G.videoDuration>0){
-              _G.movieModule.changeModeBack();
-              _G.movieModule.showProgressBar();
-              _G.movieModule.showMovieBgAnime();
+            if(videoDuration>0){
+              movieModule.changeModeBack();
+              movieModule.showProgressBar();
+              movieModule.showMovieBgAnime();
               if(eventGet==false){
                 //已经注册过事件就不用重复；
-                _G.movieModule.initEvents();
+                movieModule.initEvents();
               }
-
-
               eventGet = true;
-
             }
             self.$refs.videoPlayBtn.style.pointerEvents = 'none';
             self.$refs.videoPlayBtn.style.opacity = 0;
-
-
           }
           LoadingAnimation.setMaskShow(false);
-          Debugs.log('show all....')
-
-          app.stage.addChild(_G.movieModule);
-          pixiScene = _G.movieModule;
-
+          app.stage.addChild(movieModule);
+          pixiScene = movieModule;
 
         }
       }
     },
     beforeCreate() {
-
       if (this.$store.state.lessonPartsList.length == 0) {
         this.$router.push('/');
         window.location.reload()
-      }
-    },
-    beforeDestroy() {
-
-
-    },
-    destroyed() {
-
-      if(this.$refs.myVideo && this.$refs.videoPlayBtn){
-        this.$refs.myVideo.ondurationchange = null;
-       // this.$refs.myVideo.onloadedmetadata = null;
-        this.$refs.videoPlayBtn.onclick = null;
-      }
-      if(pixiScene){
-        pixiScene.destroyed();
-        pixiScene.destroy();
-        pixiScene = null
-
       }
     },
     mounted() {
       const self = this;
       self.SET_LESSONCURRENTPAGEINDEX(Number(self.allLessonComponentsNames.indexOf(self.$route.name)));
 
+      canvasApp  = new PIXI.Application({
+        width: 1920,
+        height: 1080,
+        antialias: false,
+        transparent:true
+      });
+
+      canvasApp.view.style.position = 'absolute';
+      canvasApp.view.style.width = '100%';
+      canvasApp.view.style.height = '100%';
+      canvasApp.view.style.top = '0px';
+      canvasApp.view.style.left = '0px';
+      canvasApp.view.style.right = '0px';
+      canvasApp.view.style.margin = '0px auto';
+      self.$refs.pixicanvas.appendChild(canvasApp.view);
+       this.gameStart(canvasApp)
+
 
     },
+    beforeDestroy(){
+      if(canvasApp){
+        canvasApp.destroy();
+        canvasApp = null;
+      };
+      if(pixiScene){
+        pixiScene.destroy();
+        pixiScene = null;
+      }
+       movieModule = null;
+       videoDuration = null;
+       tickerment = null;
+       movieModule = null;
+       videoDuration = null;
+
+       Debugs.log("电影页面已经退出")
+    }
   }
 </script>
 

@@ -1,40 +1,58 @@
-import {LoadingAnimation} from "./gameui/GameManager";
-import {TextureCache} from './Utils.js'
+
 import PixiHammer from './gameui/PixiHammer.js'
 import GameMenuBars from "./gameui/GameMenuBar.js";
 import {PIXIAudio} from "./EasyPIXI";
 import {Debugs} from "./Utils";
 
-
+var gameMenuBar = null;
 class PixiScene1 extends PIXI.Container {
   constructor($options) {
     super();
-    this.gameConfig = $options.json;
     this.resource = PIXI.loader.resources;
     this.vueInstance = $options.vueInstance;
-
-    this.gameMenuBar = null;
-
-    this.gameLevel = 0;
-
-    this.bearDefaultAn = null;
     this.swiperContainer = null;
-
     this.swiperPosition = -1;
-
     this.leftTouchBtn = null;//左边的按钮
     this.rightTouchBtn = null;//右边的按钮
     this.swiperHammer = null;
     this.swiperAnimating = false;
-
     this.ufoSlides = [];
+    this.THEME_TYPE = null;
+    this.on('added', this.addedToStage, this);
+  }
+
+
+  destroyed() {
+    const self = this;
+    super.destroy();
+    this.removeAllListeners();
+    this.resource = null;
+    this.vueInstance = null;
+    if(gameMenuBar){
+      gameMenuBar.clearGameMenuEvents();
+      gameMenuBar.destroy();
+      // gameMenuBar = null;
+    }
+    // gameMenuBar = null;
+    this.swiperContainer = null;
+    this.swiperPosition = null;
+    this.leftTouchBtn = null;//左边的按钮
+    this.rightTouchBtn = null;//右边的按钮
+    this.swiperHammer = null;
+    this.swiperAnimating = null;
+
+    if(this.ufoSlides){
+      this.ufoSlides.forEach((item)=>{
+        item.destroy();
+
+      });
+      this.ufoSlides = null;
+    }
     this.THEME_TYPE = null;
 
 
 
-    this.on('added', this.addedToStage, this)
   }
-
   showMonsters() {
     for (let i = 0; i < this.ufoSlides.length; i++) {
       this.ufoSlides[i].alpha = 1;
@@ -60,56 +78,11 @@ class PixiScene1 extends PIXI.Container {
     }
   }
 
-  updateFromVue(swiperX) {
-    const self = this;
-    if (!swiperX) return;
-
-    // this.swiperContainer.x = swiperX/0.4
-    this.ufoSlides.forEach((item, index) => {
-      item.x = swiperX[index];
-    });
-
-  }
-
-  clickonme($index, $callback = function () {
-  }) {
-    const self = this;
-    //  this.ufoSlides[$index].getChildAt(1).state.setAnimation(0, 'ready', false);
-
-    this.ufoSlides[$index].getChildAt(1).state.setAnimation(0, 'catching1', false);
-
-    this.ufoSlides[$index].getChildAt(1).state.addListener({
-      complete: function (entry) {
-        if (entry.animation.name == 'catching1') {
-          if ($callback) {
-            $callback();
-          }
-        }
-      }
-    });
-    GameMenuBars.freeze = true;
-    // self.vueInstance.$parent.$refs.gameMenu.freeze = true;
-  }
-  createCommonAtlas($texturename){
-    let sprite = new PIXI.Sprite(PIXI.loader.resources['commons_atlas'].textures[$texturename]);
-    return sprite;
-  }
 
 
-  destroyed() {
-    const self = this
-    this.gameMenuBar.clearGameMenuEvents();
-    this.gameMenuBar.destroy();
-    this.gameMenuBar = null;
-    this.ufoSlides = null
-  }
 
   addedToStage() {
     const self = this;
-
-
-
-
 
 
     this.THEME_TYPE = self.vueInstance.gameThemeType;
@@ -127,8 +100,8 @@ class PixiScene1 extends PIXI.Container {
 
 
     this.swiperContainer = new PIXI.Container();
-    var ground = new PIXI.Sprite(self.resource['bgGround_jpg'].texture);
-    var bgGround = new PIXI.Sprite(self.resource['indexback1_jpg'].texture);
+    var ground = new PIXI.Sprite(PIXI.Texture.from('bgGround_jpg'));
+    var bgGround = new PIXI.Sprite(PIXI.Texture.from('indexback1_jpg'));
 
 
 
@@ -166,9 +139,9 @@ class PixiScene1 extends PIXI.Container {
 
     var monsterData="",lessonPartName="";
     for (let i = 0; i < this.vueInstance.$store.state.lessonPartsList.length; i++) {
-      let slideUfo = new PIXI.Container();
+      let slideUfo_ctn = new PIXI.Container();
 
-      slideUfo.myIndex = i;
+      slideUfo_ctn.myIndex = i;
       lessonPartName = self.vueInstance.$store.state.lessonPartsList[i].name;
 
       switch (lessonPartName) {
@@ -204,15 +177,15 @@ class PixiScene1 extends PIXI.Container {
       monsters.state.setAnimation(0, 'standing', true);
       monsters.x = 308;
       monsters.y = -10;
-      var tablebarStart = new PIXI.Sprite(self.resource['tablebar2_png'].texture);
+      var tablebarStart = new PIXI.Sprite(PIXI.Texture.from('tablebar2_png'));
 
       var plate =new PIXI.Sprite(self.resource['table_png'].texture);
-      var tablebarDefault = new PIXI.Sprite(self.resource['tablebar_png'].texture);
+      var tablebarDefault = new PIXI.Sprite(PIXI.Texture.from('tablebar_png'));
 
-      slideUfo.addChild(plate);
+      slideUfo_ctn.addChild(plate);
       plate.y = 160;
       plate.x = 12;
-      slideUfo.addChild(monsters);
+      slideUfo_ctn.addChild(monsters);
 
 
       let progressBar = new PIXI.Container()
@@ -243,19 +216,19 @@ class PixiScene1 extends PIXI.Container {
       }
 
       progressMask.width =  getPlusByCompleted() / self.vueInstance.allLessonCompleteStat[i].length * tablebarStart.width;
-      slideUfo.addChild(progressBar);
+      slideUfo_ctn.addChild(progressBar);
       var  text = new PIXI.Sprite(self.resource['tabletext_atlas'].textures[self.vueInstance.allPartNames[i] + '.png']);
 
       text.pivot.x = text.width / 2;
       text.x = plate.width / 2 + 26;
       text.y = 320;
 
-      slideUfo.addChild(text)
-      this.swiperContainer.addChild(slideUfo);
-      this.ufoSlides.push(slideUfo)
-      slideUfo.interactive = true;
-      slideUfo.on('pointertap', this.ufoSlidePointerDown, this)
-      slideUfo.y = 600;
+      slideUfo_ctn.addChild(text)
+      this.swiperContainer.addChild(slideUfo_ctn);
+      this.ufoSlides.push(slideUfo_ctn)
+      slideUfo_ctn.interactive = true;
+      slideUfo_ctn.on('pointertap', this.ufoSlidePointerDown, this)
+      slideUfo_ctn.y = 600;
     }
 
     this.ufoSlides.forEach((item, index) => {
@@ -266,15 +239,11 @@ class PixiScene1 extends PIXI.Container {
     this.swiperContainer.x = 650;
     this.swiperContainer.interactive = true;
 //    this.swiperContainer.interactiveChildren = true;
-    this.swiperContainer.on('tap', () => {
 
-    });
     //赋值swiperPosition;
     this.swiperPosition = self.vueInstance.indexPageInitialSlide - 1
 
     this.interactive = true;
-    this.on('pointerdown', this.scence_pointerdown, this);
-
     this.showFocusAnimation(self.swiperPosition + 1, function () {
     })
     this.swiperSlideTo.call(this, self.swiperPosition, function () {
@@ -316,52 +285,52 @@ class PixiScene1 extends PIXI.Container {
     //顶部导航;
 
     GameMenuBars.vueInstance = self.vueInstance;
-    this.gameMenuBar = new GameMenuBars();
-    this.addChild(this.gameMenuBar);
+    gameMenuBar = new GameMenuBars();
+    this.addChild(gameMenuBar);
 
-    this.gameMenuBar.backBtnShow = true;
-    this.gameMenuBar.homeBtnShow = false;
-    this.gameMenuBar.bookBtnShow = true;
-    this.gameMenuBar.soundBtnShow = false;
-    this.gameMenuBar.updateGameMenu();
+    gameMenuBar.backBtnShow = true;
+    gameMenuBar.homeBtnShow = false;
+    gameMenuBar.bookBtnShow = true;
+    gameMenuBar.soundBtnShow = false;
+    gameMenuBar.updateGameMenu();
     GameMenuBars.freeze = false;
     setTimeout(()=>{
       //回到首页自动翻书
       if(self.vueInstance.showMagicBook && !GameMenuBars.gameHasOpendBook){
         self.swiperHammer.lock = true;
-        self.gameMenuBar.bookScene.openBook();
+        gameMenuBar.bookScene.openBook();
         GameMenuBars.gameHasOpendBook = true;
         Debugs.log('首次打开翻书')
       }else if(Number(self.vueInstance.bookOpened) == 0 && self.vueInstance.gameHasBeenCompleted){
-        self.gameMenuBar.bookScene.openEnergyCan(true);
+        gameMenuBar.bookScene.openEnergyCan(true);
         Debugs.log('再次打开能量条，因为宝箱未开就进来了',self.vueInstance.bookOpened,self.vueInstance.gameHasBeenCompleted)
       }else if(Number(self.vueInstance.openMagicBookByGameIndex)>=1){
         //从游戏回来的逻辑>>
-        self.gameMenuBar.bookScene.openBook();
+        gameMenuBar.bookScene.openBook();
         self.swiperHammer.lock = true;
         self.vueInstance.SET_MAGICBOOKBYGAMEINDEX(-1);
         Debugs.log('从游戏回来打开翻书')
       }
 
     },200);
-    this.gameMenuBar.setBackBtn_tapHandler(() => {
+    gameMenuBar.setBackBtn_tapHandler(() => {
       //返回主目录;
 
         window.parent.postMessage({
           "type": "preparationClose"
         }, "*");
     });
-    this.gameMenuBar.setBookBtn_tapHandler(() => {
+    gameMenuBar.setBookBtn_tapHandler(() => {
       if (GameMenuBars.freeze) return;
       self.swiperHammer.lock = true;
-      self.gameMenuBar.bookScene.openBook();
+      gameMenuBar.bookScene.openBook();
     });
     self.vueInstance.$watch(()=>{
       return self.vueInstance.energyCurrentNum
     },(newval)=>{
-      this.gameMenuBar.energy = newval;
+      gameMenuBar.energy = newval;
     });
-    this.gameMenuBar.energyOnce = self.vueInstance.energyCurrentNum;
+    gameMenuBar.energyOnce = self.vueInstance.energyCurrentNum;
     this.leftTouchBtn.x = 50;
     this.leftTouchBtn.y = 300;
     this.rightTouchBtn.x = 1400;
@@ -402,12 +371,11 @@ class PixiScene1 extends PIXI.Container {
         complete: function (entry) {
           if (entry.animation.name == 'catching1') {
 
-            LoadingAnimation.setMaskShow(true)
-            setTimeout(() => {
+
               self.vueInstance.$router.push('/index/' + self.vueInstance.lessonPartsList[myIndex].name);
               self.vueInstance.SET_LESSONPARTSINDEX(myIndex);
               self.vueInstance.SET_INDEXPAGEINITIALSLIDE(myIndex);
-            }, 1000);
+
           }
         }
       });
@@ -428,13 +396,6 @@ class PixiScene1 extends PIXI.Container {
 
   }
 
-  scence_pointerdown(event) {
-
-    if (event.data.global.y > 325 && event.data.global.y < 1080) {
-
-    }
-
-  }
 
   leftAreaPointerTap() {
 

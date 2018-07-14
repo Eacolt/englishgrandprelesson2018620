@@ -1,0 +1,50 @@
+{
+  "menuModuleId": "string",
+  "themeType":2,
+  "menus": [
+    
+    {
+      "name": "song",
+      "pageModuleId": "choiceInterface",
+      "pageResourceId": "choiceinterface",
+      "menus": [
+        {
+          "name": "learning",
+          "pageModuleId": "movieModule",
+          "pageResourceId": "moviemodule"
+        }
+      ]
+    },
+    {
+      "name": "vocabulary",
+      "pageModuleId": "choiceInterface",
+      "pageResourceId": "choiceinterface",
+      "menus": [
+        {
+          "name": "learning",
+          "pageModuleId": "picSwipeModule",
+          "pageResourceId": "picswipemodule"
+        },
+         {
+          "name": "practice",
+          "pageModuleId": "choicePicModule",
+          "pageResourceId": "choicepicmodule"
+        }
+      ]
+    },
+    {
+
+      "name": "sentences",
+      "pageModuleId": "choiceInterface",
+      "pageResourceId": "choiceinterface",
+      "menus": [
+        {
+          "name": "learning",
+          "pageModuleId": "picSwipeModule",
+          "pageResourceId": "picswipemodule2"
+        }
+      ]
+    }
+
+  ]
+}

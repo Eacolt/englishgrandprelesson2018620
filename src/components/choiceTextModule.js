@@ -10,32 +10,19 @@ class ChoiceTextModule extends PIXI.Container {
   constructor($options) {
     super();
     this.gameConfig = $options.json;
-    this.app = $options.app;
-    this.ticker = $options.ticker;
-    this.resources = PIXI.loader.resources;// $options.resources;
     this.vueInstance = $options.vueInstance;
-
-    this.rightAnswersArr = [3, 1, 0];//正确答案数字;
-
+    this.rightAnswersArr = [];//正确答案数字;
     this.gameLevel = 0;
+    this.resources = PIXI.loader.resources;
     this.gameLessonCompleted = false;
-
-
-    this.bearDefaultAn = null;
-
     this.picBand = null;
-    // this.btnsContainer = null;
     this.progressBar = null;
     this.isAnimating = false;
-
     //上部分声音;
     this.soundButton = null;
     this.soundSpeakText = null;
     this.gameAudio = null;
-
-
     this.gameMenuBar = null;
-
     this.on('added', this.addedToStage, this)
   }
 
@@ -51,6 +38,26 @@ class ChoiceTextModule extends PIXI.Container {
   }
 
   playContinue() {
+
+    //
+    // if (this.vueInstance.gameHasBeenCompleted) {
+    //   /////////////////////
+    //   let restArrangmentArr = this.vueInstance.$store.state.restArrangementStat;
+    //   if (restArrangmentArr.length > 0) {
+    //     this.vueInstance.$router.push({name: restArrangmentArr[0]});
+    //     let d = Number(restArrangmentArr[0].split('-')[1]);
+    //     this.vueInstance.$store.dispatch('SET_LESSONPARTSINDEX', d);
+    //   }
+    // } else {
+    //   let allLessonComponentsNames = this.vueInstance.$store.state.allLessonComponentsNames;
+    //   let b = Number(allLessonComponentsNames[0].split('-')[1]);
+    //   let currentPageIndex = this.vueInstance.lessonCurrentPageIndex;
+    //   if (currentPageIndex < allLessonComponentsNames.length - 1) {
+    //     this.vueInstance.$router.push({name: allLessonComponentsNames[currentPageIndex + 1]});
+    //   } else {
+    //     this.vueInstance.$router.push({name: allLessonComponentsNames[0]});
+    //   }
+    // }
 
     if (this.vueInstance.gameHasBeenCompleted) {
       checkForJumpRoute.call(this, false);
@@ -378,7 +385,7 @@ class ChoiceTextModule extends PIXI.Container {
   addedToStage() {
     const self = this;
 
-    var gameBg = new PIXI.Sprite(PIXI.loader.resources['practicebg_jpg'].texture);
+    var gameBg = new PIXI.Sprite(self.resources['practicebg_jpg'].texture);
     this.addChild(gameBg)
     this.progressBar = new ProgressBar();
     self.picBand = new PicCard();
@@ -537,7 +544,10 @@ class ChoiceTextModule extends PIXI.Container {
       self.gameAudio.play();
       self.soundButton.play();
       self.gameAudio.on('complete',()=>{
-        self.soundButton.stop();
+        if(self.soundButton){
+          self.soundButton.stop();
+        }
+
       });
     }
 
@@ -554,14 +564,35 @@ class ChoiceTextModule extends PIXI.Container {
   }
 
   destroyed() {
-    if (this.gameAudio) {
-      this.gameAudio.stop();
-    }
+    super.destroy();
+    this.gameConfig = null;
+    this.rightAnswersArr = null;
+    this.gameLevel = null;
+    this.gameLessonCompleted = null;
+    this.picBand.destroy();
+    this.picBand = null;
+    this.progressBar.destroy();
+    this.progressBar = null;
+    this.isAnimating = null;
+    this.resources = null;
+
+    this.soundSpeakText = null;
+
+
+    // this.gameAudio.stop();
+    // this.soundButton.stop();
+    this.stopSpeakSound();
     if(this.gameMenuBar){
       this.gameMenuBar.clearGameMenuEvents();
       this.gameMenuBar.destroy();
+      this.gameMenuBar = null;
     }
-    this.removeChildren();
+    //上部分声音;
+    this.soundButton.destroy();
+    this.soundButton = null;
+    this.gameAudio = null;
+
+    this.vueInstance = null;
     this.destroy();
 
   }

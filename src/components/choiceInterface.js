@@ -1,7 +1,6 @@
 import GameMenuBars from "./gameui/GameMenuBar";
 import {PIXIAudio} from "./EasyPIXI";
 
-import {LoadingAnimation} from "./gameui/GameManager";
 
 class ChoiceInterface extends PIXI.Container {
   constructor($options) {
@@ -83,7 +82,7 @@ class ChoiceInterface extends PIXI.Container {
         complete: function (entry) {
 
           if (entry.animation.name == 'dropdown') {
-            setTimeout(() => {
+
               self.vueInstance.$store.dispatch("SET_MODULEINDEX", i);
 
               let moduleList = self.vueInstance.$store.state.lessonPartsList[self.vueInstance.$store.state.lessonPartsIndex].menus
@@ -92,10 +91,8 @@ class ChoiceInterface extends PIXI.Container {
               self.vueInstance.$router.push(self.vueInstance.$route.fullPath + '/' + self.vueInstance.$store.state.currentModuleList[i].name);
 
 
-            }, 1000);
 
-
-            LoadingAnimation.setMaskShow(true)
+            // LoadingAnimation.setMaskShow(true)
 
 
           }
@@ -127,17 +124,16 @@ class ChoiceInterface extends PIXI.Container {
         complete: function (entry) {
 
           if (entry.animation.name == 'dropdown') {
-            setTimeout(() => {
+
               self.vueInstance.$store.dispatch("SET_MODULEINDEX", i);
               let moduleList = self.vueInstance.$store.state.lessonPartsList[self.vueInstance.$store.state.lessonPartsIndex].menus;
               self.vueInstance.$store.dispatch('SET_MODULELIST', moduleList);
 
               self.vueInstance.$router.push(self.vueInstance.$route.fullPath + '/' + self.vueInstance.$store.state.currentModuleList[i].name);
-            }, 1000)
+
 
           }
 
-          LoadingAnimation.setMaskShow(true)
 
 
         }
@@ -318,11 +314,10 @@ class ChoiceInterface extends PIXI.Container {
     this.gameMenuBars.homeBtnShow = false;
     this.gameMenuBars.updateGameMenu();
     this.gameMenuBars.setBackBtn_tapHandler(() => {
-      setTimeout(() => {
-        self.vueInstance.$router.push('/index/')
-      }, 1000);
 
-      LoadingAnimation.setMaskShow(true)
+        self.vueInstance.$router.push('/index/')
+
+
     });
 
     this.vueInstance.$watch(() => {

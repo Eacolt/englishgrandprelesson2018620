@@ -6,54 +6,32 @@ import GameMenuBars from "./gameui/GameMenuBar";
 import {PIXIAudio} from "./EasyPIXI";
 import Masker from "./gameui/Masker";
 import {LoadingAnimation} from "./gameui/GameManager";
+//
+// var gameMenuBar= null;
+var unwatchVue = null;
+var unwatchVue2 = null;
 
 class PixiScene3 extends PIXI.Container {
   constructor($options) {
     super();
     this.gameConfig = $options.json;
-    this.app = $options.app;
-    this.ticker = $options.ticker;
-    this.resources = PIXI.loader.resources;
     this.vueInstance = $options.vueInstance;
-
-    this.gameLevel = 0;
-    this.cardList = [];
     this.boySpine = null;
-    this.currentAudioPlaying = false;
-
-
     this.gameAudio = null;
-
     this.maskerBg= null;
-
-    this.swiperCtn = $options.swiper;
-
-
+    this.gameMenuBar = null;
     this.on('added', this.addedToStage, this)
   }
 
-  clearUp() {
-    this.gameConfig = null;
-    this.app = null;
-    this.ticker = null;
-    this.resources = null;
-    this.gameLevel = null;
-    this.cardList = null;
-    this.boySpine = null;
-
-  }
 
   addedToStage() {
+
     const self = this;
-
-    var gameBg = new PIXI.Sprite(PIXI.loader.resources['backbg_jpg'].texture);
-
-    this.addChild(gameBg)
+    // var gameBg = new PIXI.Sprite(PIXI.Texture.from('backbg_jpg'));
+    //  this.addChild(gameBg)
     this.maskerBg = new Masker();
-
     this.swiperContainer = new PIXI.Container();
-
-    var boyData = self.resources['boyskeleton'].spineData;
+    var boyData = PIXI.loader.resources['boyskeleton'].spineData;
     this.boySpine = new PIXI.spine.Spine(boyData);
 
 
@@ -63,23 +41,26 @@ class PixiScene3 extends PIXI.Container {
     this.boySpine.skeleton.setSkinByName('boy3');
     this.boySpine.skeleton.setSlotsToSetupPose();
     this.boySpine.state.setAnimation(0, 'next', true);
-    this.boySpine.alpha = 0;
+    this.boySpine.interactive = true;
+    this.boySpine.on('pointerdown',this.boySpineTouchDown,this)
+
 
     this.addChild(this.boySpine);
 
     //TODO:顶部导航逻辑-----
     GameMenuBars.freeze = false;
-    self.gameMenuBar = new GameMenuBars();
+    this.gameMenuBar = new GameMenuBars();
 
 
 
-    self.addChild(self.gameMenuBar);
-    self.gameMenuBar.setBackBtn_tapHandler(() => {
+    self.addChild(this.gameMenuBar);
+    this.gameMenuBar.setBackBtn_tapHandler(() => {
+      //触发回去的回调函数
 
-      self.swiperCtn.slidePrev(300)
+     // self.swiperCtn.slidePrev(300)
 
     });
-    self.gameMenuBar.setHomeBtn_tapHandler(() => {
+    this.gameMenuBar.setHomeBtn_tapHandler(() => {
 
       if (self.vueInstance.$route.meta.completed == 0) {
 
@@ -101,7 +82,7 @@ class PixiScene3 extends PIXI.Container {
       }
     });
     //控制声音;
-    self.gameMenuBar.setSoundBtn_tapHandler((evt) => {
+     this.gameMenuBar.setSoundBtn_tapHandler((evt) => {
       if (evt.currentTarget.status == 'playing') {
         self.stopAudios()
       } else {
@@ -113,7 +94,7 @@ class PixiScene3 extends PIXI.Container {
     self.gameMenuBar.bookBtnShow = false;
     self.gameMenuBar.soundBtnShow = true;
     self.gameMenuBar.updateGameMenu();
-    self.vueInstance.$watch(()=>{
+    unwatchVue = self.vueInstance.$watch(()=>{
       return self.vueInstance.energyCurrentNum
     },(newval)=>{
       self.gameMenuBar.energy = newval;
@@ -122,7 +103,7 @@ class PixiScene3 extends PIXI.Container {
 
 
 
-    self.vueInstance.$watch(() => {
+    unwatchVue2 = self.vueInstance.$watch(() => {
       return self.vueInstance.currentPage;
     }, (newval) => {
       if (newval > 0) {
@@ -139,7 +120,7 @@ class PixiScene3 extends PIXI.Container {
     });
 
 
-    this.gameMenuBar.energyOnce = self.vueInstance.energyCurrentNum;
+    self.gameMenuBar.energyOnce = self.vueInstance.energyCurrentNum;
 
     //顶部导航逻辑END
 
@@ -156,7 +137,7 @@ class PixiScene3 extends PIXI.Container {
   //音频控制;
   playAudios() {
     const self = this;
-    //if (this.currentAudioPlaying) return;
+
     self.stopAudios()
     let soundName =  this.vueInstance.$route.meta.assetsUrl+'_' + this.gameConfig.pictureList[this.vueInstance.currentPage].audioSrc.replace(/\./g,'_');
     if(this.gameConfig.pictureList[this.vueInstance.currentPage].audioSrc && _.trim(this.gameConfig.pictureList[this.vueInstance.currentPage].audioSrc)!=''){
@@ -168,13 +149,13 @@ class PixiScene3 extends PIXI.Container {
         if(self.gameMenuBar.soundBtn){
           self.gameMenuBar.soundBtn.stop();
         }
-        //self.currentAudioPlaying = false;
+
       })
 
-      if(this.gameMenuBar.soundBtn){
-        this.gameMenuBar.soundBtn.play();
+      if(self.gameMenuBar.soundBtn){
+        self.gameMenuBar.soundBtn.play();
       }
-      //this.currentAudioPlaying = true;
+
       self.gameMenuBar.soundBtnShow = true;
       self.gameMenuBar.updateGameMenu();
     }else{
@@ -188,39 +169,65 @@ class PixiScene3 extends PIXI.Container {
 
     if(this.gameAudio){
       this.gameAudio.stop();
-      //this.currentAudioPlaying = false;
       this.gameMenuBar.soundBtn.stop();
 
     }
+
+  }
+  boySpineTouchDown(){
+
+    this.vueInstance.boyBtnAreaClicked();
 
   }
 
   hideBoy() {
     const self = this;
     if (this.boySpine) {
-      TweenMax.to(this.boySpine, 0.3, {x: 2500, alpha: 0})
+      TweenMax.to(this.boySpine, 0.3, {x: 2500})
     }
   }
 
   showBoy() {
     const self = this;
 
+
     if (this.boySpine) {
-      this.boySpine.alpha = 1;
+
+      // this.boySpine.alpha = 1;
       this.boySpine.x = 1800;
       TweenMax.to(this.boySpine, 0.3, {x: 1950})
     }
 
   }
   destroyed() {
+    super.destroy();
     this.stopAudios();
     if(this.gameMenuBar){
       this.gameMenuBar.clearGameMenuEvents();
       this.gameMenuBar.destroy();
     }
-    this.removeAllListeners();
-    this.removeChildren();
-    this.destroy()
+    this.stopAudios();
+    if(unwatchVue){
+      unwatchVue();
+      unwatchVue = null;
+    }
+    if(unwatchVue2){
+      unwatchVue2();
+      unwatchVue2 = null;
+    }
+    if(this.boySpine){
+      this.boySpine.destroy();
+      this.boySpine = null;
+    }
+    if(this.maskerBg){
+      this.maskerBg.destroy();
+      this.maskerBg = null;
+    }
+    this.gameAudio = null;
+    this.gameConfig = null;
+    this.vueInstance = null;
+
+    this.destroy();
     Debugs.log('picSwipeModule: destroyed')
 
   }
