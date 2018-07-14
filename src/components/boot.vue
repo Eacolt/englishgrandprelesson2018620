@@ -6,7 +6,7 @@
 </template>
 <script>
   import {mapActions, mapState} from 'vuex'
-  import {LoadingAnimation} from './gameui/GameManager.js'
+
   import {Debugs, myVueMixin} from "./Utils";
   import {PIXIAudio} from "./EasyPIXI";
   import {TweenMax} from 'gsap'
@@ -179,8 +179,7 @@
         var monsterLoaders = [];
 
         var _Ga = {};
-        LoadingAnimation.loading = self.$parent.$refs.masker;
-        // LoadingAnimation.setMaskShow(false, 0);
+
         _Ga.monster = document.getElementById('starmonster');
         _Ga.planet1 = document.getElementById('load_planet1');//8
         _Ga.planet2 = document.getElementById('load_planet2');
@@ -350,7 +349,7 @@
                   });
                   app.stage.addChild(gameCtn)
                   self.SET_ASSETSPAGES({assetsName: 'indexPage', completedStat: 1});
-                  // LoadingAnimation.setMaskShow(false);
+
 
 
                   _Ga.loading = document.getElementsByClassName('container')[0];
@@ -358,7 +357,7 @@
 
 
                   clearInterval(_Ga.intervalment);
-                  document.getElementById('app').style.cursor = 'none';
+
                   PIXI.loader.removeListener('progress');
 
 

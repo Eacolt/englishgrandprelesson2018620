@@ -28,7 +28,7 @@
   import {myVueMixin, myVueMixin_Popup, checkForJumpRoute, loaderAssetsByValided} from './Utils.js'
   import {mapActions, mapState} from 'vuex'
   import congraPopup from './gameui/congraPopup.vue'
-  import {LoadingAnimation} from "./gameui/GameManager";
+
   import MovieModulePure from "./MovieModulePure";
   import {Debugs} from "./Utils";
 
@@ -153,9 +153,11 @@
             PIXI.loader.add(avalidiAssets)
               .load(function(){
                 GameStart.call(self,gameConfigData.data);
+                document.getElementById('gamebasemasker').style.visibility = 'hidden';
               });
           }else{
             GameStart.call(self,gameConfigData.data);
+            document.getElementById('gamebasemasker').style.visibility = 'hidden';
           }
           //PIXI加载逻辑 ---END
         });
@@ -221,7 +223,7 @@
             self.$refs.videoPlayBtn.style.pointerEvents = 'none';
             self.$refs.videoPlayBtn.style.opacity = 0;
           }
-          LoadingAnimation.setMaskShow(false);
+
           app.stage.addChild(movieModule);
           pixiScene = movieModule;
 
@@ -233,6 +235,9 @@
         this.$router.push('/');
         window.location.reload()
       }
+    },
+    created(){
+      document.getElementById('gamebasemasker').style.visibility = 'visible';
     },
     mounted() {
       const self = this;

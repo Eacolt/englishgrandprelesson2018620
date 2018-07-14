@@ -26,7 +26,6 @@ const store = new Vuex.Store({
 
     indexPageInitialSlide:0,//页面初始化滑动停留位置;
 
-    showPopupDelay: 1200,//弹出框间隔时间
 
     gameInitResponse: null,//indexpage初始化获取的数据
 
@@ -71,10 +70,7 @@ const store = new Vuex.Store({
     SET_GAMESECONDPLAYED({commit},payload){
       commit('setGameSecondPlayed',payload);
     },
-    //设置弹出框出现时间间隔;
-    SET_SHOWPOPUPDELAY({commit},payload){
-      commit('shouwPopupDelay',payload)
-    },
+
 
     SET_MAGICBOOKBYGAMEINDEX({commit},payload){
       commit('setMagicBookByGameIndex',payload)
@@ -305,14 +301,8 @@ const store = new Vuex.Store({
 
     setCurrentPage(state, payload) {
       state.currentPage = payload;
-    },
-    shouwPopupDelay(state,payload){
-      state.shouwPopupDelay = payload
     }
-    // setCanvasPage(state, payload) {
-    //   // state.canvasPages[payload] = true;
-    //
-    // }
+
   }
 });
 export default store;

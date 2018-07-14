@@ -20,7 +20,7 @@
   import {mapActions, mapState} from 'vuex'
   import PixiScene1 from './choicePicModule.js'
   import congraPopup from './gameui/congraPopup.vue'
-  import {LoadingAnimation} from './gameui/GameManager.js'
+
   import {PIXIAudio,AnimationSprite} from "./EasyPIXI";
   import {checkForJumpRoute} from './Utils.js'
   var pixiScene = null;
@@ -45,11 +45,15 @@
         window.location.reload()
       }
     },
+    created(){
+
+      document.getElementById('gamebasemasker').style.visibility = 'visible';
+    },
 
 
 
     computed:{
-      ...mapState(['lessonPartsIndex','gameSecondPlayed','alreadyHasOneCard','showPopupDelay','allPartNames','lessonPartsList','assetsPages','completedLessonNum','allLessonsNum','allLessonComponentsNames','restArrangementStat','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
+      ...mapState(['lessonPartsIndex','gameSecondPlayed','alreadyHasOneCard','allPartNames','lessonPartsList','assetsPages','completedLessonNum','allLessonsNum','allLessonComponentsNames','restArrangementStat','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
 
     },
     components:{congraPopup},
@@ -93,7 +97,6 @@
       quitGame_hdr(){
         const self = this;
 
-        LoadingAnimation.setMaskShow(true);
         let arr = this.$route.fullPath.split('/');
         let index = self.allPartNames.indexOf(arr[2]);
         self.SET_INDEXPAGEINITIALSLIDE(Number(index));
@@ -189,7 +192,9 @@
               vueInstance: self
             });
             app.stage.addChild(pixiScene);
-          }
+          };
+
+          document.getElementById('gamebasemasker').style.visibility = 'hidden';
         }
       },
     },

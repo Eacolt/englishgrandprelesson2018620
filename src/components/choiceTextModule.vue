@@ -49,9 +49,12 @@
         window.location.reload()
       }
     },
+    created(){
+      document.getElementById('gamebasemasker').style.visibility = 'visible';
+    },
 
     computed: {
-      ...mapState(['lessonPartsList','gameSecondPlayed','alreadyHasOneCard','gameThemeType','allPartNames','assetsPages', 'completedLessonNum','allLessonsNum','showPopupDelay','lessonPartsIndex', 'allLessonComponentsNames','restArrangementStat','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
+      ...mapState(['lessonPartsList','gameSecondPlayed','alreadyHasOneCard','gameThemeType','allPartNames','assetsPages', 'completedLessonNum','allLessonsNum','lessonPartsIndex', 'allLessonComponentsNames','restArrangementStat','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
 
     },
     components: {congraPopup},
@@ -112,7 +115,6 @@
         const self = this;
          modulesUrl = this.$route.meta.assetsUrl;
 
-         console.log('这是什么情况，输出两次？？？？')
 
 
           ////加载逻辑
@@ -147,13 +149,6 @@
 
 
 
-        ///End加载逻辑
-
-        //加载页面小人END
-        // LoadingAnimation.setMaskShow(true,0);
-        //end
-
-
 
         function GameStart(gameConfigData){
 
@@ -182,6 +177,7 @@
                 vueInstance: self
               });
               app.stage.addChild(pixiScene);
+              document.getElementById('gamebasemasker').style.visibility = 'hidden';
 
 
             },modulesUrl);

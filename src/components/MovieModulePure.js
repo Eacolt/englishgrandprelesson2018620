@@ -560,7 +560,13 @@ class MovieModulePure extends PIXI.Container {
 
   againStar() {
     const self = this;
-   // if(self._G.videoIsEnd)return;
+    var showPopupDelay = null;
+    if(self.vueInstance.$route.meta.completed != 1){
+      showPopupDelay = 1000;
+    }else{
+      showPopupDelay = 0;
+    }
+
 //TODO:开始设置清算界面逻辑全套;
     self.vueInstance.$route.meta.completed = 1;
     self.vueInstance.setOwnLessonComplete();
@@ -590,7 +596,7 @@ class MovieModulePure extends PIXI.Container {
           PIXIAudio.audios['win_jump'].play();
           Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
         }
-      }, self.vueInstance.showPopupDelay);
+      }, showPopupDelay);
       self.vueInstance.updateRestArrangementStat();
     }, 1);
     //TODO:开始设置清算界面逻辑全套---END;

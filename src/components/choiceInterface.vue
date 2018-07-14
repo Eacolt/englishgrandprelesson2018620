@@ -1,19 +1,22 @@
 <template>
-  <div class="bgContainer">
-    <pixi-canvas @startGame="gameStart"></pixi-canvas>
+  <div class="bgContainer" ref="pixicanvas">
+
+
+
   </div>
 </template>
 
 <script>
   import {mapActions, mapState} from 'vuex'
  import {PIXIAudio} from './EasyPIXI.js'
-  import {LoadingAnimation} from "./gameui/GameManager";
+
 
   import ChoiceInterface from './choiceInterface.js'
   import GameMenuBars from './gameui/GameMenuBar.js'
 
 
  var pixiScene = null;
+  var canvasApp = null;
   export default {
     name: "choice-interface",
     data() {
@@ -28,14 +31,21 @@
         window.location.reload()
       }
     },
-    beforeDestroy(){
+    created(){
+      document.getElementById('gamebasemasker').style.visibility = 'visible';
+    },
+
+    beforeDestroy() {
 
       PIXIAudio.audios.bgSound.volume = 0;
-    },
-    destroyed() {
+      if(canvasApp){
+        canvasApp.destroy();
+        canvasApp = null;
+      }
       if(pixiScene){
         pixiScene.destroyed();
         pixiScene.destroy();
+        pixiScene = null;
       }
 
     },
@@ -45,6 +55,23 @@
 
       this.SET_MODULEINDEX(0);//初始化列表index;
       this.moduleList = this.lessonPartsList[this.lessonPartsIndex].menus;
+
+      canvasApp  = new PIXI.Application({
+        width: 1920,
+        height: 1080,
+        antialias: false,
+      });
+
+      canvasApp.view.style.position = 'absolute';
+      canvasApp.view.style.width = '100%';
+      canvasApp.view.style.height = '100%';
+      canvasApp.view.style.top = '0px';
+      canvasApp.view.style.left = '0px';
+      canvasApp.view.style.right = '0px';
+      canvasApp.view.style.margin = '0px auto';
+      self.$refs.pixicanvas.appendChild(canvasApp.view);
+
+      this.gameStart(canvasApp);
 
 
 
@@ -65,47 +92,70 @@
       ...mapActions(['SET_MODULEINDEX', 'SET_ASSETSPAGES','SET_CANVASPAGE', 'PUSH_GAMES', 'SET_PREPARATION', 'SET_LESSONPART', 'SET_MODULELIST', 'SET_BASEASSETSCOMPLETED']),
       gameStart(app) {
         const self = this;
-        if (self.assetsPages.choicePages == 1) {
-          GameStart.call(self);
+        // if (self.assetsPages.choicePages == 1) {
+        //   GameStart.call(self);
+        // }else{
+        //
+        //   PIXI.loader.add();
+        //   PIXI.loader.load(function (loader, resource) {
+        //     GameStart.call(self);
+        //     self.SET_ASSETSPAGES({assetsName: 'choicePages', completedStat: 1});
+        //
+        //
+        //   });
+        //
+        // }
+
+        var assets =[
+          {
+            "name":"choiceDesk_png",
+            "url":"static/themetypeui/back2ground.png"
+          },
+          {
+            "name": "practiceBox_skeleton",
+            "url": "static/img/choicepage/boxskeleton/skeleton.json"
+          },
+          {
+            "name":"backbg_jpg",
+            "url":"static/themetypeui/backbg.jpg"
+          },
+          {
+            "name":"practicebg_jpg",
+            "url":"static/themetypeui/practicebg.jpg"
+          }
+        ]
+        //PIXI 加载逻辑
+        var avalidiAssets = [];
+        assets.forEach((item)=>{
+          if(!PIXI.loader.resources[item.name]){
+            avalidiAssets.push({
+              name:item.name,
+              url:item.url
+            })
+          };
+        });
+        if(avalidiAssets.length>0){
+          PIXI.loader.add(avalidiAssets)
+            .load(function(){
+              GameStart.call(self);
+            });
         }else{
-
-          PIXI.loader.add([
-            {
-              "name":"choiceDesk_png",
-              "url":"static/themetypeui/back2ground.png"
-            },
-            {
-              "name": "practiceBox_skeleton",
-              "url": "static/img/choicepage/boxskeleton/skeleton.json"
-            },
-            {
-              "name":"backbg_jpg",
-              "url":"static/themetypeui/backbg.jpg"
-            },
-            {
-              "name":"practicebg_jpg",
-              "url":"static/themetypeui/practicebg.jpg"
-            }
-          ]);
-          PIXI.loader.load(function (loader, resource) {
-            GameStart.call(self);
-            self.SET_ASSETSPAGES({assetsName: 'choicePages', completedStat: 1});
-              LoadingAnimation.setMaskShow(false);
-
-          });
-
+          GameStart.call(self);
         }
+        //PIXI加载逻辑 ---END
+
+
+
+
         function GameStart() {
-          var scene1 = new ChoiceInterface({
-            app: app,
-            ticker: app.ticker,
-            resources: PIXI.loader.resources,
+           pixiScene = new ChoiceInterface({
+
             vueInstance: self
           });
-          app.stage.addChild(scene1);
-          pixiScene = scene1;
+          app.stage.addChild(pixiScene);
 
-          LoadingAnimation.setMaskShow(false);
+          document.getElementById('gamebasemasker').style.visibility = 'hidden';
+
         }
 
 

@@ -21,7 +21,7 @@
   import {mapActions, mapState} from 'vuex'
   import PixiScene1 from './bookReadingModule.js'
   import {PIXIAudio,AnimationSprite} from "./EasyPIXI";
-  import {LoadingAnimation} from './gameui/GameManager.js'
+
 
   var pixiScene = null;
   var modulesUrl = null;
@@ -43,7 +43,7 @@
 
 
     computed: {
-      ...mapState(['lessonPartsList','gameSecondPlayed','showPopupDelay','allPartNames','assetsPages','completedLessonNum','allLessonsNum','lessonPartsIndex', 'restArrangementStat','allLessonComponentsNames','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
+      ...mapState(['lessonPartsList','gameSecondPlayed','allPartNames','assetsPages','completedLessonNum','allLessonsNum','lessonPartsIndex', 'restArrangementStat','allLessonComponentsNames','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
 
     },
     components: {congraPopup},
@@ -91,7 +91,7 @@
         setTimeout(() => {
           self.$router.push('/index/')
         }, 1000);
-        LoadingAnimation.setMaskShow(true);
+
         let arr = this.$route.fullPath.split('/');
         let index = self.allPartNames.indexOf(arr[2]);
         self.SET_INDEXPAGEINITIALSLIDE(Number(index));
@@ -113,9 +113,7 @@
       //  var gameConfig;
         var urls = 'static/' + modulesUrl + '/resource.json';
 
-        //加载页面小人END
-        LoadingAnimation.setMaskShow(true,0);
-        //end
+
 
         ////加载逻辑
         self.axios.get('static/' + modulesUrl + '/gameconfig.json').then((gameConfigData) => {
@@ -183,7 +181,8 @@
               });
               app.stage.addChild(scene1);
               pixiScene = scene1;
-              LoadingAnimation.setMaskShow(false);
+
+              document.getElementById('gamebasemasker').style.visibility = 'hidden';
             },modulesUrl);
           }else{
             var scene1 = new PixiScene1({
@@ -192,7 +191,8 @@
             });
             app.stage.addChild(scene1);
             pixiScene = scene1;
-            LoadingAnimation.setMaskShow(false);
+
+            document.getElementById('gamebasemasker').style.visibility = 'hidden';
           }
           //
         }
@@ -205,6 +205,9 @@
         this.$router.push('/');
         window.location.reload()
       }
+    },
+    created(){
+      document.getElementById('gamebasemasker').style.visibility = 'visible';
     },
     beforeDestroy(){
       if(pixiScene){

@@ -29,6 +29,7 @@
     margin:0;
     visibility: hidden;
 
+
   }
   .loadingUI {
     position: absolute;

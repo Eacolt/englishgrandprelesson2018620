@@ -81,10 +81,6 @@ class ChoicePicModule extends PIXI.Container {
       self.vueInstance.popupType = 'shutback';
       self.vueInstance.showCongra = true;
     } else {
-      // setTimeout(() => {
-      //   self.vueInstance.$router.push('/index/')
-      // }, 1000);
-
 
       let arr = self.vueInstance.$route.fullPath.split('/');
       let index = self.vueInstance.allPartNames.indexOf(arr[2]);
@@ -159,6 +155,13 @@ class ChoicePicModule extends PIXI.Container {
               self.soundButton.stop();
             }
 
+            var showPopupDelay = null;
+            if(self.vueInstance.$route.meta.completed != 1){
+              showPopupDelay = 1000;
+            }else{
+              showPopupDelay = 0;
+            }
+
             //TODO:开始设置清算界面逻辑全套;
             self.vueInstance.$route.meta.completed = 1;
             self.vueInstance.setOwnLessonComplete();
@@ -189,7 +192,7 @@ class ChoicePicModule extends PIXI.Container {
                   PIXIAudio.audios['win_jump'].play();
                   Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
                 }
-              }, self.vueInstance.showPopupDelay);
+              }, showPopupDelay);
               self.vueInstance.updateRestArrangementStat();
             }, 1);
             //TODO:开始设置清算界面逻辑全套---END;
@@ -376,6 +379,7 @@ class ChoicePicModule extends PIXI.Container {
 
   addedToStage() {
     const self = this;
+    self.soundButton = new AnimationSprite();
 
 
     var gameBg = new PIXI.Sprite(self.resources['practicebg_jpg'].texture);
@@ -414,7 +418,7 @@ class ChoicePicModule extends PIXI.Container {
 
     //播放声音;
 
-    self.soundButton = new AnimationSprite();
+
     self.soundButton.resName = 'gamebtnSound_atlas';
     self.soundButton.alienImages = ['gamesound0.png','gamesound1.png','gamesound2.png']
     self.soundButton.interactive = true;
@@ -502,10 +506,10 @@ class ChoicePicModule extends PIXI.Container {
   soundButtonTap() {
 
     if (this.soundButton.status == 'stoping') {
-      this.soundButton.play();
+
       this.playSpeakSound();
     } else if (this.soundButton.status == 'playing') {
-      this.soundButton.stop();
+
       this.stopSpeakSound();
     }
 
@@ -519,9 +523,12 @@ class ChoicePicModule extends PIXI.Container {
 
       self.gameAudio = PIXIAudio.audios[soundName];
       self.gameAudio.play();
-      self.soundButton.play();
+      if(self.soundButton){
+        self.soundButton.play();
+      }
+
       self.gameAudio.on('complete',()=>{
-        self.soundButton.stop();
+        self.stopSpeakSound();
       });
     }
 
@@ -531,7 +538,10 @@ class ChoicePicModule extends PIXI.Container {
   stopSpeakSound() {
     if (this.gameAudio) {
       this.gameAudio.stop();
-      this.soundButton.stop();
+      if(this.soundButton){
+        this.soundButton.stop();
+
+      }
 
     }
 
@@ -576,7 +586,7 @@ class ChoicePicModule extends PIXI.Container {
     this.gameAudio.stop();
     this.soundButton.destroy();
 
-    this.soundButton.destroy();
+
     this.soundButton = null;
     this.gameAudio = null;
     this.vueInstance = null;

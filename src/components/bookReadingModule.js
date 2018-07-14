@@ -1,7 +1,7 @@
 import ProgressBar from './gameui/Progressbar.js'
 import {pixiAnimation} from './EasyPIXI.js'
 import {checkForJumpRoute, Debugs} from './Utils.js'
-import {LoadingAnimation} from './gameui/GameManager.js'
+
 import {Back, TweenMax} from "gsap";
 import GameMenuBars from "./gameui/GameMenuBar";
 import PixiHammer from './gameui/PixiHammer.js'
@@ -304,6 +304,12 @@ class BookReadingModule extends PIXI.Container {
           self.stopAudios();
         }
         self.swiperHammer.lock = true;
+        var showPopupDelay = null;
+        if(self.vueInstance.$route.meta.completed != 1){
+          showPopupDelay = 1000;
+        }else{
+          showPopupDelay = 0;
+        }
 
         //TODO:开始设置清算界面逻辑全套;
         self.vueInstance.$route.meta.completed = 1;
@@ -336,7 +342,7 @@ class BookReadingModule extends PIXI.Container {
               PIXIAudio.audios['win_jump'].play();
               Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
             }
-          }, self.vueInstance.showPopupDelay);
+          },showPopupDelay);
           self.vueInstance.updateRestArrangementStat();
         }, 1);
         //TODO:开始设置清算界面逻辑全套---END;
@@ -579,14 +585,10 @@ class BookReadingModule extends PIXI.Container {
       this.vueInstance.showCongra = true;
     } else {
 
-      setTimeout(() => {
-        self.vueInstance.$router.push('/index/')
-      }, 1000);
-      LoadingAnimation.setMaskShow(true);
-
       let arr = self.vueInstance.$route.fullPath.split('/');
       let index = self.vueInstance.allPartNames.indexOf(arr[2]);
       self.vueInstance.SET_INDEXPAGEINITIALSLIDE(Number(index));
+      self.vueInstance.$router.push('/index/')
 
 
     }

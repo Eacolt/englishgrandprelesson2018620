@@ -604,7 +604,7 @@ class BookScene extends PIXI.Container{
     ticker.start();
     if($isEnd){
       GameMenuBars.vueInstance.SET_GAMEHASBEENCOMPLETED(true);
-      GameMenuBars.vueInstance.SET_SHOWPOPUPDELAY(1);
+
 
     }
     function showText($isCompleted=false){

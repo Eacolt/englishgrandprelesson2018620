@@ -3,7 +3,7 @@
     <div  class="bg" :style="bgStyle"></div>
 
     <div  id="swiperContainerMain" class="swiper-container">
-      <div v-cloak id="swiperWrapperMain" class="swiper-wrapper" @mouseenter="swiperMainMouseEnter()" @mouseleave="swiperMainMouseLeave()">
+      <div v-cloak id="swiperWrapperMain" class="swiper-wrapper">
         <div   v-for="(item,index) in slideLists" class="swiper-slide swiper-slide-main">
           <div class="slideInnerPic" :style="item.styles">
 
@@ -41,7 +41,7 @@
 
     <div class="canvasApp" :style="canvasAppLevel" ref="pixicanvas"></div>
 
-    <div ref="boyBtnArea" class="boyBtnArea" @click="boyBtnAreaClicked"></div>
+
 
       <congraPopup :showType="popupType" v-if="showCongra"
                    @quitGame="quitGame_hdr()"
@@ -158,10 +158,13 @@
         }
         if(pixiScene){
           pixiScene.stopAudios();
+        };
+        var showPopupDelay = null;
+        if(self.$route.meta.completed != 1){
+          showPopupDelay = 1000;
+        }else{
+          showPopupDelay = 0;
         }
-
-
-
 
 
        //TODO:开始设置清算界面逻辑全套66;
@@ -179,7 +182,6 @@
             if (isQingsuan && !self.gameHasBeenCompleted) {
               Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.gameHasBeenCompleted)
                pixiScene.gameMenuBar.bookScene.openEnergyCan(false);
-             // self.openEnergyed = 0;
 
             } else if (isQingsuan == false && !self.gameHasBeenCompleted) {
               self.showCongra = true;
@@ -194,7 +196,7 @@
               PIXIAudio.audios['win_jump'].play();
               Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.gameHasBeenCompleted)
             }
-          }, self.showPopupDelay);
+          }, showPopupDelay);
           self.updateRestArrangementStat();
         }, 1);
         //TODO:开始设置清算界面逻辑全套---END;
@@ -220,31 +222,13 @@
       },
       clickContinue_hdr(){
 
-        if (this.gameHasBeenCompleted) {
-          /////////////////////
-          let restArrangmentArr = this.$store.state.restArrangementStat;
-          if (restArrangmentArr.length > 0) {
-            this.$router.push({name: restArrangmentArr[0]});
-            let d = Number(restArrangmentArr[0].split('-')[1]);
-            this.$store.dispatch('SET_LESSONPARTSINDEX', d);
-          }
-        } else {
-          let allLessonComponentsNames = this.$store.state.allLessonComponentsNames;
-          let b = Number(allLessonComponentsNames[0].split('-')[1]);
-          let currentPageIndex = this.lessonCurrentPageIndex;
-          if (currentPageIndex < allLessonComponentsNames.length - 1) {
-            this.$router.push({name: allLessonComponentsNames[currentPageIndex + 1]});
-          } else {
-            this.$router.push({name: allLessonComponentsNames[0]});
-          }
-        }
 
-        // if(this.gameHasBeenCompleted){
-        //   checkForJumpRoute.call(this,false);
-        //
-        // }else{
-        //   checkForJumpRoute.call(this,true);
-        // }
+        if(this.gameHasBeenCompleted){
+          checkForJumpRoute.call(this,false);
+
+        }else{
+          checkForJumpRoute.call(this,true);
+        }
       },
       againClicked_hdr(){
         this.showCongra = false;
@@ -254,31 +238,31 @@
           mySwiper.slideTo(0,500)
         }
       },
-
-      swiperMainMouseEnter(){
-        // if(this.appPlatform=='pc'){
-        //   GameHand.setAnimation('swipe')
-        // }
-
-      },
-      swiperMainMouseLeave(){
-        // if(this.appPlatform=='pc'){
-        //   GameHand.setAnimation('normal')
-        // }
-
-      },
-      paginationBallMouseLeave(){
-        // if(this.appPlatform == 'pc'){
-        //   GameHand.setAnimation('normal')
-        // }
-
-      },
-      paginationBallMouseEnter(){
-        // if(this.appPlatform=='pc'){
-        //   GameHand.setAnimation('click')
-        // }
-
-      },
+      //
+      // swiperMainMouseEnter(){
+      //   // if(this.appPlatform=='pc'){
+      //   //   GameHand.setAnimation('swipe')
+      //   // }
+      //
+      // },
+      // swiperMainMouseLeave(){
+      //   // if(this.appPlatform=='pc'){
+      //   //   GameHand.setAnimation('normal')
+      //   // }
+      //
+      // },
+      // paginationBallMouseLeave(){
+      //   // if(this.appPlatform == 'pc'){
+      //   //   GameHand.setAnimation('normal')
+      //   // }
+      //
+      // },
+      // paginationBallMouseEnter(){
+      //   // if(this.appPlatform=='pc'){
+      //   //   GameHand.setAnimation('click')
+      //   // }
+      //
+      // },
       paginationBallClick(index){
         const self = this;
         if(mySwiperPagination){
@@ -412,19 +396,16 @@
                     },
                     slideChange(){
                       self.currentPage = this.activeIndex;
-                      console.log(pixiScene,'pixiScene')
-
                       if(this.activeIndex>=this.slides.length-1){
-                        self.$refs.boyBtnArea.style.pointerEvents = 'auto';
+
                         if(pixiScene){
                           pixiScene.showBoy();
+
+                        }
+                        self.canvasAppLevel = {
+                          zIndex:100
                         }
 
-                        // self.canvasAppStyle = {
-                        //   pointerEvents:'auto'
-                        // }
-
-                        // PIXIAudio.audios['nextpart'].play();
                         self.currentLessonCompleted= true;
 
                       }else{
@@ -434,11 +415,7 @@
                         self.canvasAppLevel = {
                           zIndex:1
                         }
-                        // self.canvasAppStyle = {
-                        //   pointerEvents:'none'
-                        // }
 
-                        self.$refs.boyBtnArea.style.pointerEvents = 'none';
                       }
                       if(pixiScene){
                         pixiScene.stopAudios();
@@ -491,11 +468,13 @@
               //end
               if(PIXIAudio.loadedStatus[modulesUrl]==undefined && audioManifest.length>0){
                 PIXIAudio.addAudio(audioManifest, globalStatic+'/', ()=>{
-                  PixiGameStart.call(self)
+                  PixiGameStart.call(self);
+                  document.getElementById('gamebasemasker').style.visibility = 'hidden';
 
                 },modulesUrl)
               }else{
-                PixiGameStart.call(self)
+                PixiGameStart.call(self);
+                document.getElementById('gamebasemasker').style.visibility = 'hidden';
               }
 
 
@@ -504,11 +483,11 @@
                   json: gameConfigData.gameData,
                   app: app,
                   vueInstance:self,
-                  // swiper:mySwiper
+                  swiper:mySwiper
                 });
                 app.stage.addChild(scene1);
                 pixiScene = scene1;
-                // LoadingAnimation.setMaskShow(false)
+
               }
               //END
             }
@@ -519,6 +498,9 @@
         this.$router.push('/');
         window.location.reload()
       }
+    },
+    created(){
+      document.getElementById('gamebasemasker').style.visibility = 'visible';
     },
     beforeDestroy(){
       this.slideLists = null;
@@ -571,17 +553,7 @@
     left: 0;
     top: 0;
   }
-  .boyBtnArea{
-    position: absolute;
-    top:4rem;
-    right:0rem;
-    width:2rem;
-    height:3rem;
-    background:gray;
-    z-index: 100;
-    opacity: 0;
-    pointer-events: none;
-  }
+
   .swiper-container {
     position: absolute;
     top: 1rem;
@@ -593,7 +565,7 @@
     background:transparent;
     left:0;
     top:2.2rem;
-    cursor:none;
+
 
   }
   .diyButtonNext{
@@ -603,7 +575,7 @@
     background:transparent;
     right:0;
     top:2.2rem;
-    cursor:none;
+
 
   }
   .swiper-slide-active, .swiper-slide-duplicate-active {

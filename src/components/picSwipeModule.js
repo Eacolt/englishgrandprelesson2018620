@@ -4,8 +4,8 @@ import {TweenMax, Back} from 'gsap'
 import {Debugs, TextureCache} from "./Utils";
 import GameMenuBars from "./gameui/GameMenuBar";
 import {PIXIAudio} from "./EasyPIXI";
-import Masker from "./gameui/Masker";
-import {LoadingAnimation} from "./gameui/GameManager";
+
+
 //
 // var gameMenuBar= null;
 var unwatchVue = null;
@@ -18,7 +18,8 @@ class PixiScene3 extends PIXI.Container {
     this.vueInstance = $options.vueInstance;
     this.boySpine = null;
     this.gameAudio = null;
-    this.maskerBg= null;
+    this.swiperCtn = $options.swiper;
+
     this.gameMenuBar = null;
     this.on('added', this.addedToStage, this)
   }
@@ -29,7 +30,7 @@ class PixiScene3 extends PIXI.Container {
     const self = this;
     // var gameBg = new PIXI.Sprite(PIXI.Texture.from('backbg_jpg'));
     //  this.addChild(gameBg)
-    this.maskerBg = new Masker();
+
     this.swiperContainer = new PIXI.Container();
     var boyData = PIXI.loader.resources['boyskeleton'].spineData;
     this.boySpine = new PIXI.spine.Spine(boyData);
@@ -57,7 +58,7 @@ class PixiScene3 extends PIXI.Container {
     this.gameMenuBar.setBackBtn_tapHandler(() => {
       //触发回去的回调函数
 
-     // self.swiperCtn.slidePrev(300)
+      self.swiperCtn.slidePrev(300)
 
     });
     this.gameMenuBar.setHomeBtn_tapHandler(() => {
@@ -67,18 +68,11 @@ class PixiScene3 extends PIXI.Container {
         self.vueInstance.popupType = 'shutback';
         self.vueInstance.showCongra = true;
       } else {
-        setTimeout(() => {
-          self.vueInstance.$router.push('/index/')
-        }, 1000);
 
-
-        LoadingAnimation.setMaskShow(true)
-
-
-        self.maskerBg.showMakser()
         let arr = self.vueInstance.$route.fullPath.split('/');
         let index = self.vueInstance.allPartNames.indexOf(arr[2]);
         self.vueInstance.SET_INDEXPAGEINITIALSLIDE(Number(index));
+        self.vueInstance.$router.push('/index/')
       }
     });
     //控制声音;
@@ -123,10 +117,6 @@ class PixiScene3 extends PIXI.Container {
     self.gameMenuBar.energyOnce = self.vueInstance.energyCurrentNum;
 
     //顶部导航逻辑END
-
-    this.addChild(this.maskerBg);
-    this.maskerBg.hideMakser();
-
 
 
 
@@ -219,10 +209,8 @@ class PixiScene3 extends PIXI.Container {
       this.boySpine.destroy();
       this.boySpine = null;
     }
-    if(this.maskerBg){
-      this.maskerBg.destroy();
-      this.maskerBg = null;
-    }
+    this.swiperCtn = null;
+
     this.gameAudio = null;
     this.gameConfig = null;
     this.vueInstance = null;

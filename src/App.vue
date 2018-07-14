@@ -12,24 +12,21 @@
   import axios from 'axios';
   import VueAxios from 'vue-axios'
   import $ from 'jquery'
-  import VueAwesomeSwiper from 'vue-awesome-swiper'
-  import {swiper, swiperSlide} from 'vue-awesome-swiper'
+
   import {mapActions, mapState} from 'vuex'
 
-  import GameHand from './components/gameui/Gamehand.js'
-  import {Debugs, myVueMixin,AudioManager} from './components/Utils.js'
-
-  import {LoadingAnimation} from './components/gameui/GameManager.js'
+  // import GameHand from './components/gameui/Gamehand.js'
+  import {Debugs} from './components/Utils.js'
   import masker from './components/masker.vue'
   import {Broswer} from "./components/EasyPIXI";
-  import Bowser from 'bowser'
+
 
   import 'swiper/dist/css/swiper.css'
 
   require('pixi-spine')
   const VConsole = require('vconsole')
   Vue.use(VueAxios, axios);
-  const bowser = require('bowser')
+
   export default {
     name: 'App',
     created() {
@@ -42,9 +39,9 @@
       this.SET_CURRENTPAGE(1);
       if (Broswer.IsPC()) {
         self.SET_PLATFORM('pc');
-        GameHand.isPC = true;
-        GameHand.init();
-        GameHand.setAnimation('normal');
+        // GameHand.isPC = true;
+        // GameHand.init();
+        // GameHand.setAnimation('normal');
         // document.documentElement.addEventListener('mousedown',handDown);
         // document.documentElement.addEventListener('mouseup',handUp);
         // function handDown(event){
@@ -59,9 +56,12 @@
         // }
       }else{
         self.SET_PLATFORM('mobile')
-      }
+      };
 
 
+    //  document.documentElement.style.cursor = 'url("static/img/myhand.ico") auto'
+
+       document.documentElement.style.cursor = 'url("static/img/myhand.ico") auto';
 
 
 
@@ -137,7 +137,6 @@
     overflow: hidden;
     background:black;
 
-
   }
   html, body, div {
     padding: 0;
@@ -147,10 +146,8 @@
     -webkit-text-size-adjust:none;
     -moz-text-size-adjust: none;
     user-select: none;
-    /*cursor: none;*/
     outline: none;
     box-sizing: border-box !important;
-
   }
 
   #app {

@@ -1,6 +1,6 @@
 import GameMenuBars from "./gameui/GameMenuBar";
 import {PIXIAudio} from "./EasyPIXI";
-
+import {Debugs} from "./Utils";
 
 class ChoiceInterface extends PIXI.Container {
   constructor($options) {
@@ -8,17 +8,12 @@ class ChoiceInterface extends PIXI.Container {
     this.resources = PIXI.loader.resources;
     this.vueInstance = $options.vueInstance;
     this.gameMenuBars = null;
-    this.gamePopups = null;
-
-    this.gameLevel = 0;
-
-    this.bearDefaultAn = null;
 
     this.practiceBoxes = [];
     this.monsterHasDroped = false;
     this.monster = null;
 
-    this.monsterFirstEntry = null;
+
     this.canDragDown = false;
 
     this.THEME_TYPE = GameMenuBars.vueInstance.gameThemeType;
@@ -92,8 +87,6 @@ class ChoiceInterface extends PIXI.Container {
 
 
 
-            // LoadingAnimation.setMaskShow(true)
-
 
           }
 
@@ -123,7 +116,8 @@ class ChoiceInterface extends PIXI.Container {
       this.monster.state.addListener({
         complete: function (entry) {
 
-          if (entry.animation.name == 'dropdown') {
+
+            if (entry.animation.name == 'dropdown') {
 
               self.vueInstance.$store.dispatch("SET_MODULEINDEX", i);
               let moduleList = self.vueInstance.$store.state.lessonPartsList[self.vueInstance.$store.state.lessonPartsIndex].menus;
@@ -132,7 +126,10 @@ class ChoiceInterface extends PIXI.Container {
               self.vueInstance.$router.push(self.vueInstance.$route.fullPath + '/' + self.vueInstance.$store.state.currentModuleList[i].name);
 
 
-          }
+            }
+
+
+
 
 
 
@@ -141,7 +138,7 @@ class ChoiceInterface extends PIXI.Container {
 
 
     }
-    return;
+
   }
 
   destroyed() {
@@ -149,13 +146,27 @@ class ChoiceInterface extends PIXI.Container {
     this.gameMenuBars.destroy();
     this.gameMenuBars = null;
 
+    if(this.practiceBoxes.length>0){
+      this.practiceBoxes.forEach((item)=>{
+        item.destroy();
+      })
+    }
+
+    this.practiceBoxes = null;
+    this.monsterHasDroped = null;
+    this.monster.destroy();
+    this.monster = null;
+    this.canDragDown = null;
+    this.practiceBoxes = null;
+    this.resources = null;
+    this.vueInstance = null;
+    this.destroy();
+    Debugs.log('destroyed === choiceInterface')
+
   }
 
   addedToStage() {
     const self = this;
-    setTimeout(()=>{
-      self.canDragDown = true;
-    },400)
 
     let desk = new PIXI.Sprite(self.resources['choiceDesk_png'].texture);
 
@@ -298,13 +309,23 @@ class ChoiceInterface extends PIXI.Container {
 
     }
 
-    let monsters = new PIXI.spine.Spine(monsterData);
 
-    self.monster = monsters;
-    monsters.x = 1920 / 2;
-    monsters.y = 650;
-    this.addChild(monsters)
-    this.monsterFirstEntry = monsters.state.setAnimation(0, 'catching2', false);
+
+    self.monster = new PIXI.spine.Spine(monsterData);
+    self.monster.x = 1920 / 2;
+    self.monster.y = 650;
+    this.addChild(self.monster)
+    let monsterAn = self.monster.state.setAnimation(0,'catching2',false);
+
+    monsterAn.listener = {
+      complete:()=>{
+        self.canDragDown = true;
+      }
+    }
+
+
+
+
 
     this.gameMenuBars = new GameMenuBars();
     this.addChild(this.gameMenuBars);

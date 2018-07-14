@@ -7,7 +7,6 @@
 <script>
   import {mapActions, mapState} from 'vuex'
   import IndexPage from './indexpage.js'
-  import {LoadingAnimation} from './gameui/GameManager.js'
   import {Debugs, myVueMixin} from "./Utils";
   import {PIXIAudio} from "./EasyPIXI";
   var pixiScene = null;
@@ -26,6 +25,7 @@
         }
       }
     },
+
     mounted(){
 
 
@@ -35,7 +35,7 @@
       }
     },
     methods: {
-      ...mapActions(['PUSH_GAMES','SET_SHOWPOPUPDELAY', 'SET_MODULELIST','SET_GAMESECONDPLAYED', 'SET_GAMETHEMETYPE', 'SET_BOOKOPENED','SET_MAGICBOOKBYGAMEINDEX', 'SET_SHOWMAGICBOOK', 'SET_INDEXPAGEINITIALSLIDE', 'SET_ALREADYHASONECARD',  'SET_ALLASSETSPACKAGE', 'SET_ASSETSPAGES', 'SET_COMPLETEDLESSONNUM', 'SET_GAMEHASBEENCOMPLETED', 'SET_ENERGY', 'SET_ALLPARTNAMES', 'SET_GAMEINITRESPONSE', 'SET_ALLLESSONNUM', 'SET_GAMECARDS',
+      ...mapActions(['PUSH_GAMES','SET_MODULELIST','SET_GAMESECONDPLAYED', 'SET_GAMETHEMETYPE', 'SET_BOOKOPENED','SET_MAGICBOOKBYGAMEINDEX', 'SET_SHOWMAGICBOOK', 'SET_INDEXPAGEINITIALSLIDE', 'SET_ALREADYHASONECARD',  'SET_ALLASSETSPACKAGE', 'SET_ASSETSPAGES', 'SET_COMPLETEDLESSONNUM', 'SET_GAMEHASBEENCOMPLETED', 'SET_ENERGY', 'SET_ALLPARTNAMES', 'SET_GAMEINITRESPONSE', 'SET_ALLLESSONNUM', 'SET_GAMECARDS',
         'SET_PREPARATION', 'SET_LESSONPARTSINDEX',
         'SET_LESSONPARTSLIST', 'SET_BASEASSETSCOMPLETE', 'SET_LESSONCOMPLETESTAT', 'SET_RESTARRANGEMENTSTAT', 'SET_ALLLESSONCOMPONENTSNAMES']),
       gameStart(app) {
@@ -47,7 +47,6 @@
         });
 
         app.stage.addChild(pixiScene);
-        // LoadingAnimation.setMaskShow(false);
         PIXIAudio.audios.bgSound.volume = 1;
         //END
       },

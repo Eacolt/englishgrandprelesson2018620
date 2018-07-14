@@ -1,7 +1,7 @@
 import ProgressBar from './gameui/Progressbar.js'
 
 import {checkForJumpRoute,Debugs} from './Utils.js'
-import {LoadingAnimation} from './gameui/GameManager.js'
+
 import GameMenuBars from "./gameui/GameMenuBar";
 import {AnimationSprite} from './EasyPIXI.js'
 import {PIXIAudio} from "./EasyPIXI";
@@ -38,33 +38,31 @@ class ChoiceTextModule extends PIXI.Container {
   }
 
   playContinue() {
-
-    //
-    // if (this.vueInstance.gameHasBeenCompleted) {
-    //   /////////////////////
-    //   let restArrangmentArr = this.vueInstance.$store.state.restArrangementStat;
-    //   if (restArrangmentArr.length > 0) {
-    //     this.vueInstance.$router.push({name: restArrangmentArr[0]});
-    //     let d = Number(restArrangmentArr[0].split('-')[1]);
-    //     this.vueInstance.$store.dispatch('SET_LESSONPARTSINDEX', d);
-    //   }
-    // } else {
-    //   let allLessonComponentsNames = this.vueInstance.$store.state.allLessonComponentsNames;
-    //   let b = Number(allLessonComponentsNames[0].split('-')[1]);
-    //   let currentPageIndex = this.vueInstance.lessonCurrentPageIndex;
-    //   if (currentPageIndex < allLessonComponentsNames.length - 1) {
-    //     this.vueInstance.$router.push({name: allLessonComponentsNames[currentPageIndex + 1]});
-    //   } else {
-    //     this.vueInstance.$router.push({name: allLessonComponentsNames[0]});
-    //   }
-    // }
-
     if (this.vueInstance.gameHasBeenCompleted) {
-      checkForJumpRoute.call(this, false);
-
+      /////////////////////
+      let restArrangmentArr = this.vueInstance.$store.state.restArrangementStat;
+      if (restArrangmentArr.length > 0) {
+        this.vueInstance.$router.push({name: restArrangmentArr[0]});
+        let d = Number(restArrangmentArr[0].split('-')[1]);
+        this.vueInstance.$store.dispatch('SET_LESSONPARTSINDEX', d);
+      }
     } else {
-      checkForJumpRoute.call(this, true);
+      let allLessonComponentsNames = this.vueInstance.$store.state.allLessonComponentsNames;
+      let b = Number(allLessonComponentsNames[0].split('-')[1]);
+      let currentPageIndex = this.vueInstance.lessonCurrentPageIndex;
+      if (currentPageIndex < allLessonComponentsNames.length - 1) {
+        this.vueInstance.$router.push({name: allLessonComponentsNames[currentPageIndex + 1]});
+      } else {
+        this.vueInstance.$router.push({name: allLessonComponentsNames[0]});
+      }
     }
+
+    // if (this.vueInstance.gameHasBeenCompleted) {
+    //   checkForJumpRoute.call(this, false);
+    //
+    // } else {
+    //   checkForJumpRoute.call(this, true);
+    // }
   }
 
   goToHome() {
@@ -73,14 +71,10 @@ class ChoiceTextModule extends PIXI.Container {
       self.vueInstance.popupType = 'shutback';
       self.vueInstance.showCongra = true;
     } else {
-      setTimeout(() => {
-        self.vueInstance.$router.push('/index/')
-      }, 1000);
-      LoadingAnimation.setMaskShow(true);
-
       let arr = self.vueInstance.$route.fullPath.split('/');
       let index = self.vueInstance.allPartNames.indexOf(arr[2]);
       self.vueInstance.SET_INDEXPAGEINITIALSLIDE(Number(index));
+      self.vueInstance.$router.push('/index/')
     }
   }
 
@@ -161,8 +155,16 @@ class ChoiceTextModule extends PIXI.Container {
         setTimeout(() => {
           if (self.gameLevel >= self.gameConfig.levels.length - 1) {
             if(self.gameAudio){
-              self.soundButton.stop();
+
+              self.stopSpeakSound();
             }
+            var showPopupDelay = null;
+            if(self.vueInstance.$route.meta.completed != 1){
+              showPopupDelay = 1000;
+            }else{
+              showPopupDelay = 0;
+            }
+
 
             //TODO:开始设置清算界面逻辑全套;
             self.vueInstance.$route.meta.completed = 1;
@@ -194,7 +196,7 @@ class ChoiceTextModule extends PIXI.Container {
                   PIXIAudio.audios['win_jump'].play();
                   Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
                 }
-              }, self.vueInstance.showPopupDelay);
+              }, showPopupDelay);
               self.vueInstance.updateRestArrangementStat();
             }, 1);
             //TODO:开始设置清算界面逻辑全套---END;
@@ -386,6 +388,7 @@ class ChoiceTextModule extends PIXI.Container {
     const self = this;
 
     var gameBg = new PIXI.Sprite(self.resources['practicebg_jpg'].texture);
+    self.soundButton = new AnimationSprite();
     this.addChild(gameBg)
     this.progressBar = new ProgressBar();
     self.picBand = new PicCard();
@@ -442,7 +445,7 @@ class ChoiceTextModule extends PIXI.Container {
 
     //播放声音;
 
-    self.soundButton = new AnimationSprite();
+
     self.soundButton.resName = 'gamebtnSound_atlas';
     self.soundButton.alienImages = ['gamesound0.png','gamesound1.png','gamesound2.png']
     self.soundButton.interactive = true;
@@ -525,10 +528,8 @@ class ChoiceTextModule extends PIXI.Container {
   soundButtonTap() {
 
     if (this.soundButton.status == 'stoping') {
-      this.soundButton.play();
       this.playSpeakSound();
     } else if (this.soundButton.status == 'playing') {
-      this.soundButton.stop();
       this.stopSpeakSound();
     }
 
@@ -538,8 +539,6 @@ class ChoiceTextModule extends PIXI.Container {
     const self = this;
     if (_.trim(self.gameConfig.levels[self.gameLevel].audioSrc) != "") {
       let soundName =  this.vueInstance.$route.meta.assetsUrl+'_'+self.gameConfig.levels[self.gameLevel].audioSrc.replace(/\./g,'_');
-
-
       self.gameAudio = PIXIAudio.audios[soundName];
       self.gameAudio.play();
       self.soundButton.play();
@@ -578,9 +577,6 @@ class ChoiceTextModule extends PIXI.Container {
 
     this.soundSpeakText = null;
 
-
-    // this.gameAudio.stop();
-    // this.soundButton.stop();
     this.stopSpeakSound();
     if(this.gameMenuBar){
       this.gameMenuBar.clearGameMenuEvents();
