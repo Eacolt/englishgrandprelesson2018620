@@ -11,16 +11,7 @@
         {
           "picture":"slidepic2_002.png",
           "audioSrc":"sound002.mp3"
-        },
-        {
-          "picture":"slidepic2_001.png",
-          "audioSrc":"sound001.mp3"
-        },
-        {
-          "picture":"slidepic2_002.png",
-          "audioSrc":"sound002.mp3"
         }
-
       ]
   }
 }

@@ -3,8 +3,8 @@ import BookScene from './BookScene.js'
 import {AnimationSprite,PIXIAudio} from '../EasyPIXI.js'
 
 class GameMenuBars extends PIXI.Container {
-  static instancement = null;
-  static vueInstance= null;
+  // static instancement = null;
+   static vueInstance= null;
   static freeze = false;
 
   static gameHasOpendBook= false;//游戏已经第二周目，不能再翻开书
@@ -14,6 +14,7 @@ class GameMenuBars extends PIXI.Container {
 
     this.barCtn = null;
     this.bookScene = null;
+    this.vueInstance = null;
 
     this.offsetToTop = 35;
     this.offsetToLeft = 90;
@@ -54,12 +55,6 @@ class GameMenuBars extends PIXI.Container {
 
 
 
-    this.gobackHandler = function () {
-
-    };
-
-
-
     this.on('added', this.initial, this)
   }
 
@@ -94,6 +89,9 @@ class GameMenuBars extends PIXI.Container {
 
   initial() {
     const self = this;
+
+    this.bookScene = new BookScene();
+    this.bookScene.vueInstance = GameMenuBars.vueInstance;
 
     this.starsLight = new PIXI.spine.Spine(PIXI.loader.resources['starflash_json'].spineData);
     this.starsLight.state.setAnimation(0,'star',true);
@@ -224,7 +222,6 @@ class GameMenuBars extends PIXI.Container {
 
     //精彩部分;
 
-    this.bookScene = new BookScene();
     this.addChild(this.bookScene);
 
 
@@ -352,6 +349,7 @@ class GameMenuBars extends PIXI.Container {
       }
     }
   }
+
   //设置Close;
   set closeBtnShow($b){
     this._closeBtnShow = $b;
@@ -454,8 +452,7 @@ class GameMenuBars extends PIXI.Container {
     this.starsLight.state.tracks[0].trackTime = 0;
     this.starsLight.alpha = 1;
 
-
-    PIXIAudio.audios['power_gain'].play();
+    PIXI.loader.resources['power_gain'].sound.play()
 
 
   }
@@ -476,35 +473,84 @@ class GameMenuBars extends PIXI.Container {
     })
   }
   //
+
+  destroyed(){
+    this.rightMenuUI = [];
+    // if(this.bookScene){
+    //   this.bookScene.destroyed();
+    //   this.bookScene.destroy();
+    // }
+    if(this.starsLight){
+      this.starsLight.destroy();
+    }
+    if(this.backBtn){
+      this.backBtn.destroy();
+    }
+    if(this.energyBar){
+      this.energyBar.destroy();
+    }
+    if(this.bookBtn){
+      this.bookBtn.destroy();
+    }
+    if(this.homeBtn){
+      this.homeBtn.destroy();
+    }
+    if(this.closeBtn){
+      this.closeBtn.destroy();
+    }
+    if(this.soundBtn){
+      this.soundBtn.destroy();
+    }
+    super.destroy();
+    this.destroy();
+   // this.bookScene = null;
+    this.offsetToTop = null;
+    this.offsetToLeft = null;
+
+    this.energyBar = null;
+    this.backBtn = null;
+    this.energyMask = null;//游戏的能量条遮罩
+    this.bookBtn = null;
+    this.closeBtn = null
+    this.soundBtn = null;
+    this.homeBtn = null;
+    this.energyNumber = null;
+    this.buttonsOffset = null;//按钮间距
+
+    //setter
+    this._backBtnShow = null;
+    this._homeBtnShow = null;
+    this._energyBtnShow = null;
+    this._bookBtnShow = null;
+    this._closeBtnShow = null;
+    this._soundBtnShow = null;
+
+    this.clearGameMenuEvents();
+
+
+  }
   //TODO:事件分发部分;
   clearGameMenuEvents(){
 
-    this.rightMenuUI = [];
-    if(this.bookScene){
-      this.bookScene.destroy()
-    }
-    if(this.starsLight){
 
-      this.starsLight.destroy();
-    }
     if(this.closeBtnHandler){
-      this.closeBtn.removeAllListeners();
+
       this.closeBtnHandler = null;
     }
     if(this.backBtnHandler){
-      this.backBtn.removeAllListeners();
+
       this.backBtnHandler = null;
     }
     if(this.homeBtnHandler){
-      this.homeBtn.removeAllListeners();
+
       this.homeBtnHandler = null;
     }
     if(this.soundBtnHandler){
-      this.soundBtn.removeAllListeners();
+
       this.soundBtnHandler = null;
     }
     if(this.bookBtnHandler){
-      this.bookBtn.removeAllListeners();
+
       this.bookBtnHandler = null;
     }
   }

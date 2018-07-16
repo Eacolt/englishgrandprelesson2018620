@@ -1,13 +1,8 @@
-import GameMenuBar from './gameui/GameMenuBar.js'
-import $ from "jquery";
+
 import {TweenMax, Back} from 'gsap'
-import {Debugs, TextureCache} from "./Utils";
-import GameMenuBars from "./gameui/GameMenuBar";
-import {PIXIAudio} from "./EasyPIXI";
+import {AudioManager, Debugs} from "./Utils";
+import GameMenuBars from "./gameui/GameMenuBar.js";
 
-
-//
-// var gameMenuBar= null;
 var unwatchVue = null;
 var unwatchVue2 = null;
 
@@ -120,27 +115,26 @@ class PixiScene3 extends PIXI.Container {
 
 
 
-
+    setTimeout(()=>{
+      self.playAudios()
+    },100)
 
   }
 
   //音频控制;
   playAudios() {
     const self = this;
-
-    self.stopAudios()
+    self.stopAudios();
     let soundName =  this.vueInstance.$route.meta.assetsUrl+'_' + this.gameConfig.pictureList[this.vueInstance.currentPage].audioSrc.replace(/\./g,'_');
     if(this.gameConfig.pictureList[this.vueInstance.currentPage].audioSrc && _.trim(this.gameConfig.pictureList[this.vueInstance.currentPage].audioSrc)!=''){
-      this.gameAudio = PIXIAudio.audios[soundName];
-      this.gameAudio.play();
-      this.gameAudio.position = 0;
-      let soundTime =this.gameAudio.duration;
-      this.gameAudio.on('complete',()=>{
+      this.gameAudio =  PIXI.loader.resources[soundName].sound.play()
+
+
+      this.gameAudio.on('end',()=>{
         if(self.gameMenuBar.soundBtn){
           self.gameMenuBar.soundBtn.stop();
         }
-
-      })
+      });
 
       if(self.gameMenuBar.soundBtn){
         self.gameMenuBar.soundBtn.play();
@@ -192,11 +186,18 @@ class PixiScene3 extends PIXI.Container {
   destroyed() {
     super.destroy();
     this.stopAudios();
-    if(this.gameMenuBar){
-      this.gameMenuBar.clearGameMenuEvents();
-      this.gameMenuBar.destroy();
+
+
+    if(this.boySpine){
+      this.boySpine.destroy();
+
     }
-    this.stopAudios();
+    if(this.gameMenuBar){
+      this.gameMenuBar.destroyed();
+      this.gameMenuBar.destroy();
+      this.gameMenuBar = null;
+    }
+    this.destroy();
     if(unwatchVue){
       unwatchVue();
       unwatchVue = null;
@@ -205,18 +206,13 @@ class PixiScene3 extends PIXI.Container {
       unwatchVue2();
       unwatchVue2 = null;
     }
-    if(this.boySpine){
-      this.boySpine.destroy();
-      this.boySpine = null;
-    }
-    this.swiperCtn = null;
 
+    this.swiperCtn = null;
+    this.boySpine = null;
     this.gameAudio = null;
     this.gameConfig = null;
     this.vueInstance = null;
 
-    this.destroy();
-    Debugs.log('picSwipeModule: destroyed')
 
   }
 }

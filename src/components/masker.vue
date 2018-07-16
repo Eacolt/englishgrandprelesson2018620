@@ -2,6 +2,7 @@
   <div class="masker">
     <div class="loadingUI">
       <img src="static/img/loading.gif" width="100%" height="auto"/>
+      <div>资源加载中，请耐心等待...</div>
     </div>
 
   </div>
@@ -24,7 +25,6 @@
     left: 0px;
     background: black;
     z-index: 9999999999;
-    pointer-events: none;
     padding:0;
     margin:0;
     visibility: hidden;

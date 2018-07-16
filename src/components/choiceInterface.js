@@ -1,6 +1,6 @@
 import GameMenuBars from "./gameui/GameMenuBar";
-import {PIXIAudio} from "./EasyPIXI";
-import {Debugs} from "./Utils";
+
+import {AudioManager, Debugs} from "./Utils";
 
 class ChoiceInterface extends PIXI.Container {
   constructor($options) {
@@ -68,7 +68,8 @@ class ChoiceInterface extends PIXI.Container {
 
           self.monster.state.addAnimation(0, 'dropdown', false, 0);
 
-          PIXIAudio.audios['hand_down'].play()
+          PIXI.loader.resources['hand_down'].sound.play()
+
 
         }
       })
@@ -85,7 +86,8 @@ class ChoiceInterface extends PIXI.Container {
 
               self.vueInstance.$router.push(self.vueInstance.$route.fullPath + '/' + self.vueInstance.$store.state.currentModuleList[i].name);
 
-
+            let bgsound = PIXI.loader.resources['bgSound'].sound.play();
+            bgsound.volume = 0;
 
 
           }
@@ -108,7 +110,9 @@ class ChoiceInterface extends PIXI.Container {
           self.monster.state.addAnimation(0, 'dropdown', false, 0);
 
 
-          PIXIAudio.audios['hand_down'].play();
+
+
+          PIXI.loader.resources['hand_down'].sound.play();
 
         }
       })
@@ -161,7 +165,7 @@ class ChoiceInterface extends PIXI.Container {
     this.resources = null;
     this.vueInstance = null;
     this.destroy();
-    Debugs.log('destroyed === choiceInterface')
+
 
   }
 

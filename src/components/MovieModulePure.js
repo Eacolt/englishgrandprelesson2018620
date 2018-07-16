@@ -1,8 +1,8 @@
 import GameMenuBars from "./gameui/GameMenuBar";
 
 import FormatDate from "dateformat";
-import {PIXIAudio} from "./EasyPIXI";
-import {Debugs} from "./Utils";
+
+import {AudioManager, Debugs} from "./Utils";
 var gameMenuBar = null;
 class MovieModulePure extends PIXI.Container {
   constructor($option) {
@@ -406,13 +406,11 @@ class MovieModulePure extends PIXI.Container {
       self._G.getInterval_hideprogress = null;
     }
     if (gameMenuBar) {
-      gameMenuBar.clearGameMenuEvents();
+      gameMenuBar.destroyed();
       gameMenuBar.destroy();
       gameMenuBar = null;
     }
     this.destroy();
-
-
     this.myVideo = null;
     this.vueInstance = null;
     this._G = null;
@@ -580,21 +578,22 @@ class MovieModulePure extends PIXI.Container {
       let isQingsuan = self.vueInstance.$route.name == self.vueInstance.restArrangementStat[self.vueInstance.restArrangementStat.length - 1];//开始清算;
       setTimeout(() => {
         if (isQingsuan && !self.vueInstance.gameHasBeenCompleted) {
-          Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.vueInstance.gameHasBeenCompleted)
+          // Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.vueInstance.gameHasBeenCompleted)
           gameMenuBar.bookScene.openEnergyCan(false);
+          PIXI.loader.resources['win_jump'].sound.play();
 
         } else if (isQingsuan == false && !self.vueInstance.gameHasBeenCompleted) {
           self.vueInstance.showCongra = true;
-          Debugs.log('游戏没有完成，并且也不是清算页')
-          PIXIAudio.audios['win_jump'].play();
+          // Debugs.log('游戏没有完成，并且也不是清算页')
+          PIXI.loader.resources['win_jump'].sound.play();
         } else if (self.vueInstance.gameHasBeenCompleted && self.vueInstance.gameSecondPlayed) {
           self.vueInstance.showCongra = true;
-          Debugs.log('游戏第二周目，继续玩')
-          PIXIAudio.audios['win_jump'].play();
+          // Debugs.log('游戏第二周目，继续玩')
+          PIXI.loader.resources['win_jump'].sound.play();
         } else if (self.vueInstance.gameHasBeenCompleted && !self.vueInstance.gameSecondPlayed) {
           gameMenuBar.bookScene.openEnergyCan(true);
-          PIXIAudio.audios['win_jump'].play();
-          Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
+          PIXI.loader.resources['win_jump'].sound.play();
+          // Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
         }
       }, showPopupDelay);
       self.vueInstance.updateRestArrangementStat();

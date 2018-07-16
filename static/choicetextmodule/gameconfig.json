@@ -75,7 +75,7 @@
           "cardpicture":"cardpicture002",
           "rightAnswer":1,
           "cardlist":["A: Last Tuesday","C：Last Monday"],
-          "audioSrc":"sound002.mp3",
+          "audioSrc":"sound001.mp3",
           "content":"-When did you go shopping? \n-I am on Saturday."
         },
         {
@@ -83,6 +83,13 @@
           "rightAnswer":1,
           "cardlist":["A: Last Tuesday","C：Last Monday"],
           "audioSrc":"sound002.mp3",
+          "content":"sdfsdfsdfsdfsdf"
+        },
+        {
+          "cardpicture":"cardpicture002",
+          "rightAnswer":1,
+          "cardlist":["A: Last Tuesday","C：Last Monday"],
+          "audioSrc":"sound003.mp3",
           "content":"sdfsdfsdfsdfsdf"
         }
 

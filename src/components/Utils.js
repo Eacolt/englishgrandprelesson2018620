@@ -23,24 +23,108 @@ class AudioManager {
 
   static audios = [];
 
-  static setAudio($name, $src) {
-    let audio = new Audio($src);
-    AudioManager.audios.push({
-      audio: audio,
-      name: $name
-    })
+
+
+   add($manifest=[],$callback = null) {
+    let loadedNum = 0;
+    let sameAssets = null;
+    // for(let i=0;i<$manifest.length;i++){
+    //   let idx = AudioManager.audios.indexOf($manifest[i].name);
+    //   AudioManager.audios.splice(idx,1);
+    // }
+
+    // let avalid  = AudioManager.audios.every((item)=>{
+    //   for(let i=0;i<$manifest.length;i++){
+    //     if(item.name == $manifest[i].name){
+    //       sameAssets = item.name;
+    //       return item.name == $manifest[i].name;
+    //       break;
+    //     }
+    //   }
+    //
+    // });
+    // if(!avalid){
+    //   console.warn('都是相同的资源')
+    //   return false;
+    // }
+    for(let i=0;i<$manifest.length;i++){
+      let avalidsound = AudioManager.audios.some((item)=>{
+        return item.name == $manifest[i].name;
+      });
+      if(avalidsound){
+        console.log('音乐重复：',$manifest[i].name)
+        return;
+      }
+
+      let audio = new Audio();
+      audio.src = $manifest[i].url;
+       audio.load();
+      audio.ondurationchange = function(){
+        if(audio.duration>0){
+
+          // let dd = AudioManager.audios.some((item)=>{
+          //   return item.name == $manifest[i].name
+          // });
+
+          AudioManager.audios.push({
+            audio: audio,
+            name: $manifest[i].name
+          });
+          loadedNum++;
+          console.log(loadedNum,loadedNum>=$manifest.length)
+          if(loadedNum>=$manifest.length){
+            if($callback){
+              $callback();
+              // AudioManager.audios.forEach((item)=>{
+              //   item.ondurationchange = null;
+              // })
+              console.warn('音效加载完毕')
+            }
+
+          }
+        }
+      }
+    }
+
+    return AudioManager;
+
+  }
+  destroyAudio($name){
+
+  }
+  static playAudio($name){
+    let myaudio = AudioManager.getAudio($name) || null;
+    if(myaudio && myaudio.duration>0){
+      myaudio.play();
+    }
+  }
+  static loadAudios(){
+    if(AudioManager.audios.length<=0)return;
+
+    for(let i=0;i<AudioManager.audios.length;i++){
+
+    }
+
   }
 
   static getAudio($name) {
+    let myaudio = null;
     for (let i = 0; i < AudioManager.audios.length; i++) {
-      if (AudioManager.audios[i].name == $name) {
-        return AudioManager.audios[i].audio;
+      if (AudioManager.audios[i].name == $name && AudioManager.audios[i].audio.duration>0) {
+        myaudio = AudioManager.audios[i].audio;
+        break;
       }
     }
+    return myaudio;
   }
 
   static getId($id) {
     return document.getElementById($id)
+  }
+
+  getSrcByName($name){
+
+
   }
 
 }
@@ -68,7 +152,7 @@ class ResourceMent {
 * //选文：
                   .add([
                   ])*/
-const loaderAssetsByValided = function(modulesUrl,$newAssets,GameStart,$otherAssets=[]){
+var loaderAssetsByValided = function(modulesUrl,$newAssets,GameStart,$otherAssets=[]){
   const self = this;
   var getValidedAssets = function ($newAssets) {
     let newAssetsArr = [];
@@ -111,18 +195,8 @@ const loaderAssetsByValided = function(modulesUrl,$newAssets,GameStart,$otherAss
 ///End加载逻辑
 
 
-//Vue
-const myVueMixin_Swiper = {
-  methods: {
-    toCanvasPosX(x) {
-      return 1920 * (x) / parseInt($('#app').width())
-    },
-    toCanvasPosY(x) {
-      return 1920 * x / parseInt(document.documentElement.clientHeight)
-    }
-  }
-}
-const myVueMixin_Popup = {
+
+var myVueMixin_Popup = {
   methods: {
     beforeEnter: function (el) {
       TweenMax.to(el, 0, {css: {opacity: 0, pointerEvents: 'none'}})
@@ -195,21 +269,20 @@ function checkForJumpRoute($checked = true) {
     /////////////////////
     let restArrangmentArr = target.$store.state.restArrangementStat;
     if (restArrangmentArr.length > 0) {
-      target.$router.push({name: restArrangmentArr[0]});
+
       let d = Number(restArrangmentArr[0].split('-')[1]);
       target.$store.dispatch('SET_LESSONPARTSINDEX', d);
+      target.$router.push({name: restArrangmentArr[0]});
     }
   } else {
     let allLessonComponentsNames = target.$store.state.allLessonComponentsNames;
-    let b = Number(allLessonComponentsNames[0].split('-')[1]);
+    // let b = Number(allLessonComponentsNames[0].split('-')[1]);
     let currentPageIndex = target.lessonCurrentPageIndex;
     if (currentPageIndex < allLessonComponentsNames.length - 1) {
       target.$router.push({name: allLessonComponentsNames[currentPageIndex + 1]});
     } else {
       target.$router.push({name: allLessonComponentsNames[0]});
     }
-
-
   }
 
 }

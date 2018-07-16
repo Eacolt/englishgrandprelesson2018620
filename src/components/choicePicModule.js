@@ -3,15 +3,16 @@ import {TimelineMax, TweenMax} from 'gsap'
 import {AnimationSprite} from './EasyPIXI.js'
 import {checkForJumpRoute, Debugs} from './Utils.js'
 import GameMenuBars from "./gameui/GameMenuBar";
-import {PIXIAudio} from "./EasyPIXI";
 
 
+require('pixi-sound')
 
 class ChoicePicModule extends PIXI.Container {
   constructor($options) {
     super();
     this.gameConfig = $options.json;
     this.vueInstance = $options.vueInstance;
+    this.audioManifest = $options.audioManifest;
     this.rightAnswersArr = [];
     this.gameLevel = 0;
     this.btnsArr = [];
@@ -35,6 +36,7 @@ class ChoicePicModule extends PIXI.Container {
     this.on('added', this.addedToStage, this)
   }
 
+
   playAgain() {
 
     this.vueInstance.showCongra = false;
@@ -46,31 +48,31 @@ class ChoicePicModule extends PIXI.Container {
 
   playContinue() {
 
-    // if (this.vueInstance.gameHasBeenCompleted) {
-    //   checkForJumpRoute.call(this, false);
-    //
-    // } else {
-    //   checkForJumpRoute.call(this, true);
-    // }
-    //
     if (this.vueInstance.gameHasBeenCompleted) {
-      /////////////////////
-      let restArrangmentArr = this.vueInstance.$store.state.restArrangementStat;
-      if (restArrangmentArr.length > 0) {
-        this.vueInstance.$router.push({name: restArrangmentArr[0]});
-        let d = Number(restArrangmentArr[0].split('-')[1]);
-        this.vueInstance.$store.dispatch('SET_LESSONPARTSINDEX', d);
-      }
+      checkForJumpRoute.call(this, false);
+
     } else {
-      let allLessonComponentsNames = this.vueInstance.$store.state.allLessonComponentsNames;
-      let b = Number(allLessonComponentsNames[0].split('-')[1]);
-      let currentPageIndex = this.vueInstance.lessonCurrentPageIndex;
-      if (currentPageIndex < allLessonComponentsNames.length - 1) {
-        this.vueInstance.$router.push({name: allLessonComponentsNames[currentPageIndex + 1]});
-      } else {
-        this.vueInstance.$router.push({name: allLessonComponentsNames[0]});
-      }
+      checkForJumpRoute.call(this, true);
     }
+
+    // if (this.vueInstance.gameHasBeenCompleted) {
+    //   /////////////////////
+    //   let restArrangmentArr = this.vueInstance.$store.state.restArrangementStat;
+    //   if (restArrangmentArr.length > 0) {
+    //     this.vueInstance.$router.push({name: restArrangmentArr[0]});
+    //     let d = Number(restArrangmentArr[0].split('-')[1]);
+    //     this.vueInstance.$store.dispatch('SET_LESSONPARTSINDEX', d);
+    //   }
+    // } else {
+    //   let allLessonComponentsNames = this.vueInstance.$store.state.allLessonComponentsNames;
+    //   let b = Number(allLessonComponentsNames[0].split('-')[1]);
+    //   let currentPageIndex = this.vueInstance.lessonCurrentPageIndex;
+    //   if (currentPageIndex < allLessonComponentsNames.length - 1) {
+    //     this.vueInstance.$router.push({name: allLessonComponentsNames[currentPageIndex + 1]});
+    //   } else {
+    //     this.vueInstance.$router.push({name: allLessonComponentsNames[0]});
+    //   }
+    // }
 
 
   }
@@ -150,15 +152,15 @@ class ChoicePicModule extends PIXI.Container {
         self.progressBar.progress = self.gameLevel;
         setTimeout(() => {
           if (self.gameLevel >= self.gameConfig.levels.length - 1) {
-            if(self.gameAudio){
-              self.gameAudio.stop();
-              self.soundButton.stop();
+            if (self.gameAudio) {
+
+              self.stopSpeakSound();
             }
 
             var showPopupDelay = null;
-            if(self.vueInstance.$route.meta.completed != 1){
+            if (self.vueInstance.$route.meta.completed != 1) {
               showPopupDelay = 1000;
-            }else{
+            } else {
               showPopupDelay = 0;
             }
 
@@ -175,22 +177,24 @@ class ChoicePicModule extends PIXI.Container {
               let isQingsuan = self.vueInstance.$route.name == self.vueInstance.restArrangementStat[self.vueInstance.restArrangementStat.length - 1];//开始清算;
               setTimeout(() => {
                 if (isQingsuan && !self.vueInstance.gameHasBeenCompleted) {
-                  Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.vueInstance.gameHasBeenCompleted)
+                 // Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.vueInstance.gameHasBeenCompleted)
                   self.gameMenuBar.bookScene.openEnergyCan(false);
+                  PIXI.loader.resources['win_jump'].sound.play();
 
                 } else if (isQingsuan == false && !self.vueInstance.gameHasBeenCompleted) {
                   self.vueInstance.showCongra = true;
-                  Debugs.log('游戏没有完成，并且也不是清算页')
-                  PIXIAudio.audios['win_jump'].play();
-                }else if(self.vueInstance.gameHasBeenCompleted && self.vueInstance.gameSecondPlayed){
-                  self.vueInstance.showCongra = true;
-                  Debugs.log('游戏第二周目，继续玩')
-                  PIXIAudio.audios['win_jump'].play();
+                 // Debugs.log('游戏没有完成，并且也不是清算页')
+                  PIXI.loader.resources['win_jump'].sound.play();
 
-                }  else if (self.vueInstance.gameHasBeenCompleted && !self.vueInstance.gameSecondPlayed) {
+                } else if (self.vueInstance.gameHasBeenCompleted && self.vueInstance.gameSecondPlayed) {
+                  self.vueInstance.showCongra = true;
+                  //Debugs.log('游戏第二周目，继续玩')
+                  PIXI.loader.resources['win_jump'].sound.play();
+
+                } else if (self.vueInstance.gameHasBeenCompleted && !self.vueInstance.gameSecondPlayed) {
                   self.gameMenuBar.bookScene.openEnergyCan(true);
-                  PIXIAudio.audios['win_jump'].play();
-                  Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
+                  PIXI.loader.resources['win_jump'].sound.play();
+                 // Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
                 }
               }, showPopupDelay);
               self.vueInstance.updateRestArrangementStat();
@@ -235,7 +239,7 @@ class ChoicePicModule extends PIXI.Container {
         self.playSpeakSound();
 
 
-      },onStart:()=>{
+      }, onStart: () => {
         self.arrangePicCards.call(self);
       }
     });
@@ -249,10 +253,10 @@ class ChoicePicModule extends PIXI.Container {
       this.soundButton.alpha = 0;
       this.soundSpeakText.alpha = 1;
       //文字杭高逻辑判断
-      if(this.soundSpeakText.height>70){
+      if (this.soundSpeakText.height > 70) {
         this.soundSpeakText.style.align = 'left';
         self.soundSpeakText.y = 260;
-      }else{
+      } else {
         this.soundSpeakText.style.align = 'center';
         self.soundSpeakText.y = 290;
       }
@@ -267,10 +271,10 @@ class ChoicePicModule extends PIXI.Container {
       this.soundButton.alpha = 1;
       this.soundSpeakText.alpha = 0;
       //文字杭高逻辑判断
-      if(this.soundSpeakText.height>70){
+      if (this.soundSpeakText.height > 70) {
         this.soundSpeakText.style.align = 'left';
         self.soundSpeakText.y = 260;
-      }else{
+      } else {
         this.soundSpeakText.style.align = 'center';
         self.soundSpeakText.y = 290;
       }
@@ -283,10 +287,10 @@ class ChoicePicModule extends PIXI.Container {
       this.soundButton.alpha = 1;
       this.soundSpeakText.alpha = 1;
       //文字杭高逻辑判断
-      if(this.soundSpeakText.height>70){
+      if (this.soundSpeakText.height > 70) {
         this.soundSpeakText.style.align = 'left';
         self.soundSpeakText.y = 260;
-      }else{
+      } else {
         this.soundSpeakText.style.align = 'center';
         self.soundSpeakText.y = 290;
       }
@@ -338,6 +342,7 @@ class ChoicePicModule extends PIXI.Container {
 
 
   }
+
   arrangePicCards() {
     if (this.btnsArr.length > 0) {
       this.btnsArr.forEach((item) => {
@@ -352,15 +357,13 @@ class ChoicePicModule extends PIXI.Container {
       this.btnsContainer.addChild(pic);
       pic.setPicture(this.resources[this.gameConfig.levels[this.gameLevel].cardlist[k]].texture);
 
-      if(cardListNum==2){
-        pic.x = k * (pic.width + (this.cardOffsetWidth+100));
+      if (cardListNum == 2) {
+        pic.x = k * (pic.width + (this.cardOffsetWidth + 100));
 
-      }else if(cardListNum>=3){
+      } else if (cardListNum >= 3) {
         pic.x = k * (pic.width + this.cardOffsetWidth);
 
       }
-
-
 
 
       this.btnsArr.push(pic);
@@ -394,13 +397,11 @@ class ChoicePicModule extends PIXI.Container {
     function setRightAnswers() {
       let rightArr = [];
       self.gameConfig.levels.forEach((item) => {
-        rightArr.push(item.rightAnswer-1)
+        rightArr.push(item.rightAnswer - 1)
       })
       self.rightAnswersArr = rightArr;
     };
     setRightAnswers();
-
-
 
 
     self.arrangePicCards.call(self);
@@ -420,16 +421,18 @@ class ChoicePicModule extends PIXI.Container {
 
 
     self.soundButton.resName = 'gamebtnSound_atlas';
-    self.soundButton.alienImages = ['gamesound0.png','gamesound1.png','gamesound2.png']
+    self.soundButton.alienImages = ['gamesound0.png', 'gamesound1.png', 'gamesound2.png']
     self.soundButton.interactive = true;
     self.addChild(self.soundButton);
     self.soundButton.x = 410;
     self.soundButton.y = 209;
     self.soundButton.on('pointertap', self.soundButtonTap, self);
 
-    setTimeout(()=>{
-      self.playSpeakSound();
-    },300)
+
+      setTimeout(() => {
+        self.playSpeakSound();
+      }, 300)
+
 
 
     self.soundSpeakText = new PIXI.Text('', {
@@ -437,8 +440,8 @@ class ChoicePicModule extends PIXI.Container {
       fontSize: 50,
       fill: 0xffffff,
       align: 'left',
-      wordWrap:true,
-      wordWrapWidth:2200
+      wordWrap: true,
+      wordWrapWidth: 2200
     });
 
     self.addChild(self.soundSpeakText);
@@ -446,9 +449,9 @@ class ChoicePicModule extends PIXI.Container {
     self.soundSpeakText.text = self.gameConfig.levels[self.gameLevel].content;
     self.soundSpeakText.x = 620;
     //核心判断垂直逻辑
-    if(self.soundSpeakText.height>70){
+    if (self.soundSpeakText.height > 70) {
       self.soundSpeakText.y = 260
-    }else{
+    } else {
       self.soundSpeakText.y = 290
     }
 
@@ -461,27 +464,27 @@ class ChoicePicModule extends PIXI.Container {
     self.addChild(self.gameMenuBar);
 
     ////
-    self.gameMenuBar.setBackBtn_tapHandler(()=>{
+    self.gameMenuBar.setBackBtn_tapHandler(() => {
 
       self.goBackComing();
     });
-    self.gameMenuBar.setHomeBtn_tapHandler(()=>{
+    self.gameMenuBar.setHomeBtn_tapHandler(() => {
       self.goToHome();
     })
     self.gameMenuBar.backBtnShow = false;
     self.gameMenuBar.homeBtnShow = true;
-    self.gameMenuBar.bookBtnShow =false;
+    self.gameMenuBar.bookBtnShow = false;
     self.gameMenuBar.updateGameMenu();
-    self.vueInstance.$watch(()=>{
+    self.vueInstance.$watch(() => {
       return self.vueInstance.energyCurrentNum
-    },(newval)=>{
+    }, (newval) => {
       this.gameMenuBar.energy = newval;
       this.gameMenuBar.playStars();
     });
 
-    self.vueInstance.$watch(()=>{
+    self.vueInstance.$watch(() => {
       return self.vueInstance.currentGameLevel
-    },(newval)=>{
+    }, (newval) => {
       if (newval > 0) {
         self.gameMenuBar.backBtnShow = true;
         self.gameMenuBar.homeBtnShow = true;
@@ -504,32 +507,38 @@ class ChoicePicModule extends PIXI.Container {
   };
 
   soundButtonTap() {
+    // for(let i=0;i<this.audioManifest.length;i++){
+    //   if(PIXI.sound._sound && !PIXI.sound._sound[this.audioManifest[i].name]){
+    //     PIXI.sound.add(this.audioManifest[i].name,this.audioManifest[i].url);
+    //   }
+    // }
 
     if (this.soundButton.status == 'stoping') {
-
       this.playSpeakSound();
     } else if (this.soundButton.status == 'playing') {
-
       this.stopSpeakSound();
     }
-
   }
 
   playSpeakSound() {
     const self = this;
     if (_.trim(self.gameConfig.levels[self.gameLevel].audioSrc) != "") {
-      let soundName =  this.vueInstance.$route.meta.assetsUrl+'_'+self.gameConfig.levels[self.gameLevel].audioSrc.replace(/\./g,'_');
+      let soundName = this.vueInstance.$route.meta.assetsUrl + '_' + self.gameConfig.levels[self.gameLevel].audioSrc.replace(/\./g, '_');
+      console.log('pixi.sound', PIXI.sound, PIXI.sound.play)
 
 
-      self.gameAudio = PIXIAudio.audios[soundName];
-      self.gameAudio.play();
-      if(self.soundButton){
+      self.gameAudio = PIXI.loader.resources[soundName].sound.play();
+
+      if (self.soundButton) {
         self.soundButton.play();
       }
 
-      self.gameAudio.on('complete',()=>{
-        self.stopSpeakSound();
-      });
+      if (self.gameAudio) {
+        self.gameAudio.on('end', () => {
+          self.stopSpeakSound();
+        })
+      }
+
     }
 
 
@@ -538,7 +547,7 @@ class ChoicePicModule extends PIXI.Container {
   stopSpeakSound() {
     if (this.gameAudio) {
       this.gameAudio.stop();
-      if(this.soundButton){
+      if (this.soundButton) {
         this.soundButton.stop();
 
       }
@@ -557,21 +566,28 @@ class ChoicePicModule extends PIXI.Container {
 
   destroyed() {
     super.destroy();
-    if(this.gameMenuBar){
-      this.gameMenuBar.clearGameMenuEvents();
+    if (this.gameMenuBar) {
+      this.gameMenuBar.destroyed();
       this.gameMenuBar.destroy();
-      this.gameMenuBar = null;
+
     }
     this.gameConfig = null;
 
     this.rightAnswersArr = null;
     this.gameLevel = null;
-    if(this.btnsArr){
-      this.btnsArr.forEach((item)=>{
+    if (this.btnsArr) {
+      this.btnsArr.forEach((item) => {
         item.destroy();
       })
 
     }
+    //上部分声音;
+    this.stopSpeakSound();
+
+    this.soundButton.destroy();
+    this.destroy();
+
+    this.gameMenuBar = null;
     this.btnsArr = null;
     this.btnsContainer = null;
     this.progressBar = null;
@@ -581,19 +597,12 @@ class ChoicePicModule extends PIXI.Container {
 
     this.soundSpeakText = null;
 
-    //上部分声音;
-    this.stopSpeakSound();
-    this.gameAudio.stop();
-    this.soundButton.destroy();
-
-
     this.soundButton = null;
     this.gameAudio = null;
     this.vueInstance = null;
-    this.destroy();
+
   }
 }
-
 
 
 class PicCard extends PIXI.Container {
@@ -611,8 +620,8 @@ class PicCard extends PIXI.Container {
   added_handler() {
     this.leftDoor = new PIXI.Sprite(PIXI.Texture.from('cardchoose_doorL'));
     this.rightDoor = new PIXI.Sprite(PIXI.Texture.from('cardchoose_doorR'));
-    this.leftDoor.pivot.x = this.leftDoor.width / 2-1;
-    this.rightDoor.pivot.x = this.rightDoor.width / 2+1;
+    this.leftDoor.pivot.x = this.leftDoor.width / 2 - 1;
+    this.rightDoor.pivot.x = this.rightDoor.width / 2 + 1;
     this.leftDoor.pivot.y = this.leftDoor.height / 2;
     this.rightDoor.pivot.y = this.rightDoor.height / 2;
 

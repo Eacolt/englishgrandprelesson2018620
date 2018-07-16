@@ -8,11 +8,12 @@
 
 <script>
   import {mapActions, mapState} from 'vuex'
- import {PIXIAudio} from './EasyPIXI.js'
+
 
 
   import ChoiceInterface from './choiceInterface.js'
   import GameMenuBars from './gameui/GameMenuBar.js'
+  import {AudioManager} from "./Utils";
 
 
  var pixiScene = null;
@@ -37,9 +38,11 @@
 
     beforeDestroy() {
 
-      PIXIAudio.audios.bgSound.volume = 0;
+
+      let bgsound = PIXI.loader.resources['bgSound'].sound;
+      bgsound.volume = 0;
       if(canvasApp){
-        canvasApp.destroy();
+        canvasApp.destroy(true);
         canvasApp = null;
       }
       if(pixiScene){
@@ -50,7 +53,7 @@
 
     },
     mounted() {
-      const self = this;
+      var self = this;
 
 
       this.SET_MODULEINDEX(0);//初始化列表index;
@@ -91,20 +94,7 @@
     methods: {
       ...mapActions(['SET_MODULEINDEX', 'SET_ASSETSPAGES','SET_CANVASPAGE', 'PUSH_GAMES', 'SET_PREPARATION', 'SET_LESSONPART', 'SET_MODULELIST', 'SET_BASEASSETSCOMPLETED']),
       gameStart(app) {
-        const self = this;
-        // if (self.assetsPages.choicePages == 1) {
-        //   GameStart.call(self);
-        // }else{
-        //
-        //   PIXI.loader.add();
-        //   PIXI.loader.load(function (loader, resource) {
-        //     GameStart.call(self);
-        //     self.SET_ASSETSPAGES({assetsName: 'choicePages', completedStat: 1});
-        //
-        //
-        //   });
-        //
-        // }
+        var self = this;
 
         var assets =[
           {

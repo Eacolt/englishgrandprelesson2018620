@@ -1,11 +1,10 @@
 import ProgressBar from './gameui/Progressbar.js'
 import {pixiAnimation} from './EasyPIXI.js'
 import {checkForJumpRoute, Debugs} from './Utils.js'
-
 import {Back, TweenMax} from "gsap";
 import GameMenuBars from "./gameui/GameMenuBar";
 import PixiHammer from './gameui/PixiHammer.js'
-import {PIXIAudio} from "./EasyPIXI";
+
 
 
 class BookReadingModule extends PIXI.Container {
@@ -324,23 +323,25 @@ class BookReadingModule extends PIXI.Container {
           let isQingsuan = self.vueInstance.$route.name == self.vueInstance.restArrangementStat[self.vueInstance.restArrangementStat.length - 1];//开始清算;
           setTimeout(() => {
             if (isQingsuan && !self.vueInstance.gameHasBeenCompleted) {
-              Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.vueInstance.gameHasBeenCompleted)
+              //Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.vueInstance.gameHasBeenCompleted)
               self.gameMenuBar.bookScene.openEnergyCan(false);
+              PIXI.loader.resources['win_jump'].sound.play();
 
             } else if (isQingsuan == false && !self.vueInstance.gameHasBeenCompleted) {
               self.vueInstance.showCongra = true;
-              Debugs.log('游戏没有完成，并且也不是清算页')
-              PIXIAudio.audios['win_jump'].play();
+             // Debugs.log('游戏没有完成，并且也不是清算页')
+
+              PIXI.loader.resources['win_jump'].sound.play();
             } else if (self.vueInstance.gameHasBeenCompleted && self.vueInstance.gameSecondPlayed) {
               self.vueInstance.showCongra = true;
-              Debugs.log('游戏第二周目，继续玩');
-              PIXIAudio.audios['win_jump'].play();
+            //  Debugs.log('游戏第二周目，继续玩');
+              PIXI.loader.resources['win_jump'].sound.play();
 
 
             } else if (self.vueInstance.gameHasBeenCompleted && !self.vueInstance.gameSecondPlayed) {
               self.gameMenuBar.bookScene.openEnergyCan(true);
-              PIXIAudio.audios['win_jump'].play();
-              Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
+              PIXI.loader.resources['win_jump'].sound.play();
+             // Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
             }
           },showPopupDelay);
           self.vueInstance.updateRestArrangementStat();
@@ -354,7 +355,7 @@ class BookReadingModule extends PIXI.Container {
 
     //TODO:顶部导航逻辑-----
     GameMenuBars.freeze = false;
-    GameMenuBars.instancement = null;
+
     self.gameMenuBar = new GameMenuBars();
 
     self.addChild(self.gameMenuBar)
@@ -443,11 +444,14 @@ class BookReadingModule extends PIXI.Container {
       this.stopAudios();
 
     }
+    this.boySpine.destroy();
     if (this.gameMenuBar) {
-      this.gameMenuBar.clearGameMenuEvents();
+      this.gameMenuBar.destroyed();
       this.gameMenuBar.destroy();
-      this.gameMenuBar = null;
+
+       this.gameMenuBar = null;
     }
+    this.destroy();
     this.gameConfig = null;
     this.resources = null;
 
@@ -461,7 +465,7 @@ class BookReadingModule extends PIXI.Container {
     this.pageUpper = null;
     this.pageDown = null;
     this.swiperHammer = null;
-    this.boySpine.destroy();
+
     //封面;
     this.coverPageTl = null;
     this.coverPageTl_reserve = null;
@@ -474,7 +478,7 @@ class BookReadingModule extends PIXI.Container {
     this.gameAudio = null;
     this.boySpine = null;
     this.vueInstance = null;
-    this.destroy();
+
   }
 
   hideBoy() {
@@ -503,7 +507,8 @@ class BookReadingModule extends PIXI.Container {
       })
     }
 
-    PIXIAudio.audios['nextpart'].play();
+    PIXI.loader.resources['nextpart'].sound.play()
+
 
   }
 
@@ -519,9 +524,10 @@ class BookReadingModule extends PIXI.Container {
 
   //音频控制;
   playAudios($num = null) {
-    const self = this;
-    self.stopAudios()
 
+    const self = this;
+
+    self.stopAudios();
     let myIndex = $num || this.currentPage;
     let soundName;
     if (this.gameConfig.showCoverpage == true && this.isCoverPageTime && _.trim(this.gameConfig.coverpageAudio) != '') {
@@ -529,20 +535,21 @@ class BookReadingModule extends PIXI.Container {
     } else {
       soundName = this.vueInstance.$route.meta.assetsUrl + '_' + this.gameConfig.levels[myIndex].audioSrc.replace(/\./g, '_');
     }
-    //console.log(_.trim(this.gameConfig.levels[myIndex].audioSrc),'<=audio');
+
+
     if ((this.gameConfig.levels[myIndex].audioSrc && _.trim(this.gameConfig.levels[myIndex].audioSrc) != '') ||
       (this.gameConfig.showCoverpage == true && this.isCoverPageTime && _.trim(this.gameConfig.coverpageAudio) != '')) {
-      this.gameAudio = PIXIAudio.audios[soundName];
-      this.gameAudio.play();
-      this.gameAudio.position = 0;
+      this.gameAudio = PIXI.loader.resources[soundName].sound.play();
 
-      let soundTime = this.gameAudio.duration;
-      self.gameAudio.on('complete', () => {
+     // this.gameAudio.play();
+
+      this.gameAudio.on('end',()=>{
+
         if (self.gameMenuBar.soundBtn) {
           self.gameMenuBar.soundBtn.stop();
         }
-        //self.currentAudioPlaying = false;
       })
+
 
       if (this.gameMenuBar.soundBtn) {
         this.gameMenuBar.soundBtn.play();

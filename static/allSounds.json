@@ -1,30 +1,30 @@
 [
-  {"src":"ground_music.mp3", "id":"bgSound"},
-  {"src":"book_close.mp3", "id":"book_close"},
+  {"url":"static/sound/ground_music.mp3", "name":"bgSound"},
+  {"url":"static/sound/book_close.mp3", "name":"book_close"},
 
-  {"src":"book_open.mp3", "id":"book_open"},
-  {"src":"book_turn.mp3", "id":"book_turn"},
+  {"url":"static/sound/book_open.mp3", "name":"book_open"},
+  {"url":"static/sound/book_turn.mp3", "name":"book_turn"},
 
-  {"src":"box_right.mp3", "id":"box_right"},
+  {"url":"static/sound/box_right.mp3", "name":"box_right"},
 
-  {"src":"box_wrong.mp3", "id":"box_wrong"},
+  {"url":"static/sound/box_wrong.mp3", "name":"box_wrong"},
 
-  {"src":"click.mp3", "id":"click"},
+  {"url":"static/sound/click.mp3", "name":"click"},
 
-  {"src":"hand_down.mp3", "id":"hand_down"},
+  {"url":"static/sound/hand_down.mp3", "name":"hand_down"},
 
 
-  {"src":"hand_down2.mp3", "id":"hand_down2"},
+  {"url":"static/sound/hand_down2.mp3", "name":"hand_down2"},
 
-  {"src":"hand_up.mp3", "id":"hand_up"},
+  {"url":"static/sound/hand_up.mp3", "name":"hand_up"},
 
-  {"src":"nextpart.mp3", "id":"nextpart"},
+  {"url":"static/sound/nextpart.mp3", "name":"nextpart"},
 
-  {"src":"power_gain.mp3", "id":"power_gain"},
+  {"url":"static/sound/power_gain.mp3", "name":"power_gain"},
 
-  {"src":"power_over.mp3", "id":"power_over"},
-  {"src":"select_right.mp3", "id":"select_right"},
-  {"src":"select_wrong.mp3", "id":"select_wrong"},
+  {"url":"static/sound/power_over.mp3", "name":"power_over"},
+  {"url":"static/sound/select_right.mp3", "name":"select_right"},
+  {"url":"static/sound/select_wrong.mp3", "name":"select_wrong"},
 
-  {"src":"win_jump.mp3", "id":"win_jump"}
+  {"url":"static/sound/win_jump.mp3", "name":"win_jump"}
 ]

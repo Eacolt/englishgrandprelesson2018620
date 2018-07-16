@@ -1,59 +1,36 @@
 <template>
-  <div id="app"  >
+  <div id="app">
     <router-view :key="routerKey"/>
     <masker id="gamebasemasker" ref="masker"></masker>
   </div>
 </template>
 <script>
   import Vue from 'vue'
-
+  import masker from './components/masker.vue'
   import {TweenMax} from 'gsap'
   import * as PIXI from 'pixi.js'
   import axios from 'axios';
   import VueAxios from 'vue-axios'
   import $ from 'jquery'
-
   import {mapActions, mapState} from 'vuex'
-
-  // import GameHand from './components/gameui/Gamehand.js'
   import {Debugs} from './components/Utils.js'
-  import masker from './components/masker.vue'
   import {Broswer} from "./components/EasyPIXI";
-
-
   import 'swiper/dist/css/swiper.css'
-
   require('pixi-spine')
-  const VConsole = require('vconsole')
   Vue.use(VueAxios, axios);
 
   export default {
     name: 'App',
     created() {
-     new VConsole();
-      Debugs.locked = false;
-
+      Debugs.locked = true;
+      PIXI.utils.skipHello();
     },
     mounted() {
       const self = this;
       this.SET_CURRENTPAGE(1);
       if (Broswer.IsPC()) {
         self.SET_PLATFORM('pc');
-        // GameHand.isPC = true;
-        // GameHand.init();
-        // GameHand.setAnimation('normal');
-        // document.documentElement.addEventListener('mousedown',handDown);
-        // document.documentElement.addEventListener('mouseup',handUp);
-        // function handDown(event){
-        //   if(GameHand.hand){
-        //     GameHand.setStepAnimation(1)
-        //   }
-        // };
-        // function handUp(){
-        //   if(GameHand.hand){
-        //     GameHand.setStepAnimation(0)
-        //   }
-        // }
+
       }else{
         self.SET_PLATFORM('mobile')
       };
@@ -61,14 +38,12 @@
 
     //  document.documentElement.style.cursor = 'url("static/img/myhand.ico") auto'
 
-       document.documentElement.style.cursor = 'url("static/img/myhand.ico") auto';
-
+       //document.documentElement.style.cursor = 'url("static/img/myhand.ico") auto';
 
 
     },
     methods: {
       ...mapActions(['SET_CURRENTPAGE','SET_COMPLETEDLESSONNUM', 'SET_PLATFORM', 'SET_ENERGY','SET_GAMEHASBEENCOMPLETED']),
-
 
     },
     watch:{
@@ -102,6 +77,7 @@
 
       }
     },
+    components:{masker},
     computed: {
 
       ...mapState(['gamesArr', 'allLessonsNum','completedLessonNum','currentPage', 'bgMaskShow', 'baseAssetsCompleted', 'allLessonCompleteStat', 'energyCurrentNum','gameHasBeenCompleted']),
@@ -126,9 +102,8 @@
           backgroundSize: "100% 100%"
         }
       }
-    },
+    }
 
-    components: {masker},
 
   }
 </script>
@@ -169,14 +144,6 @@
     /*font-family: sans-serif;*/
   }
 
-  .logo {
-    position: absolute;
-    z-index: 999;
-    left: .5rem;
-    bottom: .3rem;
-    width: 1.9rem;
-
-  }
 
 
 </style>

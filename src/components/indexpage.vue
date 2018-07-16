@@ -7,8 +7,8 @@
 <script>
   import {mapActions, mapState} from 'vuex'
   import IndexPage from './indexpage.js'
-  import {Debugs, myVueMixin} from "./Utils";
-  import {PIXIAudio} from "./EasyPIXI";
+  import {AudioManager, Debugs, myVueMixin} from "./Utils";
+
   var pixiScene = null;
   var canvasApp = null;
   export default {
@@ -27,12 +27,11 @@
     },
 
     mounted(){
-
-
       if(this.$store.state.lessonPartsList.length==0){
         this.$router.push('/');
         window.location.reload()
       }
+
     },
     methods: {
       ...mapActions(['PUSH_GAMES','SET_MODULELIST','SET_GAMESECONDPLAYED', 'SET_GAMETHEMETYPE', 'SET_BOOKOPENED','SET_MAGICBOOKBYGAMEINDEX', 'SET_SHOWMAGICBOOK', 'SET_INDEXPAGEINITIALSLIDE', 'SET_ALREADYHASONECARD',  'SET_ALLASSETSPACKAGE', 'SET_ASSETSPAGES', 'SET_COMPLETEDLESSONNUM', 'SET_GAMEHASBEENCOMPLETED', 'SET_ENERGY', 'SET_ALLPARTNAMES', 'SET_GAMEINITRESPONSE', 'SET_ALLLESSONNUM', 'SET_GAMECARDS',
@@ -47,7 +46,8 @@
         });
 
         app.stage.addChild(pixiScene);
-        PIXIAudio.audios.bgSound.volume = 1;
+
+
         //END
       },
     },
@@ -81,7 +81,7 @@
       }
       if(canvasApp){
 
-        canvasApp.destroy();
+        canvasApp.destroy(true);
         canvasApp = null;
       }
 

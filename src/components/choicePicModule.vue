@@ -1,31 +1,29 @@
 <template>
   <div class="gameContainer" ref="pixicanvas">
-    <!--<pixi-canvas @startGame="gameStart"></pixi-canvas>-->
 
-    <!--<transition  @before-enter="beforeEnter"-->
-                 <!--@enter="enter"-->
-                 <!--@leave="leave">-->
       <congraPopup :showType="popupType" v-if="showCongra"
                    @quitGame="quitGame_hdr()"
                    @continueGame="continueGame_hdr()"
                    @continueClicked="clickContinue_hdr()"
                    @againClicked="againClicked_hdr"></congraPopup>
-    <!--</transition>-->
+
   </div>
 
 </template>
 <script>
-  import Vue from 'vue'
-  import {ResourceMent,myVueMixin,Debugs,myVueMixin_Popup,loaderAssetsByValided} from './Utils.js'
+
+  import {AudioManager} from "./Utils";
+  import {ResourceMent,myVueMixin,Debugs,myVueMixin_Popup} from './Utils.js'
   import {mapActions, mapState} from 'vuex'
   import PixiScene1 from './choicePicModule.js'
   import congraPopup from './gameui/congraPopup.vue'
 
-  import {PIXIAudio,AnimationSprite} from "./EasyPIXI";
   import {checkForJumpRoute} from './Utils.js'
   var pixiScene = null;
   var modulesUrl = null;
   var canvasApp = null;
+  require('pixi-sound')
+
   export default {
     name: "module2",
     mixins:[myVueMixin,myVueMixin_Popup],
@@ -53,7 +51,7 @@
 
 
     computed:{
-      ...mapState(['lessonPartsIndex','gameSecondPlayed','alreadyHasOneCard','allPartNames','lessonPartsList','assetsPages','completedLessonNum','allLessonsNum','allLessonComponentsNames','restArrangementStat','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
+      ...mapState(['lessonPartsIndex','appPlatform','gameSecondPlayed','alreadyHasOneCard','allPartNames','lessonPartsList','assetsPages','completedLessonNum','allLessonsNum','allLessonComponentsNames','restArrangementStat','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
 
     },
     components:{congraPopup},
@@ -122,9 +120,23 @@
               url: item.url
             }
           });
+          var audioManifest = [];
+          for(let i=0;i<gameConfigData.data.gameData.levels.length;i++){
+            let audioSrc = gameConfigData.data.gameData.levels[i].audioSrc;
+            let audioSrcTrim = _.trim(audioSrc);
+            if(audioSrcTrim!=''){
+              let audioName = modulesUrl+'_'+audioSrcTrim.replace(/\./g,'_');
 
+              audioManifest.push({
+                name:audioName,
+                url:'static/'+modulesUrl+'/'+audioSrc
+              });
+            };
 
-          //PIXI 加载逻辑
+          };
+
+          //加载逻辑
+
           var avalidiAssets = [];
           assets.forEach((item)=>{
             if(!PIXI.loader.resources[item.name]){
@@ -135,77 +147,41 @@
             };
           });
           if(avalidiAssets.length>0){
+            PIXI.loader.add(audioManifest)
             PIXI.loader.add(avalidiAssets)
               .load(function(){
-                GameStart.call(self,gameConfigData.data);
+                pixiScene = new PixiScene1({
+                  json: gameConfigData.data.gameData,
+                  vueInstance:self,
+                });
+                app.stage.addChild(pixiScene);
+                document.getElementById('gamebasemasker').style.visibility = 'hidden';
               });
-          }else{
-            GameStart.call(self,gameConfigData.data);
-          }
-          //PIXI加载逻辑 ---END
-        });
-
-
-
-
-
-
-        //加载页面小人END
-
-        //end
-
-
-
-        function GameStart(gameConfigData){
-          let audioManifest = [];
-          for(let i=0;i<gameConfigData.gameData.levels.length;i++){
-            let audioSrc = gameConfigData.gameData.levels[i].audioSrc;
-            let audioSrcTrim = _.trim(audioSrc);
-            if(audioSrcTrim!=''){
-              let audioName = modulesUrl+'_'+audioSrcTrim.replace(/\./g,'_');
-
-              audioManifest.push({
-                id:audioName,
-                src:audioSrc
-              });
-            };
-
-          };
-          if(PIXIAudio.loadedStatus[modulesUrl]==undefined && audioManifest.length>0){
-            PIXIAudio.addAudio(audioManifest, 'static/' + modulesUrl+'/', ()=>{
-
-              pixiScene= new PixiScene1({
-                json: gameConfigData.gameData,
-                app: app,
-                ticker: app.ticker,
-
-                vueInstance: self
-              });
-              app.stage.addChild(pixiScene);
-            },modulesUrl)
           }else{
             pixiScene = new PixiScene1({
-              json: gameConfigData.gameData,
-              app: app,
-              ticker: app.ticker,
-
-              vueInstance: self
+              json: gameConfigData.data.gameData,
+              vueInstance:self,
             });
             app.stage.addChild(pixiScene);
-          };
+            document.getElementById('gamebasemasker').style.visibility = 'hidden';
+          }
+          //PIXI加载逻辑 ---END
 
-          document.getElementById('gamebasemasker').style.visibility = 'hidden';
-        }
-      },
+
+
+
+        });
+      }
     },
     beforeDestroy() {
+      this.showCongra = false;
       if(pixiScene){
         pixiScene.destroyed();
         pixiScene.destroy();
         pixiScene = null;
       }
       if(canvasApp){
-        canvasApp.destroy();
+        canvasApp.destroy(true);
         canvasApp = null;
       }
     },

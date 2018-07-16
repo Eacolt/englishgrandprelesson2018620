@@ -12,10 +12,10 @@
 
 
       <congraPopup style="z-index: 9999" :showType="popupType" v-if="showCongra"
-                   @quitGame.once="quitGame_hdr()"
-                   @continueGame.once="continueGame_hdr()"
-                   @continueClicked.once="clickContinue_hdr()"
-                   @againClicked.once="againClicked_hdr"></congraPopup>
+                   @quitGame="quitGame_hdr()"
+                   @continueGame="continueGame_hdr()"
+                   @continueClicked="clickContinue_hdr()"
+                   @againClicked="againClicked_hdr"></congraPopup>
 
     <div id="videoPlayBtn"
          class="videoPlayBtn" ref="videoPlayBtn" v-show="videoPlayBtnShow">
@@ -25,7 +25,7 @@
   </div>
 </template>
 <script>
-  import {myVueMixin, myVueMixin_Popup, checkForJumpRoute, loaderAssetsByValided} from './Utils.js'
+  import {myVueMixin, myVueMixin_Popup, checkForJumpRoute} from './Utils.js'
   import {mapActions, mapState} from 'vuex'
   import congraPopup from './gameui/congraPopup.vue'
 
@@ -35,8 +35,8 @@
 
   var pixiScene = null;
   var canvasApp = null;
-  var movieModule = null;
-  var videoDuration = 0;
+
+
   var tickerment = null;
   var movieModule = null;
   var videoDuration = null;
@@ -264,10 +264,12 @@
     },
     beforeDestroy(){
       if(canvasApp){
-        canvasApp.destroy();
+
+        canvasApp.destroy(true);
         canvasApp = null;
       };
       if(pixiScene){
+        pixiScene.destroyed();
         pixiScene.destroy();
         pixiScene = null;
       }

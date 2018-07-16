@@ -4,7 +4,8 @@ import {checkForJumpRoute,Debugs} from './Utils.js'
 
 import GameMenuBars from "./gameui/GameMenuBar";
 import {AnimationSprite} from './EasyPIXI.js'
-import {PIXIAudio} from "./EasyPIXI";
+
+import {AudioManager} from "./Utils";
 
 class ChoiceTextModule extends PIXI.Container {
   constructor($options) {
@@ -38,31 +39,31 @@ class ChoiceTextModule extends PIXI.Container {
   }
 
   playContinue() {
-    if (this.vueInstance.gameHasBeenCompleted) {
-      /////////////////////
-      let restArrangmentArr = this.vueInstance.$store.state.restArrangementStat;
-      if (restArrangmentArr.length > 0) {
-        this.vueInstance.$router.push({name: restArrangmentArr[0]});
-        let d = Number(restArrangmentArr[0].split('-')[1]);
-        this.vueInstance.$store.dispatch('SET_LESSONPARTSINDEX', d);
-      }
-    } else {
-      let allLessonComponentsNames = this.vueInstance.$store.state.allLessonComponentsNames;
-      let b = Number(allLessonComponentsNames[0].split('-')[1]);
-      let currentPageIndex = this.vueInstance.lessonCurrentPageIndex;
-      if (currentPageIndex < allLessonComponentsNames.length - 1) {
-        this.vueInstance.$router.push({name: allLessonComponentsNames[currentPageIndex + 1]});
-      } else {
-        this.vueInstance.$router.push({name: allLessonComponentsNames[0]});
-      }
-    }
-
     // if (this.vueInstance.gameHasBeenCompleted) {
-    //   checkForJumpRoute.call(this, false);
-    //
+    //   /////////////////////
+    //   let restArrangmentArr = this.vueInstance.$store.state.restArrangementStat;
+    //   if (restArrangmentArr.length > 0) {
+    //     this.vueInstance.$router.push({name: restArrangmentArr[0]});
+    //     let d = Number(restArrangmentArr[0].split('-')[1]);
+    //     this.vueInstance.$store.dispatch('SET_LESSONPARTSINDEX', d);
+    //   }
     // } else {
-    //   checkForJumpRoute.call(this, true);
+    //   let allLessonComponentsNames = this.vueInstance.$store.state.allLessonComponentsNames;
+    //   let b = Number(allLessonComponentsNames[0].split('-')[1]);
+    //   let currentPageIndex = this.vueInstance.lessonCurrentPageIndex;
+    //   if (currentPageIndex < allLessonComponentsNames.length - 1) {
+    //     this.vueInstance.$router.push({name: allLessonComponentsNames[currentPageIndex + 1]});
+    //   } else {
+    //     this.vueInstance.$router.push({name: allLessonComponentsNames[0]});
+    //   }
     // }
+
+    if (this.vueInstance.gameHasBeenCompleted) {
+      checkForJumpRoute.call(this, false);
+
+    } else {
+      checkForJumpRoute.call(this, true);
+    }
   }
 
   goToHome() {
@@ -179,22 +180,23 @@ class ChoiceTextModule extends PIXI.Container {
               let isQingsuan = self.vueInstance.$route.name == self.vueInstance.restArrangementStat[self.vueInstance.restArrangementStat.length - 1];//开始清算;
               setTimeout(() => {
                 if (isQingsuan && !self.vueInstance.gameHasBeenCompleted) {
-                  Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.vueInstance.gameHasBeenCompleted)
+
                   self.gameMenuBar.bookScene.openEnergyCan(false);
+                  PIXI.loader.resources['win_jump'].sound.play();
 
                 } else if (isQingsuan == false && !self.vueInstance.gameHasBeenCompleted) {
                   self.vueInstance.showCongra = true;
-                  Debugs.log('游戏没有完成，并且也不是清算页')
-                  PIXIAudio.audios['win_jump'].play();
+
+                  PIXI.loader.resources['win_jump'].sound.play();
 
                 }else if(self.vueInstance.gameHasBeenCompleted && self.vueInstance.gameSecondPlayed){
                   self.vueInstance.showCongra = true;
-                  Debugs.log('游戏第二周目，继续玩')
-                  PIXIAudio.audios['win_jump'].play();
+                  // Debugs.log('游戏第二周目，继续玩')
+                  PIXI.loader.resources['win_jump'].sound.play();
                 }  else if (self.vueInstance.gameHasBeenCompleted && !self.vueInstance.gameSecondPlayed) {
                   self.gameMenuBar.bookScene.openEnergyCan(true);
-                  PIXIAudio.audios['win_jump'].play();
-                  Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
+                  PIXI.loader.resources['win_jump'].sound.play();
+
                 }
               }, showPopupDelay);
               self.vueInstance.updateRestArrangementStat();
@@ -482,7 +484,7 @@ class ChoiceTextModule extends PIXI.Container {
     self.soundSpeakText.y = 290;
     //TODO:顶部导航逻辑-----
     GameMenuBars.freeze = false;
-    GameMenuBars.instancement = null;
+
     self.gameMenuBar = new GameMenuBars();
     self.addChild(self.gameMenuBar)
     self.gameMenuBar.setBackBtn_tapHandler(()=>{
@@ -539,15 +541,14 @@ class ChoiceTextModule extends PIXI.Container {
     const self = this;
     if (_.trim(self.gameConfig.levels[self.gameLevel].audioSrc) != "") {
       let soundName =  this.vueInstance.$route.meta.assetsUrl+'_'+self.gameConfig.levels[self.gameLevel].audioSrc.replace(/\./g,'_');
-      self.gameAudio = PIXIAudio.audios[soundName];
-      self.gameAudio.play();
+      self.gameAudio = PIXI.loader.resources[soundName].sound.play();
       self.soundButton.play();
-      self.gameAudio.on('complete',()=>{
+
+      self.gameAudio.on('end',()=>{
         if(self.soundButton){
           self.soundButton.stop();
         }
-
-      });
+      })
     }
 
 
@@ -564,32 +565,37 @@ class ChoiceTextModule extends PIXI.Container {
 
   destroyed() {
     super.destroy();
+    //上部分声音;
+    this.soundButton.destroy();
+    if(this.gameMenuBar){
+      this.gameMenuBar.destroyed();
+      this.gameMenuBar.destroy();
+
+    }
+    this.picBand.destroy();
+    this.progressBar.destroy();
+    this.stopSpeakSound();
+    this.destroy();
+
     this.gameConfig = null;
     this.rightAnswersArr = null;
     this.gameLevel = null;
     this.gameLessonCompleted = null;
-    this.picBand.destroy();
+    this.gameMenuBar = null;
     this.picBand = null;
-    this.progressBar.destroy();
+
     this.progressBar = null;
     this.isAnimating = null;
     this.resources = null;
 
     this.soundSpeakText = null;
 
-    this.stopSpeakSound();
-    if(this.gameMenuBar){
-      this.gameMenuBar.clearGameMenuEvents();
-      this.gameMenuBar.destroy();
-      this.gameMenuBar = null;
-    }
-    //上部分声音;
-    this.soundButton.destroy();
+
     this.soundButton = null;
     this.gameAudio = null;
 
     this.vueInstance = null;
-    this.destroy();
+
 
   }
 };

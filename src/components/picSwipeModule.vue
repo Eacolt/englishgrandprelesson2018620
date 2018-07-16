@@ -58,19 +58,13 @@
   import {myVueMixin,checkForJumpRoute,myVueMixin_Popup} from './Utils.js'
   import {mapActions, mapState} from 'vuex'
   import PixiScene1 from './picSwipeModule.js'
-  import GameMenuBars from './gameui/GameMenuBar.js'
-  import GameHand from './gameui/Gamehand.js'
-
 
   import congraPopup from './gameui/congraPopup.vue'
-  import masker from './masker.vue'
   import {Debugs} from "./Utils";
   import {swiper, swiperSlide} from 'vue-awesome-swiper'
 
   import 'swiper/dist/css/swiper.css'
-  import {PIXIAudio} from './EasyPIXI.js'
   var canvasApp = null;
-  var canvasApp2 = null;
   var pixiScene = null;
   var mySwiper = null;
   var mySwiperPagination = null;
@@ -115,9 +109,9 @@
 
       }
     },
-    components:{congraPopup,masker},
+    components:{congraPopup},
     computed: {
-      ...mapState(['lessonPartsList','appPlatform','gameSecondPlayed','allPartNames','lessonPartsIndex','allLessonsNum','showPopupDelay','allLessonComponentsNames','energyCurrentNum','restArrangementStat','lessonCurrentPageIndex','gameHasBeenCompleted']),
+      ...mapState(['lessonPartsList','assetsPages','appPlatform','gameSecondPlayed','allPartNames','lessonPartsIndex','allLessonsNum','showPopupDelay','allLessonComponentsNames','energyCurrentNum','restArrangementStat','lessonCurrentPageIndex','gameHasBeenCompleted']),
       leftTriangleShow(){
         return this.currentPaginationPages>=4
       },
@@ -145,12 +139,11 @@
       },
       boyBtnAreaClicked(){
         const self = this;
-        // if(self.boyCanClicked==false)return;
-        // self.boyCanClicked = false;
+
         this.canvasAppLevel = {
           zIndex:100
         }
-        Debugs.log('点到我了')
+
         if(mySwiper){
           if(mySwiper.activeIndex <mySwiper.slides.length-1){
             return;
@@ -180,21 +173,22 @@
           let isQingsuan = self.$route.name == self.restArrangementStat[self.restArrangementStat.length - 1];//开始清算;
           setTimeout(() => {
             if (isQingsuan && !self.gameHasBeenCompleted) {
-              Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.gameHasBeenCompleted)
+
                pixiScene.gameMenuBar.bookScene.openEnergyCan(false);
+              PIXI.loader.resources['win_jump'].sound.play();
 
             } else if (isQingsuan == false && !self.gameHasBeenCompleted) {
               self.showCongra = true;
-              Debugs.log('游戏没有完成，并且也不是清算页')
-              PIXIAudio.audios['win_jump'].play();
+              // Debugs.log('游戏没有完成，并且也不是清算页')
+              PIXI.loader.resources['win_jump'].sound.play();
             }else if(self.gameHasBeenCompleted && self.gameSecondPlayed){
               self.showCongra = true;
-              Debugs.log('游戏第二周目，继续玩')
-              PIXIAudio.audios['win_jump'].play();
+              // Debugs.log('游戏第二周目，继续玩')
+              PIXI.loader.resources['win_jump'].sound.play();
             }  else if (self.gameHasBeenCompleted && !self.gameSecondPlayed) {
               pixiScene.gameMenuBar.bookScene.openEnergyCan(true);
-              PIXIAudio.audios['win_jump'].play();
-              Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.gameHasBeenCompleted)
+              PIXI.loader.resources['win_jump'].sound.play();
+
             }
           }, showPopupDelay);
           self.updateRestArrangementStat();
@@ -238,31 +232,7 @@
           mySwiper.slideTo(0,500)
         }
       },
-      //
-      // swiperMainMouseEnter(){
-      //   // if(this.appPlatform=='pc'){
-      //   //   GameHand.setAnimation('swipe')
-      //   // }
-      //
-      // },
-      // swiperMainMouseLeave(){
-      //   // if(this.appPlatform=='pc'){
-      //   //   GameHand.setAnimation('normal')
-      //   // }
-      //
-      // },
-      // paginationBallMouseLeave(){
-      //   // if(this.appPlatform == 'pc'){
-      //   //   GameHand.setAnimation('normal')
-      //   // }
-      //
-      // },
-      // paginationBallMouseEnter(){
-      //   // if(this.appPlatform=='pc'){
-      //   //   GameHand.setAnimation('click')
-      //   // }
-      //
-      // },
+
       paginationBallClick(index){
         const self = this;
         if(mySwiperPagination){
@@ -313,184 +283,193 @@
                 }
               }
             });
-          //loaderAssetsByValided.call(self,modulesUrl,assets,GameStart);
-          self.axios.get('static/' + modulesUrl + '/gameconfig.json').then((gameConfigData) => {
 
-            GameStart.call(self,gameConfigData.data);
-          });
-        });
+          // self.axios.get('static/' + modulesUrl + '/gameconfig.json').then((gameConfigData) => {
+          //
+          //   GameStart.call(self,gameConfigData.data);
+          //
+          // });
+          setTimeout(()=>{
+            Object.assign(self.paginationballs_style,{
+              backgroundImage:"url("+globalStatic+'/pagiball1.png'+")",
+              backgroundRepeat:'no-repeat',
+              backgroundSize:'contain',
+              opacity:1
+            });
 
-            function GameStart(gameConfigData){
+            self.paginationPicture = {
+              backgroundImage: "url(static/themetypeui"+'/pagination.png'+")",
+              backgroundSize: "100% 100%",
+              backgroundRepeat: "no-repeat"
+            }
+            self.leftTriangle_style = {
+              backgroundImage: "url("+globalStatic+'/sanjiao.png'+")",
+              backgroundSize: "100% 100%",
+              backgroundRepeat: "no-repeat",
+              transform:"scaleX(-1)"
+            }
+            self.rightTriangle_style = {
+              backgroundImage: "url("+globalStatic+'/sanjiao.png'+")",
+              backgroundSize: "100% 100%",
+              backgroundRepeat: "no-repeat",
 
-              Object.assign(self.paginationballs_style,{
-                backgroundImage:"url("+globalStatic+'/pagiball1.png'+")",
-                backgroundRepeat:'no-repeat',
-                backgroundSize:'contain',
-                opacity:1
-              });
+            }
 
-              self.paginationPicture = {
-                backgroundImage: "url(static/themetypeui"+'/pagination.png'+")",
-                backgroundSize: "100% 100%",
-                backgroundRepeat: "no-repeat"
-              }
-              self.leftTriangle_style = {
-                backgroundImage: "url("+globalStatic+'/sanjiao.png'+")",
-                backgroundSize: "100% 100%",
-                backgroundRepeat: "no-repeat",
-                transform:"scaleX(-1)"
-              }
-              self.rightTriangle_style = {
-                backgroundImage: "url("+globalStatic+'/sanjiao.png'+")",
-                backgroundSize: "100% 100%",
-                backgroundRepeat: "no-repeat",
-
-              }
-
-
-
-
-              //初始化Swiper;
-
-                mySwiperPagination = new Swiper('#paginationdiy', {
-                  direction: 'horizontal',
-                  slidesPerView: 5,
-                  slidesPerGroup: 4,
-                  resistanceRatio:0,
-                  on:{
-                    init(){
-                      this.update();
-                    }
-                  }
-                });
-                mySwiper = new Swiper('#swiperContainerMain', {
-                  direction: 'horizontal',
-                  centeredSlides: true,
-                  slidesPerView: 1.3,
-                  spcaeBetween: 15,
-                  touchEventsTarget: 'wrapper',
-                  // 如果需要前进后退按钮
-                  navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
-                  },
-                  on: {
-                    slideChangeTransitionStart: function () {
-                      const _swiper = this;
-                      Array.prototype.forEach.call(this.slides,function(item,index){
-                        _swiper.slides.eq(index).removeClass('none-effect');
-                        mySwiperPagination.slides.eq(index).find('.paginationballs').css({
-                          backgroundImage:"url("+globalStatic+'/pagiball1.png'+")",
-                          backgroundRepeat:'no-repeat',
-                          backgroundSize:'contain',
-                          color:"#539bc5"
-                        });
-                      });
-                      mySwiperPagination.slides.eq(_swiper.activeIndex).find('.paginationballs').css({
-                        backgroundImage:"url("+globalStatic+'/pagiball2.png'+")",
-                        backgroundRepeat:'no-repeat',
-                        backgroundSize:'contain',
-                        color:"white"
-                      });
-                      mySwiperPagination.slideTo(_swiper.activeIndex, 1000);
-                    },
-                    slideChange(){
-                      self.currentPage = this.activeIndex;
-                      if(this.activeIndex>=this.slides.length-1){
-
-                        if(pixiScene){
-                          pixiScene.showBoy();
-
-                        }
-                        self.canvasAppLevel = {
-                          zIndex:100
-                        }
-
-                        self.currentLessonCompleted= true;
-
-                      }else{
-                        if(pixiScene){
-                          pixiScene.hideBoy();
-                        }
-                        self.canvasAppLevel = {
-                          zIndex:1
-                        }
-
-                      }
-                      if(pixiScene){
-                        pixiScene.stopAudios();
-                        pixiScene.playAudios();
-                      }
-
-                      //self.$parent.$parent.$refs.gameMenu.showAudio = false;
-                      //【重要】设置当前下部导航的索引;
-                      self.currentPaginationPages = this.realIndex;
-
-                    },
-                    tap: function () {
-
-                      self.currentPage = this.activeIndex;
-
-                    },
-                    init: function () {
-                      this.slides.eq(this.activeIndex).addClass('none-effect');
-
-                      setTimeout(()=>{
-                        mySwiperPagination.slides.eq(0).find('.paginationballs').css({
-                          backgroundImage:"url("+globalStatic+'/pagiball2.png'+")",
-                          backgroundRepeat:'no-repeat',
-                          backgroundSize:'contain',
-                          color:"white"
-                        });
-                      },20)
-                      GameHand.locked = false;
-
-                      this.update();
-                    }
-                  },
-                });
-
-              let audioManifest = [];
-              for(let i=0;i<gameConfigData.gameData.pictureList.length;i++){
-                let audioSrc = gameConfigData.gameData.pictureList[i].audioSrc;
-                let audioName = modulesUrl+'_'+audioSrc.replace(/\./g,'_');
-
-                if(audioSrc && _.trim(audioSrc)!=''){
-                  audioManifest.push({
-                    id:audioName,
-                    src:audioSrc
-                  });
+            mySwiperPagination = new Swiper('#paginationdiy', {
+              direction: 'horizontal',
+              slidesPerView: 5,
+              slidesPerGroup: 4,
+              resistanceRatio:0,
+              on:{
+                init(){
+                  this.update();
                 }
+              }
+            });
+            mySwiper = new Swiper('#swiperContainerMain', {
+              direction: 'horizontal',
+              centeredSlides: true,
+              slidesPerView: 1.3,
+              spcaeBetween: 15,
+              touchEventsTarget: 'wrapper',
+              // 如果需要前进后退按钮
+              navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+              },
+              on: {
+                slideChangeTransitionStart: function () {
+                  const _swiper = this;
+                  Array.prototype.forEach.call(this.slides,function(item,index){
+                    _swiper.slides.eq(index).removeClass('none-effect');
+                    mySwiperPagination.slides.eq(index).find('.paginationballs').css({
+                      backgroundImage:"url("+globalStatic+'/pagiball1.png'+")",
+                      backgroundRepeat:'no-repeat',
+                      backgroundSize:'contain',
+                      color:"#539bc5"
+                    });
+                  });
+                  mySwiperPagination.slides.eq(_swiper.activeIndex).find('.paginationballs').css({
+                    backgroundImage:"url("+globalStatic+'/pagiball2.png'+")",
+                    backgroundRepeat:'no-repeat',
+                    backgroundSize:'contain',
+                    color:"white"
+                  });
+                  mySwiperPagination.slideTo(_swiper.activeIndex, 1000);
+                },
+                slideChange(){
+                  self.currentPage = this.activeIndex;
+                  if(this.activeIndex>=this.slides.length-1){
 
+                    if(pixiScene){
+                      pixiScene.showBoy();
+
+                    }
+                    self.canvasAppLevel = {
+                      zIndex:100
+                    }
+
+                    self.currentLessonCompleted= true;
+
+                  }else{
+                    if(pixiScene){
+                      pixiScene.hideBoy();
+                    }
+                    self.canvasAppLevel = {
+                      zIndex:1
+                    }
+
+                  }
+                  if(pixiScene){
+                    pixiScene.stopAudios();
+                    pixiScene.playAudios();
+                  }
+
+                  //self.$parent.$parent.$refs.gameMenu.showAudio = false;
+                  //【重要】设置当前下部导航的索引;
+                  self.currentPaginationPages = this.realIndex;
+
+                },
+                tap: function () {
+
+                  self.currentPage = this.activeIndex;
+
+                },
+                init: function () {
+                  this.slides.eq(this.activeIndex).addClass('none-effect');
+
+                  setTimeout(()=>{
+                    mySwiperPagination.slides.eq(0).find('.paginationballs').css({
+                      backgroundImage:"url("+globalStatic+'/pagiball2.png'+")",
+                      backgroundRepeat:'no-repeat',
+                      backgroundSize:'contain',
+                      color:"white"
+                    });
+                  },20)
+
+
+                  this.update();
+                }
+              },
+            });
+
+            var audioManifest = [];
+
+            for(let i=0;i< gameConfigData.data.gameData.pictureList.length;i++){
+              let audioSrc =  gameConfigData.data.gameData.pictureList[i].audioSrc;
+              let audioSrcTrim = _.trim(audioSrc);
+              if(audioSrcTrim!=''){
+                let audioName = modulesUrl+'_'+audioSrcTrim.replace(/\./g,'_');
+
+                audioManifest.push({
+                  name:audioName,
+                  url:'static/'+modulesUrl+'/'+audioSrc
+                });
               };
-              //加载页面小人END
 
-              //end
-              if(PIXIAudio.loadedStatus[modulesUrl]==undefined && audioManifest.length>0){
-                PIXIAudio.addAudio(audioManifest, globalStatic+'/', ()=>{
-                  PixiGameStart.call(self);
+            };
+
+            var audioAvalid = false;
+            for(let i=0;i<audioManifest.length;i++){
+              if(PIXI.loader.resources[audioManifest[i]]){
+
+                audioAvalid = true;
+                break;
+              }
+            }
+
+            if(self.assetsPages[modulesUrl] && self.assetsPages[modulesUrl]==1){
+              pixiScene = new PixiScene1({
+                json: gameConfigData.data.gameData,
+                vueInstance:self
+              });
+              app.stage.addChild(pixiScene);
+              document.getElementById('gamebasemasker').style.visibility = 'hidden';
+            }else{
+              PIXI.loader.add(audioManifest)
+
+                .load(()=>{
+                  pixiScene = new PixiScene1({
+                    json: gameConfigData.data.gameData,
+                    vueInstance:self
+                  });
+                  app.stage.addChild(pixiScene);
                   document.getElementById('gamebasemasker').style.visibility = 'hidden';
 
-                },modulesUrl)
-              }else{
-                PixiGameStart.call(self);
-                document.getElementById('gamebasemasker').style.visibility = 'hidden';
-              }
+                  self.SET_ASSETSPAGES({
+                    assetsName:modulesUrl,
+                    completedStat:1
+                  })
 
-
-              function PixiGameStart(){
-                var scene1 = new PixiScene1({
-                  json: gameConfigData.gameData,
-                  app: app,
-                  vueInstance:self,
-                  swiper:mySwiper
-                });
-                app.stage.addChild(scene1);
-                pixiScene = scene1;
-
-              }
-              //END
+                })
             }
+
+
+
+          },100)
+        });
+
+
       }
     },
     beforeCreate(){
@@ -505,16 +484,22 @@
     beforeDestroy(){
       this.slideLists = null;
       this.paginationLists = null;
-      if(mySwiper && mySwiperPagination){
+      this.showCongra = false;
+
         mySwiper.destroy(true,true);
         mySwiperPagination.destroy(true,true);
-      };
+
 
       if(pixiScene){
         pixiScene.destroyed();
         pixiScene.destroy();
         pixiScene = null
       }
+      if(canvasApp){
+        canvasApp.destroy(true);
+        canvasApp = null;
+      }
+
     },
 
     mounted() {

@@ -1,10 +1,9 @@
 
 import {checkForJumpRoute} from '../Utils.js'
-import GameMenuBars from "./GameMenuBar";
-import {PIXIAudio} from "../EasyPIXI";
-import {Debugs} from "../Utils";
+
+import { Debugs} from "../Utils";
 class BookScene extends PIXI.Container{
-  constructor($options={}){
+  constructor(){
     super();
     const self  = this;
     this.resources = PIXI.loader.resources;
@@ -20,6 +19,7 @@ class BookScene extends PIXI.Container{
     this.leftBtn = null;
     this.rightBtn = null;
     this.currentPage = 0;
+    this.vueInstance = null;
 
     //第一页的按钮;
     this.page1StartBtn = null;
@@ -239,7 +239,8 @@ class BookScene extends PIXI.Container{
       let track = self.bookAn.state.setAnimation(0,'turnnext',false);
       self.currentPage++;
 
-      PIXIAudio.audios['book_turn'].play();
+
+      PIXI.loader.resources['book_turn'].sound.play();
 
       self.page1StartBtn.interactive = self.page2StartBtn.interactive = false;
       self.rightBtn.interactive = self.leftBtn.interactive = false;
@@ -265,7 +266,8 @@ class BookScene extends PIXI.Container{
         return;
       }
 
-      PIXIAudio.audios['book_turn'].play();
+
+      PIXI.loader.resources['book_turn'].sound.play();
 
       self.page1StartBtn.interactive = self.page2StartBtn.interactive = false;
       let track = self.bookAn.state.setAnimation(0,'turnback',false);
@@ -307,30 +309,30 @@ class BookScene extends PIXI.Container{
 
   //选择游戏按钮逻辑;
   page1StartBtn_tapHandler(){
-    if(this.currentPage==0 && GameMenuBars.vueInstance.allGameCards>=4){
+    if(this.currentPage==0 && this.vueInstance.allGameCards>=4){
     //找你妹;
       window.parent.postMessage({
         type: "enterGame",
         game:1
       }, "*");
-      Debugs.log('找你妹游戏开启')
-    }else if(this.currentPage==1 && GameMenuBars.vueInstance.allGameCards>=12){
+
+    }else if(this.currentPage==1 && this.vueInstance.allGameCards>=12){
       window.parent.postMessage({
         type: "enterGame",
         game:3
       }, "*");
-      Debugs.log('跑酷游戏开启')
+
     }
 
   }
   page2StartBtn_tapHandler(){
-    if(this.currentPage==1 && GameMenuBars.vueInstance.allGameCards>=8){
+    if(this.currentPage==1 && this.vueInstance.allGameCards>=8){
       //找你妹;
       window.parent.postMessage({
         type: "enterGame",
         game:2
       }, "*");
-      Debugs.log('换装游戏开启')
+
     }
   }
   //todo:某个宝箱单独按下
@@ -349,7 +351,7 @@ class BookScene extends PIXI.Container{
      let mypromise = new Promise(function(resolve,reject){
        window.parent.postMessage({
          type: "stepSubmit",
-         page:GameMenuBars.vueInstance.lessonCurrentPageIndex
+         page:self.vueInstance.lessonCurrentPageIndex
        }, "*");
        window.parent.postMessage({
          type: "taskSubmit"
@@ -374,9 +376,9 @@ class BookScene extends PIXI.Container{
     mypromise.then((value)=>{
       //中奖了
        if(value==1){
-         GameMenuBars.vueInstance.SET_ALREADYHASONECARD(true);
+         self.vueInstance.SET_ALREADYHASONECARD(true);
 
-         GameMenuBars.vueInstance.SET_GAMECARDS(GameMenuBars.vueInstance.allGameCards+1);
+         self.vueInstance.SET_GAMECARDS(self.vueInstance.allGameCards+1);
 
          TweenMax.to(EventTarget,1,{x:self.boxes[1].x,onStart:function(){
              self.boxes.forEach((item,_index)=>{
@@ -385,7 +387,8 @@ class BookScene extends PIXI.Container{
                }
              });
 
-             PIXIAudio.audios['box_right'].play();
+
+             PIXI.loader.resources['box_right'].sound.play();
            },onComplete:function(){
              EventTarget.state.setAnimation(0,'open1',false);
              //todo:让宝箱的UI消失
@@ -394,12 +397,12 @@ class BookScene extends PIXI.Container{
                //todo:打开魔法书后，页面及时跳转到主界面//
                setTimeout(()=>{
 
-                 if(GameMenuBars.vueInstance.$route.fullPath=='/index'){
+                 if(self.vueInstance.$route.fullPath=='/index'){
                    self.isGoIndex = true;
                  }else{
                    self.isGoIndex = false;
                  }
-                 GameMenuBars.vueInstance.$router.push('/index')
+                 self.vueInstance.$router.push('/index')
                  TweenMax.to(self.treasureBoxUI,.5,{alpha:0});
                  TweenMax.to(EventTarget,.5,{alpha:0});
 
@@ -408,7 +411,7 @@ class BookScene extends PIXI.Container{
                   // self.openBook();
                    Debugs.log('跳转宝箱')
                  }else{
-                   GameMenuBars.vueInstance.SET_SHOWMAGICBOOK(true);
+                   self.vueInstance.SET_SHOWMAGICBOOK(true);
                  }
                  if(self.parent.parent.swiperHammer){
                    self.parent.parent.swiperHammer.lock = true;
@@ -426,7 +429,8 @@ class BookScene extends PIXI.Container{
                }
              });
 
-             PIXIAudio.audios['box_wrong'].play();
+
+             PIXI.loader.resources['box_wrong'].sound.play();
            },onComplete:function(){
              EventTarget.state.setAnimation(0,'open2',false);
              //todo:让宝箱的UI消失
@@ -434,7 +438,7 @@ class BookScene extends PIXI.Container{
                TweenMax.to(EventTarget,.5,{alpha:0});
                //todo:打开魔法书后，页面及时跳转到主界面;
                setTimeout(()=>{
-                 GameMenuBars.vueInstance.$router.push('/index');
+                 self.vueInstance.$router.push('/index');
 
                     self.hideBlackMask();
                  if(self.parent.parent.swiperHammer){
@@ -461,7 +465,8 @@ class BookScene extends PIXI.Container{
 
     if(this.closeBookAnimating==false){
       this.closeBookAnimating = true;
-      PIXIAudio.audios['bgSound'].play();
+      //
+      // PIXI.loader.resources['bgSound'].sound.play();
 
       this.leftBtn.interactive = this.rightBtn.interactive = false;
       if(this.currentPage==0){
@@ -497,7 +502,8 @@ class BookScene extends PIXI.Container{
       this.currentPage = 0;
 
 
-      PIXIAudio.audios['book_close'].play();
+
+      PIXI.loader.resources['book_close'].sound.play();
     }
 
 
@@ -517,7 +523,7 @@ class BookScene extends PIXI.Container{
         item.alpha = 0;
       });
 
-      self.getCardPromise.call(self,GameMenuBars.vueInstance.allGameCards);
+      self.getCardPromise.call(self,self.vueInstance.allGameCards);
       self.page2StartBtn.interactive = self.page1StartBtn.interactive = false;
       let track = this.bookAn.state.setAnimation(0,'open',false);
       if(self.currentPage == 0){
@@ -534,7 +540,8 @@ class BookScene extends PIXI.Container{
           self.menuCloseBtn.on('pointertap',self.menuCloseBtn_tapHandler,self)
         }
       }
-      PIXIAudio.audios['book_open'].play();
+
+      PIXI.loader.resources['book_open'].sound.play();
     }
     setTimeout(()=>{
       self.leftBtn.interactive = self.rightBtn.interactive = true;
@@ -584,7 +591,7 @@ class BookScene extends PIXI.Container{
 
 
 
-    let currentTime = (GameMenuBars.vueInstance.$parent.completedLessonNum/GameMenuBars.vueInstance.$parent.allLessonsNum)*MAX_TIME;
+    let currentTime = (self.vueInstance.$parent.completedLessonNum/self.vueInstance.$parent.allLessonsNum)*MAX_TIME;
 
     var track = this.energyCan.state.setAnimation(0,'power',false);
     let ticker = new PIXI.ticker.Ticker();
@@ -594,6 +601,7 @@ class BookScene extends PIXI.Container{
         showText($isEnd);
         ticker.stop();
         ticker.destroy();
+        ticker = null;
 
         self.energyCan.state.tracks[0].timeScale  = 0;
 
@@ -603,7 +611,7 @@ class BookScene extends PIXI.Container{
     sound.play();
     ticker.start();
     if($isEnd){
-      GameMenuBars.vueInstance.SET_GAMEHASBEENCOMPLETED(true);
+      self.vueInstance.SET_GAMEHASBEENCOMPLETED(true);
 
 
     }
@@ -683,22 +691,66 @@ class BookScene extends PIXI.Container{
   openBox_pointerDown_handler(){
     this.hideAll_EnergyElement();
     this.openBoxes();
-    GameMenuBars.vueInstance.SET_BOOKOPENED(1);//让书打开；
-    GameMenuBars.vueInstance.SET_GAMESECONDPLAYED(true);//
+    this.vueInstance.SET_BOOKOPENED(1);//让书打开；
+    this.vueInstance.SET_GAMESECONDPLAYED(true);//
     this.boxes.forEach((item)=>{
       item.interactive = true;
     })
   };
   continueBtn_pointerDown_handler(){
-    checkForJumpRoute.call(GameMenuBars.vueInstance);
+    var self = this;
+    checkForJumpRoute.call(self.vueInstance);
     this.hideAll_EnergyElement();
   };
   goHomeBtn_pointerDown_handler(){
-    GameMenuBars.vueInstance.$router.push('/index/')
+    this.vueInstance.$router.push('/index/')
     this.hideAll_EnergyElement();
 
 
   };
+  destroyed(){
+    // if(this.bookAn){
+    //   this.bookAn.destroy()
+    // }
+    if(this.boxes){
+      this.boxes.forEach((item)=>{
+        item.destroy();
+      })
+    }
+    if(this.energyCan){
+      this.energyCan.destroy();
+    }
+
+
+    this.vueInstance = null;
+    this.resources = null;
+    // this.bookAn = null;//魔法书
+    this.openBookAnimating = null;
+    this.closeBookAnimating = null;
+    this.menuCloseBtn = null;
+    this.boxes = null;
+    this.energyCan = null;
+    this.energyCanCtn1 = null;//未完成的各个UI
+    this.energyCanCtn2 = null;//完成的UI；
+    this.treasureBoxUI = null;//开启宝箱的结果页面UI
+    this.leftBtn = null;
+    this.rightBtn = null;
+    this.currentPage = null;
+
+    //第一页的按钮;
+    this.page1StartBtn = null;
+    this.page2StartBtn = null;
+    this.page3StartBtn = null;
+    this.currentBookPage = null;//第一页
+    this.backGroundMask  = null;//一个黑色背景;
+
+    this.isGo = true;
+    this.isGoIndex = null;
+    this.getOne = true;
+
+    super.destroy();
+    this.destroy();
+  }
 
 
 }

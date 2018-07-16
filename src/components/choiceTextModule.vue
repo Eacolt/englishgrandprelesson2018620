@@ -19,9 +19,11 @@
   import {mapActions, mapState} from 'vuex'
   import congraPopup from './gameui/congraPopup.vue'
   import PixiScene1 from './choiceTextModule.js'
-  import {PIXIAudio,AnimationSprite} from "./EasyPIXI";
+  import {AudioManager} from "./Utils";
+
   import {checkForJumpRoute} from "./Utils";
   import {TweenMax} from 'gsap'
+  import {Debugs} from "./Utils";
 
   // const _ = require('lodash');
   // import {Debugs} from "./Utils";
@@ -42,15 +44,13 @@
       }
     },
     beforeCreate() {
-
-
       if (this.$store.state.lessonPartsList.length == 0) {
         this.$router.push('/');
         window.location.reload()
       }
     },
     created(){
-      document.getElementById('gamebasemasker').style.visibility = 'visible';
+       document.getElementById('gamebasemasker').style.visibility = 'visible';
     },
 
     computed: {
@@ -69,32 +69,33 @@
         }
       },
       clickContinue_handler() {
+        Debugs.log("Contirue")
 
-        // if (this.gameHasBeenCompleted) {
-        //   checkForJumpRoute.call(this, false);
-        //
-        //
-        // } else {
-        //   checkForJumpRoute.call(this, true);
-        // }
         if (this.gameHasBeenCompleted) {
-          /////////////////////
-          let restArrangmentArr = this.$store.state.restArrangementStat;
-          if (restArrangmentArr.length > 0) {
-            this.$router.push({name: restArrangmentArr[0]});
-            let d = Number(restArrangmentArr[0].split('-')[1]);
-            this.$store.dispatch('SET_LESSONPARTSINDEX', d);
-          }
+          checkForJumpRoute.call(this, false);
+
+
         } else {
-          let allLessonComponentsNames = this.$store.state.allLessonComponentsNames;
-          let b = Number(allLessonComponentsNames[0].split('-')[1]);
-          let currentPageIndex = this.lessonCurrentPageIndex;
-          if (currentPageIndex < allLessonComponentsNames.length - 1) {
-            this.$router.push({name: allLessonComponentsNames[currentPageIndex + 1]});
-          } else {
-            this.$router.push({name: allLessonComponentsNames[0]});
-          }
+          checkForJumpRoute.call(this, true);
         }
+        // if (this.gameHasBeenCompleted) {
+        //   /////////////////////
+        //   let restArrangmentArr = this.$store.state.restArrangementStat;
+        //   if (restArrangmentArr.length > 0) {
+        //     this.$router.push({name: restArrangmentArr[0]});
+        //     let d = Number(restArrangmentArr[0].split('-')[1]);
+        //     this.$store.dispatch('SET_LESSONPARTSINDEX', d);
+        //   }
+        // } else {
+        //   let allLessonComponentsNames = this.$store.state.allLessonComponentsNames;
+        //   let b = Number(allLessonComponentsNames[0].split('-')[1]);
+        //   let currentPageIndex = this.lessonCurrentPageIndex;
+        //   if (currentPageIndex < allLessonComponentsNames.length - 1) {
+        //     this.$router.push({name: allLessonComponentsNames[currentPageIndex + 1]});
+        //   } else {
+        //     this.$router.push({name: allLessonComponentsNames[0]});
+        //   }
+        // }
       },
       quitGame_handler(){
         const self = this;
@@ -125,8 +126,23 @@
               url: item.url
             }
           });
+          var audioManifest = [];
+          for(let i=0;i<gameConfigData.data.gameData.levels.length;i++){
+            let audioSrc = gameConfigData.data.gameData.levels[i].audioSrc;
+            let audioSrcTrim = _.trim(audioSrc);
+            if(audioSrcTrim!=''){
+              let audioName = modulesUrl+'_'+audioSrcTrim.replace(/\./g,'_');
 
-          //PIXI 加载逻辑
+              audioManifest.push({
+                name:audioName,
+                url:'static/'+modulesUrl+'/'+audioSrc
+              });
+            };
+
+          };
+
+          //加载逻辑
+
           var avalidiAssets = [];
           assets.forEach((item)=>{
             if(!PIXI.loader.resources[item.name]){
@@ -137,67 +153,43 @@
             };
           });
           if(avalidiAssets.length>0){
+            PIXI.loader.add(audioManifest)
             PIXI.loader.add(avalidiAssets)
               .load(function(){
-                GameStart.call(self,gameConfigData.data);
+                pixiScene = new PixiScene1({
+                  json: gameConfigData.data.gameData,
+                  vueInstance:self,
+                });
+                app.stage.addChild(pixiScene);
+                document.getElementById('gamebasemasker').style.visibility = 'hidden';
               });
           }else{
-            GameStart.call(self,gameConfigData.data);
+            pixiScene = new PixiScene1({
+              json: gameConfigData.data.gameData,
+              vueInstance:self,
+            });
+            app.stage.addChild(pixiScene);
+            document.getElementById('gamebasemasker').style.visibility = 'hidden';
           }
           //PIXI加载逻辑 ---END
+
         });
 
 
 
 
-        function GameStart(gameConfigData){
-
-          let audioManifest = [];
-          for(let i=0;i<gameConfigData.gameData.levels.length;i++){
-            let audioSrc = gameConfigData.gameData.levels[i].audioSrc;
-            let audioSrcTrim = _.trim(audioSrc);
-            if(audioSrcTrim!=''){
-              let audioName = modulesUrl+'_'+audioSrcTrim.replace(/\./g,'_');
-
-              audioManifest.push({
-                id:audioName,
-                src:audioSrc
-              });
-            };
-
-          };
-
-
-
-          if(PIXIAudio.loadedStatus[modulesUrl]==undefined && audioManifest.length>0){
-            PIXIAudio.addAudio(audioManifest, 'static/' + modulesUrl+'/', ()=>{
-              //加载声音；
-              pixiScene= new PixiScene1({
-                json: gameConfigData.gameData,
-                vueInstance: self
-              });
-              app.stage.addChild(pixiScene);
-              document.getElementById('gamebasemasker').style.visibility = 'hidden';
-
-
-            },modulesUrl);
-          }
-
-
-
-
-        }
       }
     },
     beforeDestroy() {
-      if(canvasApp){
-        canvasApp.destroy();
-        canvasApp = null;
-      }
+      this.showCongra = false;
       if(pixiScene){
         pixiScene.destroyed();
         pixiScene.destroy();
         pixiScene = null;
+      }
+      if(canvasApp){
+        canvasApp.destroy(true);
+        canvasApp = null;
       }
     },
 

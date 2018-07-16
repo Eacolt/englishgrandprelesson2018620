@@ -2,12 +2,11 @@
   <div class="gameContainer" ref="pixicanvas">
 
 
-
-      <congraPopup :showType="popupType" v-if="showCongra"
-                   @quitGame="quitGame()"
-                   @continueGame="continueGame()"
-                   @continueClicked="clickContinue()"
-                   @againClicked="againClicked"></congraPopup>
+    <congraPopup :showType="popupType" v-if="showCongra"
+                 @quitGame="quitGame()"
+                 @continueGame="continueGame()"
+                 @continueClicked="clickContinue()"
+                 @againClicked="againClicked"></congraPopup>
     <!--</transition>-->
   </div>
 
@@ -15,12 +14,13 @@
 
 <script>
   import Vue from 'vue'
-  import {ResourceMent, myVueMixin, myVueMixin_Popup, checkForJumpRoute,loaderAssetsByValided} from './Utils.js'
+  import {ResourceMent, myVueMixin, myVueMixin_Popup, checkForJumpRoute} from './Utils.js'
 
   import congraPopup from './gameui/congraPopup.vue'
   import {mapActions, mapState} from 'vuex'
   import PixiScene1 from './bookReadingModule.js'
-  import {PIXIAudio,AnimationSprite} from "./EasyPIXI";
+
+  import {AudioManager} from "./Utils";
 
 
   var pixiScene = null;
@@ -36,26 +36,26 @@
         homeShow: true,
         currentGameLevel: 0,
         showCongra: false,
-        popupType:'popup2',
-        currentLessonCompleted:false
+        popupType: 'popup2',
+        currentLessonCompleted: false
       }
     },
 
 
     computed: {
-      ...mapState(['lessonPartsList','gameSecondPlayed','allPartNames','assetsPages','completedLessonNum','allLessonsNum','lessonPartsIndex', 'restArrangementStat','allLessonComponentsNames','energyCurrentNum','lessonCurrentPageIndex','gameHasBeenCompleted']),
+      ...mapState(['lessonPartsList', 'gameSecondPlayed', 'allPartNames', 'assetsPages', 'completedLessonNum', 'allLessonsNum', 'lessonPartsIndex', 'restArrangementStat', 'allLessonComponentsNames', 'energyCurrentNum', 'lessonCurrentPageIndex', 'gameHasBeenCompleted']),
 
     },
     components: {congraPopup},
     methods: {
-      ...mapActions(['SET_CANVASPAGE','SET_INDEXPAGEINITIALSLIDE','SET_COMPLETEDLESSONNUM', 'SET_ASSETSPAGES','PUSH_GAMES', 'SET_LESSONCOMPLETESTAT','SET_RESTARRANGEMENTSTAT','SET_LESSONCURRENTPAGEINDEX']),
+      ...mapActions(['SET_CANVASPAGE', 'SET_INDEXPAGEINITIALSLIDE', 'SET_COMPLETEDLESSONNUM', 'SET_ASSETSPAGES', 'PUSH_GAMES', 'SET_LESSONCOMPLETESTAT', 'SET_RESTARRANGEMENTSTAT', 'SET_LESSONCURRENTPAGEINDEX']),
 
       clickContinue() {
 
-        if(this.gameHasBeenCompleted){
-          checkForJumpRoute.call(this,false);
-        }else{
-          checkForJumpRoute.call(this,true);
+        if (this.gameHasBeenCompleted) {
+          checkForJumpRoute.call(this, false);
+        } else {
+          checkForJumpRoute.call(this, true);
         }
 
         // if (this.gameHasBeenCompleted) {
@@ -82,11 +82,11 @@
       againClicked() {
         this.showCongra = false;
         // this.$parent.$parent.$refs.gameMenu.showGrandMask = false;
-        if(pixiScene){
+        if (pixiScene) {
           pixiScene.gameTryAgain();
         }
       },
-      quitGame(){
+      quitGame() {
         const self = this;
         setTimeout(() => {
           self.$router.push('/index/')
@@ -97,7 +97,7 @@
         self.SET_INDEXPAGEINITIALSLIDE(Number(index));
 
       },
-      continueGame(){
+      continueGame() {
         this.showCongra = false;
       },
 
@@ -109,10 +109,9 @@
       gameStart(app) {
         const self = this;
 
-         modulesUrl = this.$route.meta.assetsUrl;
-      //  var gameConfig;
+        modulesUrl = this.$route.meta.assetsUrl;
+        //  var gameConfig;
         var urls = 'static/' + modulesUrl + '/resource.json';
-
 
 
         ////加载逻辑
@@ -123,23 +122,55 @@
               url: item.url
             }
           });
-          //PIXI 加载逻辑
-          var avalidiAssets = [];
-          assets.forEach((item)=>{
-            if(!PIXI.loader.resources[item.name]){
-              avalidiAssets.push({
-                name:item.name,
-                url:item.url
-              })
-            };
-          });
-          if(avalidiAssets.length>0){
-            PIXI.loader.add(avalidiAssets)
-              .load(function(){
-                GameStart.call(self,gameConfigData.data);
+          var audioManifest = [];
+          for (let i = 0; i < gameConfigData.data.gameData.levels.length; i++) {
+            let audioSrc = gameConfigData.data.gameData.levels[i].audioSrc;
+            let audioName = modulesUrl + '_' + audioSrc.replace(/\./g, '_');
+            if (audioSrc && _.trim(audioSrc) != '') {
+              audioManifest.push({
+                name: audioName,
+                url: 'static/' + modulesUrl + '/' + audioSrc
               });
-          }else{
-            GameStart.call(self,gameConfigData.data);
+            }
+
+          }
+          if(gameConfigData.data.gameData.coverpageAudio && _.trim(gameConfigData.data.gameData.coverpageAudio)!=''){
+            let audioName = modulesUrl + '_' + gameConfigData.data.gameData.coverpageAudio.replace(/\./g, '_');
+            audioManifest.push({
+              name: audioName,
+              url: 'static/' + modulesUrl + '/' + gameConfigData.data.gameData.coverpageAudio
+            });
+          }
+          //加载逻辑
+
+          var avalidiAssets = [];
+          assets.forEach((item) => {
+            if (!PIXI.loader.resources[item.name]) {
+              avalidiAssets.push({
+                name: item.name,
+                url: item.url
+              })
+            }
+            ;
+          });
+          if (avalidiAssets.length > 0) {
+            PIXI.loader.add(audioManifest)
+            PIXI.loader.add(avalidiAssets)
+              .load(function () {
+                pixiScene = new PixiScene1({
+                  json: gameConfigData.data.gameData,
+                  vueInstance: self,
+                });
+                app.stage.addChild(pixiScene);
+                document.getElementById('gamebasemasker').style.visibility = 'hidden';
+              });
+          } else {
+            pixiScene = new PixiScene1({
+              json: gameConfigData.data.gameData,
+              vueInstance: self,
+            });
+            app.stage.addChild(pixiScene);
+            document.getElementById('gamebasemasker').style.visibility = 'hidden';
           }
           //PIXI加载逻辑 ---END
 
@@ -147,55 +178,49 @@
         });
         ///End加载逻辑
 
-        function GameStart(gameConfigData){
-
-
-
-
-          let audioManifest = [];
-          for(let i=0;i<gameConfigData.gameData.levels.length;i++){
-            let audioSrc = gameConfigData.gameData.levels[i].audioSrc;
-            let audioName = modulesUrl+'_'+audioSrc.replace(/\./g,'_');
-            if(audioSrc && _.trim(audioSrc)!=''){
-              audioManifest.push({
-                id:audioName,
-                src:audioSrc
-              });
-            }
-
-          }
-          if(gameConfigData.gameData.showCoverpage==true){
-            if(gameConfigData.gameData.coverpageAudio && _.trim(gameConfigData.gameData.coverpageAudio)!=''){
-              audioManifest.push({
-                id: modulesUrl+'_'+gameConfigData.gameData.coverpageAudio.replace(/\./g,'_'),
-                src:gameConfigData.gameData.coverpageAudio,
-              });
-            }
-
-          }
-          if(PIXIAudio.loadedStatus[modulesUrl]==undefined && audioManifest.length>0){
-            PIXIAudio.addAudio(audioManifest, 'static/' + modulesUrl+'/', ()=>{
-              var scene1 = new PixiScene1({
-                json: gameConfigData.gameData,
-                vueInstance:self,
-              });
-              app.stage.addChild(scene1);
-              pixiScene = scene1;
-
-              document.getElementById('gamebasemasker').style.visibility = 'hidden';
-            },modulesUrl);
-          }else{
-            var scene1 = new PixiScene1({
-              json: gameConfigData.gameData,
-              vueInstance:self,
-            });
-            app.stage.addChild(scene1);
-            pixiScene = scene1;
-
-            document.getElementById('gamebasemasker').style.visibility = 'hidden';
-          }
-          //
-        }
+        // function GameStart(gameConfigData){
+        //
+        //   let audioManifest = [];
+        //   for(let i=0;i<gameConfigData.gameData.levels.length;i++){
+        //     let audioSrc = gameConfigData.gameData.levels[i].audioSrc;
+        //     let audioName = modulesUrl+'_'+audioSrc.replace(/\./g,'_');
+        //     if(audioSrc && _.trim(audioSrc)!=''){
+        //       audioManifest.push({
+        //         name:audioName,
+        //         url:'static/'+modulesUrl+'/'+audioSrc
+        //       });
+        //     }
+        //
+        //   }
+        //   if(gameConfigData.gameData.showCoverpage==true){
+        //     if(gameConfigData.gameData.coverpageAudio && _.trim(gameConfigData.gameData.coverpageAudio)!=''){
+        //       audioManifest.push({
+        //         name: modulesUrl+'_'+gameConfigData.gameData.coverpageAudio.replace(/\./g,'_'),
+        //         url:'static/'+modulesUrl+'/'+gameConfigData.gameData.coverpageAudio,
+        //       });
+        //     }
+        //
+        //   }
+        //   function gameBegin(){
+        //     var self = this;
+        //
+        //     pixiScene = new PixiScene1({
+        //       json: gameConfigData.gameData,
+        //       vueInstance:self,
+        //     });
+        //     app.stage.addChild(pixiScene);
+        //   }
+        //   let avalidAudio = AudioManager.add(audioManifest,gameBegin.call(self));
+        //   if(!avalidAudio){
+        //     pixiScene = new PixiScene1({
+        //       json: gameConfigData.gameData,
+        //       vueInstance:self,
+        //     });
+        //     app.stage.addChild(pixiScene);
+        //
+        //
+        //   }
+        // }
 
 
       }
@@ -206,17 +231,18 @@
         window.location.reload()
       }
     },
-    created(){
+    created() {
       document.getElementById('gamebasemasker').style.visibility = 'visible';
     },
-    beforeDestroy(){
-      if(pixiScene){
+    beforeDestroy() {
+      this.showCongra = false;
+      if (pixiScene) {
         pixiScene.destroyed();
         pixiScene.destroy()
         pixiScene = null;
       }
-      if(canvasApp){
-        canvasApp.destroy();
+      if (canvasApp) {
+        canvasApp.destroy(true);
         canvasApp = null;
       }
 
@@ -233,11 +259,11 @@
         self.showCongra = true;
       });
 
-      canvasApp  = new PIXI.Application({
+      canvasApp = new PIXI.Application({
         width: 1920,
         height: 1080,
         antialias: false,
-        transparent:true
+        transparent: true
       });
 
       canvasApp.view.style.position = 'absolute';

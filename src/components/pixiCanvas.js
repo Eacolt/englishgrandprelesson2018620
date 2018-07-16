@@ -86,9 +86,7 @@ pixiCanvas.install = function (Vue) {
         })
         myApps = [];
 
-        // this.app.loader.reset();
-        // PIXI.utils.clearTextureCache();
-        // PIXI.utils.destroyTextureCache();
+
       }
     }
   });

@@ -14,6 +14,7 @@ import pixiCanvas from './components/pixiCanvas.js'
 import {Debugs} from "./components/Utils";
 
 const _ = require('lodash');
+var PixiSound = require('pixi-sound')
 
 
 Vue.use(VueAxios,axios)
