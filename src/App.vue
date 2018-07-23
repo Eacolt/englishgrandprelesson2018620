@@ -6,17 +6,21 @@
 </template>
 <script>
   import Vue from 'vue'
+   import * as PIXI from 'pixi.js'
+
   import masker from './components/masker.vue'
   import {TweenMax} from 'gsap'
-  import * as PIXI from 'pixi.js'
   import axios from 'axios';
   import VueAxios from 'vue-axios'
   import $ from 'jquery'
   import {mapActions, mapState} from 'vuex'
   import {Debugs} from './components/Utils.js'
   import {Broswer} from "./components/EasyPIXI";
-  import 'swiper/dist/css/swiper.css'
+
+  // require('pixi-spine')
+
   require('pixi-spine')
+
   Vue.use(VueAxios, axios);
 
   export default {
@@ -30,17 +34,10 @@
       this.SET_CURRENTPAGE(1);
       if (Broswer.IsPC()) {
         self.SET_PLATFORM('pc');
-
       }else{
-        self.SET_PLATFORM('mobile')
+        self.SET_PLATFORM('mobile');
+
       };
-
-
-    //  document.documentElement.style.cursor = 'url("static/img/myhand.ico") auto'
-
-       //document.documentElement.style.cursor = 'url("static/img/myhand.ico") auto';
-
-
     },
     methods: {
       ...mapActions(['SET_CURRENTPAGE','SET_COMPLETEDLESSONNUM', 'SET_PLATFORM', 'SET_ENERGY','SET_GAMEHASBEENCOMPLETED']),

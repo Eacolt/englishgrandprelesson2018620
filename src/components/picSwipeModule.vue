@@ -19,11 +19,7 @@
       <div  id="paginationdiy" class=" swiper-container ">
         <div v-cloak class="swiper-wrapper swiper-wrapper-paginationdiv ">
           <div v-for="(item,index) in slideLists" class="swiper-slide swiper-slide-paginationdiy">
-            <!--<div @mouseenter='paginationBallMouseEnter()'-->
-                 <!--@mouseleave='paginationBallMouseLeave()'-->
-                 <!--@click="paginationBallClick(index)" class="paginationballs" :style="paginationballs_style">-->
-              <!--{{index+1}}-->
-            <!--</div>-->
+
 
             <div
                  @click="paginationBallClick(index)" class="paginationballs" :style="paginationballs_style">
@@ -39,10 +35,11 @@
     </div>
 
 
+
     <div class="canvasApp" :style="canvasAppLevel" ref="pixicanvas"></div>
 
 
-
+    <div v-show="showCheckArea" class="babyChechArea" @click="boyBtnAreaClicked"></div>
       <congraPopup :showType="popupType" v-if="showCongra"
                    @quitGame="quitGame_hdr()"
                    @continueGame="continueGame_hdr()"
@@ -55,7 +52,7 @@
   </div>
 </template>
 <script>
-  import {myVueMixin,checkForJumpRoute,myVueMixin_Popup} from './Utils.js'
+  import {myVueMixin,checkForJumpRoute} from './Utils.js'
   import {mapActions, mapState} from 'vuex'
   import PixiScene1 from './picSwipeModule.js'
 
@@ -63,7 +60,6 @@
   import {Debugs} from "./Utils";
   import {swiper, swiperSlide} from 'vue-awesome-swiper'
 
-  import 'swiper/dist/css/swiper.css'
   var canvasApp = null;
   var pixiScene = null;
   var mySwiper = null;
@@ -72,12 +68,13 @@
   var globalStatic = null;
   export default {
     name: "module1",
-    mixins:[myVueMixin,myVueMixin_Popup],
+    mixins:[myVueMixin],
     data: function () {
       return {
         canvasAppLevel:{
-          zIndex:99
+          zIndex:1
         },
+        showCheckArea:false,
         slideLists: [],
         paginationLists: [],
         paginationPicture: {},
@@ -125,17 +122,17 @@
     methods: {
       ...mapActions(['SET_CANVASPAGE','SET_INDEXPAGEINITIALSLIDE','SET_ASSETSPAGES','PUSH_GAMES','SET_LESSONCOMPLETESTAT','SET_RESTARRANGEMENTSTAT','SET_LESSONCURRENTPAGEINDEX']),
       goPrevPagi(){
+
         if(mySwiperPagination){
 
           mySwiperPagination.slidePrev()
         }
       },
       goNextPagi(){
+
         if(mySwiperPagination){
           mySwiperPagination.slideNext();
-
         }
-
       },
       boyBtnAreaClicked(){
         const self = this;
@@ -175,19 +172,20 @@
             if (isQingsuan && !self.gameHasBeenCompleted) {
 
                pixiScene.gameMenuBar.bookScene.openEnergyCan(false);
-              PIXI.loader.resources['win_jump'].sound.play();
+
+              createjs.Sound.play('win_jump')
 
             } else if (isQingsuan == false && !self.gameHasBeenCompleted) {
               self.showCongra = true;
               // Debugs.log('游戏没有完成，并且也不是清算页')
-              PIXI.loader.resources['win_jump'].sound.play();
+              createjs.Sound.play('win_jump')
             }else if(self.gameHasBeenCompleted && self.gameSecondPlayed){
               self.showCongra = true;
               // Debugs.log('游戏第二周目，继续玩')
-              PIXI.loader.resources['win_jump'].sound.play();
+              createjs.Sound.play('win_jump')
             }  else if (self.gameHasBeenCompleted && !self.gameSecondPlayed) {
               pixiScene.gameMenuBar.bookScene.openEnergyCan(true);
-              PIXI.loader.resources['win_jump'].sound.play();
+              createjs.Sound.play('win_jump')
 
             }
           }, showPopupDelay);
@@ -201,9 +199,7 @@
       },
       quitGame_hdr(){
         const self = this;
-        // setTimeout(() => {
-        //   self.$router.push('/index/')
-        // }, 1000);
+
         let arr = this.$route.fullPath.split('/');
         let index = self.allPartNames.indexOf(arr[2]);
         self.SET_INDEXPAGEINITIALSLIDE(Number(index));
@@ -213,9 +209,9 @@
       },
       continueGame_hdr(){
         this.showCongra = false;
+        this.popupType = 'popup2'
       },
       clickContinue_hdr(){
-
 
         if(this.gameHasBeenCompleted){
           checkForJumpRoute.call(this,false);
@@ -365,9 +361,10 @@
                       pixiScene.showBoy();
 
                     }
-                    self.canvasAppLevel = {
-                      zIndex:100
-                    }
+                    // self.canvasAppLevel = {
+                    //   zIndex:100
+                    // }
+                    self.showCheckArea = true;
 
                     self.currentLessonCompleted= true;
 
@@ -378,6 +375,7 @@
                     self.canvasAppLevel = {
                       zIndex:1
                     }
+                    self.showCheckArea = false;
 
                   }
                   if(pixiScene){
@@ -422,8 +420,8 @@
                 let audioName = modulesUrl+'_'+audioSrcTrim.replace(/\./g,'_');
 
                 audioManifest.push({
-                  name:audioName,
-                  url:'static/'+modulesUrl+'/'+audioSrc
+                  id:audioName,
+                  src:'static/'+modulesUrl+'/'+audioSrc
                 });
               };
 
@@ -438,30 +436,34 @@
               }
             }
 
-            if(self.assetsPages[modulesUrl] && self.assetsPages[modulesUrl]==1){
+            if(self.assetsPages[modulesUrl] && self.assetsPages[modulesUrl] == 1) {
               pixiScene = new PixiScene1({
                 json: gameConfigData.data.gameData,
-                vueInstance:self
+                vueInstance:self,
+                swiper:mySwiper
               });
               app.stage.addChild(pixiScene);
               document.getElementById('gamebasemasker').style.visibility = 'hidden';
-            }else{
-              PIXI.loader.add(audioManifest)
+            }else {
+              var queue = new createjs.LoadQueue();
+              queue.installPlugin(createjs.Sound);
+              queue.on("complete", handleComplete, this);
+              queue.loadManifest(audioManifest);
+              function handleComplete() {
 
-                .load(()=>{
                   pixiScene = new PixiScene1({
                     json: gameConfigData.data.gameData,
-                    vueInstance:self
+                    vueInstance:self,
+                    swiper:mySwiper
                   });
                   app.stage.addChild(pixiScene);
                   document.getElementById('gamebasemasker').style.visibility = 'hidden';
 
-                  self.SET_ASSETSPAGES({
-                    assetsName:modulesUrl,
-                    completedStat:1
-                  })
-
-                })
+                self.SET_ASSETSPAGES({
+                  assetsName:modulesUrl,
+                  completedStat:1
+                });
+              }
             }
 
 
@@ -587,18 +589,17 @@
     right: 0;
     top: 1.8rem;
     height: 8rem;
-    z-index: 100;
+    z-index: 20;
   }
   .paginationPicture {
     position: absolute;
     width: 5.3rem;
     height: 1.8rem;
-    z-index: 99;
     left: 0;
     right: 0;
     margin: 0 auto;
     top: 8.8rem;
-    z-index: 120;
+    z-index: 22;
   }
 .pagi_triangles{
   position: absolute;
@@ -608,6 +609,7 @@
   left:0;
   right:0;
   top:0.22rem;
+  z-index: 33;
 }
 .pagi_triangles .left{
   position: absolute;
@@ -650,7 +652,7 @@
     margin: 0 auto;
     box-sizing: border-box;
     top:0.15rem;
-    z-index:999;
+    z-index:50;
   }
   .swiper-slide-paginationdiy {
     position:relative;
@@ -671,14 +673,7 @@
     position: relative;
     height: 7.8rem;
     top: 0rem;
-    /*transition: transform .1s;*/
-    /*-webkit-transition: transform 0.1s;*/
-    /*-moz-transition: transform .1s;*/
-    /*-ms-transition: transform .1s;*/
-    /*-o-transition: transform .1s;*/
-    /*transform-origin: center center;*/
-    /*-webkit-transform: scale(.9);*/
-    /*transform: scale(.9);*/
+
     box-sizing: border-box;
     background: transparent;
   }
@@ -686,22 +681,25 @@
   [v-cloak] {
     display: none;
   }
-  .canvas2{
-    position: absolute;
-    left:0;
-    top:0;
-    width:100%;
-    height:100%;
-    z-index: 111;
-  }
+
   .canvasApp{
     position: absolute;
 
     width:100%;
     height:100%;
-    z-index: 9999;
+    z-index: 100;
     top:0;
     left:0;
+  }
+  .babyChechArea{
+    position: absolute;
+    width:2rem;
+    height:4rem;
+
+    right:0;
+    top:4rem;
+    background: transparent;
+    z-index: 80;
   }
 
 </style>

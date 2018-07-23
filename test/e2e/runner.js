@@ -1,20 +1,20 @@
 // 1. start the dev server using production config
 process.env.NODE_ENV = 'testing'
 
-const webpack = require('webpack')
-const DevServer = require('webpack-dev-server')
+var  webpack = require('webpack')
+var  DevServer = require('webpack-dev-server')
 
-const webpackConfig = require('../../build/webpack.prod.conf')
-const devConfigPromise = require('../../build/webpack.dev.conf')
+var  webpackConfig = require('../../build/webpack.prod.conf')
+var  devConfigPromise = require('../../build/webpack.dev.conf')
 
 let server
 
 devConfigPromise.then(devConfig => {
-  const devServerOptions = devConfig.devServer
-  const compiler = webpack(webpackConfig)
+  var  devServerOptions = devConfig.devServer
+  var  compiler = webpack(webpackConfig)
   server = new DevServer(compiler, devServerOptions)
-  const port = devServerOptions.port
-  const host = devServerOptions.host
+  var  port = devServerOptions.port
+  var  host = devServerOptions.host
   return server.listen(port, host)
 })
 .then(() => {
@@ -33,8 +33,8 @@ devConfigPromise.then(devConfig => {
     opts = opts.concat(['--env', 'chrome'])
   }
 
-  const spawn = require('cross-spawn')
-  const runner = spawn('./node_modules/.bin/nightwatch', opts, { stdio: 'inherit' })
+  var  spawn = require('cross-spawn')
+  var  runner = spawn('./node_modules/.bin/nightwatch', opts, { stdio: 'inherit' })
 
   runner.on('exit', function (code) {
     server.close()

@@ -8,17 +8,14 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-// import phaserCanvas from './components/phaserCanvas.js'
-import pixiCanvas from './components/pixiCanvas.js'
-
-import {Debugs} from "./components/Utils";
-
+//
+// require('pixi-sound')
 const _ = require('lodash');
-var PixiSound = require('pixi-sound')
+
 
 
 Vue.use(VueAxios,axios)
-Vue.use(pixiCanvas)
+
 Vue.use(Router)
 Vue.config.productionTip = false
 

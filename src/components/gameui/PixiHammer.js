@@ -8,7 +8,6 @@ class PixiHammer{
     this.swiperX_arr = [];
 
     this.swiperTimes = 0;
-    this.swiperTicker = null;
     this.swiperMovedX = 0;
 
     this.lock  = false;
@@ -120,24 +119,20 @@ class PixiHammer{
     }
     return swiperX;
   }
-  destroy(){
-    this.swiperContainer.destroy();
+  destroyed(){
+    if(this.swiperContainer){
+      this.swiperContainer.destroy();
+    }
+    this.swiperContainer = null;
     this.swiperArea = null;
     this.swiperDirection = null;
-
-    this.swiperIsDown = false;
-    this.swiperX_arr = [];
-
+    this.swiperIsDown = null;
+    this.swiperX_arr = null;
     this.swiperTimes = null;
-    this.swiperTicker = null;
     this.swiperMovedX = null;
-
-    this.lock  = false;
-
-
-
+    this.lock  = null;
     this.moveToLeft = null;
-    this.moveToRight = function(){};
+    this.moveToRight = null;
 
   }
 }

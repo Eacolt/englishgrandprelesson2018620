@@ -1,19 +1,19 @@
 'use strict'
-const utils = require('./utils')
-const webpack = require('webpack')
-const config = require('../config')
-const merge = require('webpack-merge')
-const path = require('path')
-const baseWebpackConfig = require('./webpack.base.conf')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-const portfinder = require('portfinder')
+var  utils = require('./utils')
+var  webpack = require('webpack')
+var  config = require('../config')
+var  merge = require('webpack-merge')
+var  path = require('path')
+var  baseWebpackConfig = require('./webpack.base.conf')
+var  CopyWebpackPlugin = require('copy-webpack-plugin')
+var  HtmlWebpackPlugin = require('html-webpack-plugin')
+var  FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+var  portfinder = require('portfinder')
 
-const HOST = process.env.HOST
-const PORT = process.env.PORT && Number(process.env.PORT)
+var  HOST = process.env.HOST
+var  PORT = process.env.PORT && Number(process.env.PORT)
 
-const devWebpackConfig = merge(baseWebpackConfig, {
+var  devWebpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
   },

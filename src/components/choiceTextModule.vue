@@ -3,7 +3,7 @@
 
       <congraPopup :showType="popupType" v-if="showCongra"
                    @quitGame="quitGame_handler()"
-                   @continueGame="continueGame()"
+                   @continueGame="continueGame_handler()"
                    @continueClicked="clickContinue_handler()"
                    @againClicked="againClicked_handler">
 
@@ -15,25 +15,21 @@
 
 <script>
 
-  import {ResourceMent, myVueMixin, myVueMixin_Popup} from './Utils.js'
+  import {myVueMixin} from './Utils.js'
   import {mapActions, mapState} from 'vuex'
   import congraPopup from './gameui/congraPopup.vue'
   import PixiScene1 from './choiceTextModule.js'
-  import {AudioManager} from "./Utils";
-
   import {checkForJumpRoute} from "./Utils";
   import {TweenMax} from 'gsap'
   import {Debugs} from "./Utils";
 
-  // const _ = require('lodash');
-  // import {Debugs} from "./Utils";
 
   var pixiScene = null;
   var modulesUrl = null;
   var canvasApp = null;
   export default {
     name: "module1",
-    mixins: [myVueMixin, myVueMixin_Popup],
+    mixins: [myVueMixin],
     data: function () {
       return {
         backShow: false,
@@ -110,6 +106,7 @@
       },
       continueGame_handler(){
         this.showCongra = false;
+        this.popupType = 'popup1';
       },
 
       gameStart(app) {
@@ -134,8 +131,8 @@
               let audioName = modulesUrl+'_'+audioSrcTrim.replace(/\./g,'_');
 
               audioManifest.push({
-                name:audioName,
-                url:'static/'+modulesUrl+'/'+audioSrc
+                id:audioName,
+                src:'static/'+modulesUrl+'/'+audioSrc
               });
             };
 
@@ -144,6 +141,7 @@
           //加载逻辑
 
           var avalidiAssets = [];
+          var SoundLoaded = 0;
           assets.forEach((item)=>{
             if(!PIXI.loader.resources[item.name]){
               avalidiAssets.push({
@@ -152,25 +150,55 @@
               })
             };
           });
-          if(avalidiAssets.length>0){
-            PIXI.loader.add(audioManifest)
-            PIXI.loader.add(avalidiAssets)
-              .load(function(){
-                pixiScene = new PixiScene1({
-                  json: gameConfigData.data.gameData,
-                  vueInstance:self,
-                });
-                app.stage.addChild(pixiScene);
-                document.getElementById('gamebasemasker').style.visibility = 'hidden';
+
+
+          if(self.assetsPages[modulesUrl] && self.assetsPages[modulesUrl] == 1) {
+            setUpGame.call(self)
+          }else {
+            var queue = new createjs.LoadQueue();
+            queue.installPlugin(createjs.Sound);
+            queue.on("complete", handleComplete, this);
+            queue.loadManifest(audioManifest);
+            function handleComplete() {
+
+              setUpGame.call(self)
+
+              self.SET_ASSETSPAGES({
+                assetsName:modulesUrl,
+                completedStat:1
               });
-          }else{
-            pixiScene = new PixiScene1({
-              json: gameConfigData.data.gameData,
-              vueInstance:self,
-            });
-            app.stage.addChild(pixiScene);
-            document.getElementById('gamebasemasker').style.visibility = 'hidden';
+            }
           }
+
+
+
+
+
+
+
+          function setUpGame(){
+
+
+            if(avalidiAssets.length>0){
+              PIXI.loader.add(avalidiAssets)
+                .load(function(){
+                  pixiScene = new PixiScene1({
+                    json: gameConfigData.data.gameData,
+                    vueInstance:self,
+                  });
+                  app.stage.addChild(pixiScene);
+                  document.getElementById('gamebasemasker').style.visibility = 'hidden';
+                });
+            }else{
+              pixiScene = new PixiScene1({
+                json: gameConfigData.data.gameData,
+                vueInstance:self,
+              });
+              app.stage.addChild(pixiScene);
+              document.getElementById('gamebasemasker').style.visibility = 'hidden';
+            }
+          }
+
           //PIXI加载逻辑 ---END
 
         });

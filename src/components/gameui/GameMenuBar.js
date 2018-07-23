@@ -452,7 +452,7 @@ class GameMenuBars extends PIXI.Container {
     this.starsLight.state.tracks[0].trackTime = 0;
     this.starsLight.alpha = 1;
 
-    PIXI.loader.resources['power_gain'].sound.play()
+    createjs.Sound.play('power_gain')
 
 
   }
@@ -476,10 +476,10 @@ class GameMenuBars extends PIXI.Container {
 
   destroyed(){
     this.rightMenuUI = [];
-    // if(this.bookScene){
-    //   this.bookScene.destroyed();
-    //   this.bookScene.destroy();
-    // }
+    if(this.bookScene){
+      this.bookScene.destroyed();
+      this.bookScene.destroy();
+    }
     if(this.starsLight){
       this.starsLight.destroy();
     }

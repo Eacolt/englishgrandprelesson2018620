@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "9jiyIqrtamDppL56zCORU+kNoOE", "spine": "3.6.52", "width": 1943.59, "height": 1216.69, "images": "./stuffs/" },
+"skeleton": { "hash": "9jiyIqrtamDppL56zCORU+kNoOE", "spine": "3.6.53", "width": 1943.59, "height": 1216.69, "images": "./stuffs/" },
 "bones": [
 	{ "name": "book" },
 	{ "name": "group", "parent": "book", "y": -160 }

@@ -5,7 +5,6 @@ import {checkForJumpRoute,Debugs} from './Utils.js'
 import GameMenuBars from "./gameui/GameMenuBar";
 import {AnimationSprite} from './EasyPIXI.js'
 
-import {AudioManager} from "./Utils";
 
 class ChoiceTextModule extends PIXI.Container {
   constructor($options) {
@@ -39,24 +38,7 @@ class ChoiceTextModule extends PIXI.Container {
   }
 
   playContinue() {
-    // if (this.vueInstance.gameHasBeenCompleted) {
-    //   /////////////////////
-    //   let restArrangmentArr = this.vueInstance.$store.state.restArrangementStat;
-    //   if (restArrangmentArr.length > 0) {
-    //     this.vueInstance.$router.push({name: restArrangmentArr[0]});
-    //     let d = Number(restArrangmentArr[0].split('-')[1]);
-    //     this.vueInstance.$store.dispatch('SET_LESSONPARTSINDEX', d);
-    //   }
-    // } else {
-    //   let allLessonComponentsNames = this.vueInstance.$store.state.allLessonComponentsNames;
-    //   let b = Number(allLessonComponentsNames[0].split('-')[1]);
-    //   let currentPageIndex = this.vueInstance.lessonCurrentPageIndex;
-    //   if (currentPageIndex < allLessonComponentsNames.length - 1) {
-    //     this.vueInstance.$router.push({name: allLessonComponentsNames[currentPageIndex + 1]});
-    //   } else {
-    //     this.vueInstance.$router.push({name: allLessonComponentsNames[0]});
-    //   }
-    // }
+
 
     if (this.vueInstance.gameHasBeenCompleted) {
       checkForJumpRoute.call(this, false);
@@ -151,10 +133,16 @@ class ChoiceTextModule extends PIXI.Container {
 
 
       setTimeout(() => {
-        self.progressBar.showProgress();
-        self.progressBar.progress = self.gameLevel;
+        if(self.progressBar){
+          self.progressBar.showProgress();
+          self.progressBar.progress = self.gameLevel;
+        }
+
+
+
+
         setTimeout(() => {
-          if (self.gameLevel >= self.gameConfig.levels.length - 1) {
+          if (self.gameConfig && self.gameLevel >= self.gameConfig.levels.length - 1) {
             if(self.gameAudio){
 
               self.stopSpeakSound();
@@ -182,20 +170,21 @@ class ChoiceTextModule extends PIXI.Container {
                 if (isQingsuan && !self.vueInstance.gameHasBeenCompleted) {
 
                   self.gameMenuBar.bookScene.openEnergyCan(false);
-                  PIXI.loader.resources['win_jump'].sound.play();
+
+                  createjs.Sound.play('win_jump')
 
                 } else if (isQingsuan == false && !self.vueInstance.gameHasBeenCompleted) {
                   self.vueInstance.showCongra = true;
 
-                  PIXI.loader.resources['win_jump'].sound.play();
+                  createjs.Sound.play('win_jump')
 
                 }else if(self.vueInstance.gameHasBeenCompleted && self.vueInstance.gameSecondPlayed){
                   self.vueInstance.showCongra = true;
                   // Debugs.log('游戏第二周目，继续玩')
-                  PIXI.loader.resources['win_jump'].sound.play();
+                  createjs.Sound.play('win_jump')
                 }  else if (self.vueInstance.gameHasBeenCompleted && !self.vueInstance.gameSecondPlayed) {
                   self.gameMenuBar.bookScene.openEnergyCan(true);
-                  PIXI.loader.resources['win_jump'].sound.play();
+                  createjs.Sound.play('win_jump')
 
                 }
               }, showPopupDelay);
@@ -203,12 +192,17 @@ class ChoiceTextModule extends PIXI.Container {
             }, 1);
             //TODO:开始设置清算界面逻辑全套---END;
 
+            if(self.progressBar){
+              self.progressBar.hideProgress()
+            }
 
-            self.progressBar.hideProgress()
             return;
           }
           ;
-          self.progressBar.hideProgress(hideProgressHandler.bind(self));
+          if(self.progressBar){
+            self.progressBar.hideProgress(hideProgressHandler.bind(self));
+          }
+
         }, 1500)
       }, 400);
     }
@@ -217,11 +211,16 @@ class ChoiceTextModule extends PIXI.Container {
     function hideProgressHandler() {
 
       setTimeout(() => {
-        TweenMax.to(self.picBand, .5, {x: self.picBand.x - 2100});
+        if(self.picBand){
+          TweenMax.to(self.picBand, .5, {x: self.picBand.x - 2100});
 
-        setTimeout(() => {
-          self.goNextComing.call(self)
-        }, 500)
+          setTimeout(() => {
+            if(self.goNextComing){
+              self.goNextComing.call(self)
+            }
+          }, 500)
+        }
+
       }, 100)
 
     }
@@ -242,18 +241,26 @@ class ChoiceTextModule extends PIXI.Container {
     });
     self.stopSpeakSound();
 
+
     TweenMax.from(self.picBand, 0.5, {
       x: rightOffset, onComplete: () => {
-        self.isAnimating = false;
-        self.soundSpeakText.text = self.gameConfig.levels[self.gameLevel].content;
-        self.checksTiGan.call(self);
-        self.playSpeakSound();
+        if(self.isAnimating && self.soundSpeakText){
+          self.isAnimating = false;
+          self.soundSpeakText.text = self.gameConfig.levels[self.gameLevel].content;
+          self.checksTiGan.call(self);
+          self.playSpeakSound();
 
 
+
+
+        }
 
 
       }, onStart: () => {
-        self.picBand.setPages(self.gameConfig.levels[self.gameLevel].cardlist.length, self.gameConfig.levels[self.gameLevel].cardlist)
+        if(self.gameConfig && self.picBand){
+          self.picBand.setPages(self.gameConfig.levels[self.gameLevel].cardlist.length, self.gameConfig.levels[self.gameLevel].cardlist)
+        }
+
       }
     });
     self.picBand.questionBars.forEach((item, index) => {
@@ -261,8 +268,11 @@ class ChoiceTextModule extends PIXI.Container {
       item.getChildAt(0).highlighter.alpha = 0;
 
 
-    })
-    self.picBand.setPicture(self.resources[this.gameConfig.levels[self.gameLevel].cardpicture].texture);
+    });
+    if(self.picBand){
+      self.picBand.setPicture(self.resources[this.gameConfig.levels[self.gameLevel].cardpicture].texture);
+    }
+
 
 
   }
@@ -346,11 +356,15 @@ class ChoiceTextModule extends PIXI.Container {
 
     TweenMax.to(self.picBand, 0.5, {
       x: self.picBand.x + rightOffset, onStart: () => {
-        self.isAnimating = true;
-        self.soundSpeakText.text = self.gameConfig.levels[self.gameLevel].content;
-        self.checksTiGan.call(self);
 
-        self.picBand.setPages(self.gameConfig.levels[self.gameLevel].cardlist.length, self.gameConfig.levels[self.gameLevel].cardlist)
+        if(self.gameConfig && self.soundSpeakText){
+          self.isAnimating = true;
+          self.soundSpeakText.text = self.gameConfig.levels[self.gameLevel].content;
+          self.checksTiGan.call(self);
+
+          self.picBand.setPages(self.gameConfig.levels[self.gameLevel].cardlist.length, self.gameConfig.levels[self.gameLevel].cardlist)
+        }
+
 
 
       }
@@ -376,9 +390,10 @@ class ChoiceTextModule extends PIXI.Container {
         // item.getChildAt(0).setText(self.gameConfig.levels[self.gameLevel].cardlist[index])
 
 
-      })
-      self.picBand.setPicture(self.resources[this.gameConfig.levels[self.gameLevel].cardpicture].texture);
-
+      });
+      if(self.gameConfig && self.picBand){
+        self.picBand.setPicture(self.resources[this.gameConfig.levels[self.gameLevel].cardpicture].texture);
+      }
 
     }, 500);
 
@@ -541,10 +556,10 @@ class ChoiceTextModule extends PIXI.Container {
     const self = this;
     if (_.trim(self.gameConfig.levels[self.gameLevel].audioSrc) != "") {
       let soundName =  this.vueInstance.$route.meta.assetsUrl+'_'+self.gameConfig.levels[self.gameLevel].audioSrc.replace(/\./g,'_');
-      self.gameAudio = PIXI.loader.resources[soundName].sound.play();
+      self.gameAudio =   createjs.Sound.play(soundName);
       self.soundButton.play();
 
-      self.gameAudio.on('end',()=>{
+      self.gameAudio.on('complete',()=>{
         if(self.soundButton){
           self.soundButton.stop();
         }
@@ -570,6 +585,7 @@ class ChoiceTextModule extends PIXI.Container {
     if(this.gameMenuBar){
       this.gameMenuBar.destroyed();
       this.gameMenuBar.destroy();
+      this.gameMenuBar = null;
 
     }
     this.picBand.destroy();
@@ -581,14 +597,14 @@ class ChoiceTextModule extends PIXI.Container {
     this.rightAnswersArr = null;
     this.gameLevel = null;
     this.gameLessonCompleted = null;
-    this.gameMenuBar = null;
-    this.picBand = null;
 
-    this.progressBar = null;
-    this.isAnimating = null;
+    // this.picBand = null;
+
+    // this.progressBar = null;
+    // this.isAnimating = null;
     this.resources = null;
 
-    this.soundSpeakText = null;
+    // this.soundSpeakText = null;
 
 
     this.soundButton = null;

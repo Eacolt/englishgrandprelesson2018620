@@ -2,7 +2,6 @@
   <div class="bgContainer" ref="pixicanvas">
 
 
-
   </div>
 </template>
 
@@ -10,13 +9,9 @@
   import {mapActions, mapState} from 'vuex'
 
 
-
   import ChoiceInterface from './choiceInterface.js'
-  import GameMenuBars from './gameui/GameMenuBar.js'
-  import {AudioManager} from "./Utils";
 
-
- var pixiScene = null;
+  var pixiScene = null;
   var canvasApp = null;
   export default {
     name: "choice-interface",
@@ -32,20 +27,20 @@
         window.location.reload()
       }
     },
-    created(){
+    created() {
       document.getElementById('gamebasemasker').style.visibility = 'visible';
     },
 
     beforeDestroy() {
 
-
-      let bgsound = PIXI.loader.resources['bgSound'].sound;
-      bgsound.volume = 0;
-      if(canvasApp){
+      //
+      // let bgsound = PIXI.loader.resources['bgSound'].sound;
+      // bgsound.volume = 0;
+      if (canvasApp) {
         canvasApp.destroy(true);
         canvasApp = null;
       }
-      if(pixiScene){
+      if (pixiScene) {
         pixiScene.destroyed();
         pixiScene.destroy();
         pixiScene = null;
@@ -59,7 +54,7 @@
       this.SET_MODULEINDEX(0);//初始化列表index;
       this.moduleList = this.lessonPartsList[this.lessonPartsIndex].menus;
 
-      canvasApp  = new PIXI.Application({
+      canvasApp = new PIXI.Application({
         width: 1920,
         height: 1080,
         antialias: false,
@@ -77,11 +72,10 @@
       this.gameStart(canvasApp);
 
 
-
     },
 
     computed: {
-      ...mapState(['lessonPartsList','energyCurrentNum', 'assetsPages',  'lessonPartsIndex', 'currentModuleList', 'baseAssetsCompleted']),
+      ...mapState(['lessonPartsList', 'energyCurrentNum', 'assetsPages', 'lessonPartsIndex', 'currentModuleList', 'baseAssetsCompleted']),
       bgContainer() {
         return {
           backgroundImage: 'url("static/img/choicepage/back2.jpg")',
@@ -92,53 +86,53 @@
 
     },
     methods: {
-      ...mapActions(['SET_MODULEINDEX', 'SET_ASSETSPAGES','SET_CANVASPAGE', 'PUSH_GAMES', 'SET_PREPARATION', 'SET_LESSONPART', 'SET_MODULELIST', 'SET_BASEASSETSCOMPLETED']),
+      ...mapActions(['SET_MODULEINDEX', 'SET_ASSETSPAGES', 'SET_CANVASPAGE', 'PUSH_GAMES', 'SET_PREPARATION', 'SET_LESSONPART', 'SET_MODULELIST', 'SET_BASEASSETSCOMPLETED']),
       gameStart(app) {
         var self = this;
 
-        var assets =[
+        var assets = [
           {
-            "name":"choiceDesk_png",
-            "url":"static/themetypeui/back2ground.png"
+            "name": "choiceDesk_png",
+            "url": "static/themetypeui/back2ground.png"
           },
           {
             "name": "practiceBox_skeleton",
             "url": "static/img/choicepage/boxskeleton/skeleton.json"
           },
           {
-            "name":"backbg_jpg",
-            "url":"static/themetypeui/backbg.jpg"
+            "name": "backbg_jpg",
+            "url": "static/themetypeui/backbg.jpg"
           },
           {
-            "name":"practicebg_jpg",
-            "url":"static/themetypeui/practicebg.jpg"
+            "name": "practicebg_jpg",
+            "url": "static/themetypeui/practicebg.jpg"
           }
         ]
         //PIXI 加载逻辑
         var avalidiAssets = [];
-        assets.forEach((item)=>{
-          if(!PIXI.loader.resources[item.name]){
+        assets.forEach((item) => {
+          if (!PIXI.loader.resources[item.name]) {
             avalidiAssets.push({
-              name:item.name,
-              url:item.url
+              name: item.name,
+              url: item.url
             })
-          };
+          }
+          ;
         });
-        if(avalidiAssets.length>0){
+        if (avalidiAssets.length > 0) {
           PIXI.loader.add(avalidiAssets)
-            .load(function(){
+            .load(function () {
               GameStart.call(self);
             });
-        }else{
+        } else {
           GameStart.call(self);
         }
+
         //PIXI加载逻辑 ---END
 
 
-
-
         function GameStart() {
-           pixiScene = new ChoiceInterface({
+          pixiScene = new ChoiceInterface({
 
             vueInstance: self
           });

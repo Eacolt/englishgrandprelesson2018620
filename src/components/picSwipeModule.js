@@ -1,6 +1,6 @@
 
 import {TweenMax, Back} from 'gsap'
-import {AudioManager, Debugs} from "./Utils";
+
 import GameMenuBars from "./gameui/GameMenuBar.js";
 
 var unwatchVue = null;
@@ -38,7 +38,7 @@ class PixiScene3 extends PIXI.Container {
     this.boySpine.skeleton.setSlotsToSetupPose();
     this.boySpine.state.setAnimation(0, 'next', true);
     this.boySpine.interactive = true;
-    this.boySpine.on('pointerdown',this.boySpineTouchDown,this)
+    // this.boySpine.on('pointerdown',this.boySpineTouchDown,this)
 
 
     this.addChild(this.boySpine);
@@ -127,10 +127,11 @@ class PixiScene3 extends PIXI.Container {
     self.stopAudios();
     let soundName =  this.vueInstance.$route.meta.assetsUrl+'_' + this.gameConfig.pictureList[this.vueInstance.currentPage].audioSrc.replace(/\./g,'_');
     if(this.gameConfig.pictureList[this.vueInstance.currentPage].audioSrc && _.trim(this.gameConfig.pictureList[this.vueInstance.currentPage].audioSrc)!=''){
-      this.gameAudio =  PIXI.loader.resources[soundName].sound.play()
+
+      this.gameAudio =  createjs.Sound.play(soundName);
 
 
-      this.gameAudio.on('end',()=>{
+      this.gameAudio.on('complete',()=>{
         if(self.gameMenuBar.soundBtn){
           self.gameMenuBar.soundBtn.stop();
         }
@@ -156,11 +157,6 @@ class PixiScene3 extends PIXI.Container {
       this.gameMenuBar.soundBtn.stop();
 
     }
-
-  }
-  boySpineTouchDown(){
-
-    this.vueInstance.boyBtnAreaClicked();
 
   }
 

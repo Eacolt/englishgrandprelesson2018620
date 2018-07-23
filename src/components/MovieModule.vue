@@ -6,7 +6,6 @@
     </video>
 
 
-    <!--<div :style="pixiCanvasStyle" ref="pixicanvas" ></div>-->
 
     <div :style="pixiCanvasStyle" ref="pixicanvas" ></div>
 
@@ -25,7 +24,7 @@
   </div>
 </template>
 <script>
-  import {myVueMixin, myVueMixin_Popup, checkForJumpRoute} from './Utils.js'
+  import {myVueMixin, checkForJumpRoute} from './Utils.js'
   import {mapActions, mapState} from 'vuex'
   import congraPopup from './gameui/congraPopup.vue'
 
@@ -46,7 +45,7 @@
 
   export default {
     name: "module1",
-    mixins: [myVueMixin, myVueMixin_Popup],
+    mixins: [myVueMixin],
     data: function () {
       return {
         showCongra: false,
@@ -102,7 +101,10 @@
           this.showCongra = false;
           this.$refs.myVideo.currentTime = 0;
           this.$refs.myVideo.play();
-          pixiScene._G.videoIsEnd = false;//让timeupdate继续运作
+          if( pixiScene.videoIsEnd){
+            pixiScene.videoIsEnd = false;//让timeupdate继续运作
+          }
+
 
         }
       },
@@ -122,6 +124,7 @@
       },
       continueGame_hdr() {
         this.showCongra = false;
+        this.popupType = 'popup2';
       },
 
       gameStart(app) {

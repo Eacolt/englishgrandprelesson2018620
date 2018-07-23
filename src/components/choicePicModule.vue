@@ -12,8 +12,8 @@
 </template>
 <script>
 
-  import {AudioManager} from "./Utils";
-  import {ResourceMent,myVueMixin,Debugs,myVueMixin_Popup} from './Utils.js'
+
+  import {myVueMixin,Debugs} from './Utils.js'
   import {mapActions, mapState} from 'vuex'
   import PixiScene1 from './choicePicModule.js'
   import congraPopup from './gameui/congraPopup.vue'
@@ -22,11 +22,11 @@
   var pixiScene = null;
   var modulesUrl = null;
   var canvasApp = null;
-  require('pixi-sound')
+
 
   export default {
     name: "module2",
-    mixins:[myVueMixin,myVueMixin_Popup],
+    mixins:[myVueMixin],
     data: function () {
       return {
         backShow:false,
@@ -105,6 +105,7 @@
 
       continueGame_hdr(){
         this.showCongra = false;
+        this.popupType = 'popup1';
       },
 
       gameStart(app) {
@@ -126,15 +127,12 @@
             let audioSrcTrim = _.trim(audioSrc);
             if(audioSrcTrim!=''){
               let audioName = modulesUrl+'_'+audioSrcTrim.replace(/\./g,'_');
-
               audioManifest.push({
-                name:audioName,
-                url:'static/'+modulesUrl+'/'+audioSrc
+                id:audioName,
+                src:'static/'+modulesUrl+'/'+audioSrc
               });
             };
-
           };
-
           //加载逻辑
 
           var avalidiAssets = [];
@@ -146,25 +144,53 @@
               })
             };
           });
-          if(avalidiAssets.length>0){
-            PIXI.loader.add(audioManifest)
-            PIXI.loader.add(avalidiAssets)
-              .load(function(){
-                pixiScene = new PixiScene1({
-                  json: gameConfigData.data.gameData,
-                  vueInstance:self,
-                });
-                app.stage.addChild(pixiScene);
-                document.getElementById('gamebasemasker').style.visibility = 'hidden';
+
+
+          //新的加载逻辑END
+          if(self.assetsPages[modulesUrl] && self.assetsPages[modulesUrl] == 1) {
+            setUpGame.call(self)
+          }else {
+            var queue = new createjs.LoadQueue();
+            queue.installPlugin(createjs.Sound);
+            queue.on("complete", handleComplete, this);
+            queue.loadManifest(audioManifest);
+            function handleComplete() {
+
+              setUpGame.call(self)
+
+              self.SET_ASSETSPAGES({
+                assetsName:modulesUrl,
+                completedStat:1
               });
-          }else{
-            pixiScene = new PixiScene1({
-              json: gameConfigData.data.gameData,
-              vueInstance:self,
-            });
-            app.stage.addChild(pixiScene);
-            document.getElementById('gamebasemasker').style.visibility = 'hidden';
+            }
           }
+
+
+
+
+          function setUpGame(){
+
+            if(avalidiAssets.length>0){
+              PIXI.loader.add(avalidiAssets)
+                .load(function(){
+                  pixiScene = new PixiScene1({
+                    json: gameConfigData.data.gameData,
+                    vueInstance:self,
+                  });
+                  app.stage.addChild(pixiScene);
+                  document.getElementById('gamebasemasker').style.visibility = 'hidden';
+                });
+            }else{
+              pixiScene = new PixiScene1({
+                json: gameConfigData.data.gameData,
+                vueInstance:self,
+              });
+              app.stage.addChild(pixiScene);
+              document.getElementById('gamebasemasker').style.visibility = 'hidden';
+            }
+          }
+
+
           //PIXI加载逻辑 ---END
 
 

@@ -296,7 +296,7 @@ class BookReadingModule extends PIXI.Container {
     this.boySpine.state.setAnimation(0, 'next', true);
     this.boySpine.alpha = 1;
     this.boySpine.interactive = true;
-    this.boySpine.once('pointertap', () => {
+    this.boySpine.on('pointertap', () => {
 
       if (self.boyCanClicked) {
         if (self.gameAudio) {
@@ -325,22 +325,24 @@ class BookReadingModule extends PIXI.Container {
             if (isQingsuan && !self.vueInstance.gameHasBeenCompleted) {
               //Debugs.log('清算页面开启，游戏未完成', 'gameCOmpleted?', self.vueInstance.gameHasBeenCompleted)
               self.gameMenuBar.bookScene.openEnergyCan(false);
-              PIXI.loader.resources['win_jump'].sound.play();
+
+
+              createjs.Sound.play('win_jump')
 
             } else if (isQingsuan == false && !self.vueInstance.gameHasBeenCompleted) {
               self.vueInstance.showCongra = true;
              // Debugs.log('游戏没有完成，并且也不是清算页')
 
-              PIXI.loader.resources['win_jump'].sound.play();
+              createjs.Sound.play('win_jump')
             } else if (self.vueInstance.gameHasBeenCompleted && self.vueInstance.gameSecondPlayed) {
               self.vueInstance.showCongra = true;
             //  Debugs.log('游戏第二周目，继续玩');
-              PIXI.loader.resources['win_jump'].sound.play();
+              createjs.Sound.play('win_jump')
 
 
             } else if (self.vueInstance.gameHasBeenCompleted && !self.vueInstance.gameSecondPlayed) {
               self.gameMenuBar.bookScene.openEnergyCan(true);
-              PIXI.loader.resources['win_jump'].sound.play();
+              createjs.Sound.play('win_jump')
              // Debugs.log('游戏完成并且卡片已经获得', 'gameCompleted?', self.vueInstance.gameHasBeenCompleted)
             }
           },showPopupDelay);
@@ -439,7 +441,7 @@ class BookReadingModule extends PIXI.Container {
   };
 
   destroyed() {
-    super.destroy();
+
     if (this.gameAudio) {
       this.stopAudios();
 
@@ -451,32 +453,33 @@ class BookReadingModule extends PIXI.Container {
 
        this.gameMenuBar = null;
     }
+    if(this.swiperHammer){
+      this.swiperHammer.destroyed();
+    }
+    super.destroy();
     this.destroy();
     this.gameConfig = null;
     this.resources = null;
 
-    this.book = null;
-    this.pageturn = null;
-    this.pageturn2 = null;
-    this.leftBtn = null;
-    this.rightBtn = null;
-    this.pageMaskUpper = null;
-    this.pageMaskDown = null;
-    this.pageUpper = null;
-    this.pageDown = null;
-    this.swiperHammer = null;
+    // this.book = null;
+    // this.pageturn = null;
+    // this.pageturn2 = null;
+    // this.leftBtn = null;
+    // this.rightBtn = null;
+    // this.pageMaskUpper = null;
+    // this.pageMaskDown = null;
+    // this.pageUpper = null;
+    // this.pageDown = null;
+    // this.swiperHammer = null;
 
     //封面;
-    this.coverPageTl = null;
-    this.coverPageTl_reserve = null;
-    this.isCoverPageTime = true;//当前是封面的时候;
-    this.isCoverPageTime_reserve = false;
-    this.myAn_pageTurns = null;
-
-
-
-    this.gameAudio = null;
-    this.boySpine = null;
+    // this.coverPageTl = null;
+    // this.coverPageTl_reserve = null;
+    // this.isCoverPageTime = true;//当前是封面的时候;
+    // this.isCoverPageTime_reserve = false;
+    // this.myAn_pageTurns = null;
+    // this.gameAudio = null;
+    // this.boySpine = null;
     this.vueInstance = null;
 
   }
@@ -507,13 +510,16 @@ class BookReadingModule extends PIXI.Container {
       })
     }
 
-    PIXI.loader.resources['nextpart'].sound.play()
+
+
+    createjs.Sound.play('nextpart')
 
 
   }
 
   gameTryAgain() {
     this.currentPage = 1;
+    this.swiperHammer.lock = false;
     this.turnPrev(0);
     this.playAudios();
 
@@ -539,11 +545,11 @@ class BookReadingModule extends PIXI.Container {
 
     if ((this.gameConfig.levels[myIndex].audioSrc && _.trim(this.gameConfig.levels[myIndex].audioSrc) != '') ||
       (this.gameConfig.showCoverpage == true && this.isCoverPageTime && _.trim(this.gameConfig.coverpageAudio) != '')) {
-      this.gameAudio = PIXI.loader.resources[soundName].sound.play();
+      this.gameAudio = createjs.Sound.play(soundName);
 
      // this.gameAudio.play();
 
-      this.gameAudio.on('end',()=>{
+      this.gameAudio.on('complete',()=>{
 
         if (self.gameMenuBar.soundBtn) {
           self.gameMenuBar.soundBtn.stop();
@@ -567,20 +573,14 @@ class BookReadingModule extends PIXI.Container {
   }
 
   stopAudios() {
-
     if (this.gameAudio) {
       this.gameAudio.stop();
       //this.currentAudioPlaying = false;
       if (this.gameMenuBar.soundBtn) {
         this.gameMenuBar.soundBtn.stop();
       }
-
-
     }
-
   }
-
-
   //End Audios====
 
   //End....

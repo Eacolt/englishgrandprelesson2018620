@@ -1,30 +1,25 @@
 <template>
-  <div v-if="renderpage" class="bgContainer" ref="pixicanvas">
-
-
-    <div id="checkAreaEl" v-if="showCheckArea" class="checkArea"></div>
+  <div class="bgContainer" ref="pixicanvas">
   </div>
-
 </template>
 <script>
   import {mapActions, mapState} from 'vuex'
 
   import { Debugs, myVueMixin} from "./Utils";
+  import {PIXIAudio} from "./EasyPIXI";
 
   import {TweenMax} from 'gsap'
+
   var canvasApp = null;
-  var canPlayGame = false;
-  var PixiSound = require('pixi-sound')
+
+
   export default {
     name: "module1",
     mixins: [myVueMixin],
     data: function () {
       return {
         isgo:true,
-        renderpage:true,
-        getIdAlready:true,
-        showCheckArea:true,
-        gameConfig: "static/module1/gameconfig.json",
+        getIdAlready:true
 
       }
     },
@@ -38,29 +33,19 @@
         }
       }
     },
-    created() {
-
-      console.log(PIXI.sound.Sound,'sound')
-    },
     destroyed(){
       if(canvasApp){
         canvasApp.destroy(true);
         canvasApp = null;
       }
-
-    },
-    destroyed(){
-      this.renderpage = false;
     },
     mounted: function () {
       const self = this;
-
       canvasApp  = new PIXI.Application({
         width: 1920,
         height: 1080,
         antialias: false,
       });
-
       canvasApp.view.style.position = 'absolute';
       canvasApp.view.style.width = '100%';
       canvasApp.view.style.height = '100%';
@@ -71,8 +56,6 @@
       self.$refs.pixicanvas.appendChild(canvasApp.view);
      // this.gameStart(canvasApp)
 
-
-
       if (self.lessonPartsList.length <= 0) {
         self.axios.get('static/preparation.json').then((responseX) => {
           self.SET_GAMEINITRESPONSE(responseX.data);
@@ -81,16 +64,18 @@
 
           setTimeout(()=>{
             self.gameStart(canvasApp)
-          },300)
+          },200)
+
+          //self.gameStart(canvasApp)
 
         })
       } else {
         self.gameInit.call(self, self.gameInitResponse);
         setTimeout(()=>{
           self.gameStart(canvasApp)
-        },300)
+        },200)
 
-
+        //self.gameStart(canvasApp)
       }
 
 
@@ -163,7 +148,7 @@
           } else {
             self.SET_GAMECARDS(Number(getId_response.card));
           }
-          Debugs.log('是否打开过宝箱？opened：',getId_response.opened);
+         // Debugs.log('是否打开过宝箱？opened：',getId_response.opened);
           self.SET_BOOKOPENED(getId_response.opened);
 
           //是否完成了所有游戏；
@@ -175,15 +160,10 @@
           if (getId_response.isOpenBook && getId_response.isOpenBook) {
             self.SET_MAGICBOOKBYGAMEINDEX(getId_response.isOpenBook);
           };
-          setTimeout(()=>{
-            self.emitRender = true;
-          },400);
-
 
         }, (error) => {
           console.log('error:', error)
         });
-
 
       },
       getStuAnswerPromise() {
@@ -198,8 +178,7 @@
               resolve(e.data.stuAnswer);
             } else {
               if (self.isgo) {
-
-                resolve({detail: [0,1,2,3,4,5], card: 11, opened: 1, isOpenBook: 0});
+                resolve({detail: [0,1,2,3,4], card: 11, opened: 1, isOpenBook: 0});
                 self.isgo = false;
               }
             }
@@ -248,13 +227,13 @@
           })
         _Ga.tl.add(_Ga.tm_meter);
 
-        _Ga.tm_plane2 = TweenMax.to(_Ga.planet2, 25, {
+        _Ga.tm_plane2 = TweenMax.to(_Ga.planet2, 35, {
           bezier: [{left: '8rem', top: '+=0.8rem'},
             {left: '12rem', top: '-=0.4rem'},
             {left: '16rem', top: '+=1rem'},
             {left: '19rem', top: '-=0.8rem'}]
         });
-        _Ga.tm_plane1 = TweenMax.to(_Ga.planet1, 25, {
+        _Ga.tm_plane1 = TweenMax.to(_Ga.planet1, 35, {
           bezier: [{left: '10rem', top: '+=0.3rem'},
             {left: '12rem', top: '-=0.3rem'},
             {left: '14rem', top: '+=.3rem'},
@@ -275,35 +254,12 @@
         }, 10);
 
         self.axios.get('static/assetsConfig.json').then((response) => {
-          self.axios.get('static/allSounds.json').then((soundRes) => {
-
-            // console.log(soundRes.data,self.appPlatform)
-            // if(self.appPlatform != 'pc'){
-            //
-            // }else{
-            //   console.log('ffff?')
-            //   canPlayGame = true;
-            //   MainGame.call(self,soundRes.data)
-            // //  AudioManager.add(soundRes.data,MainGame.bind(self));
-            //    for(let i=0;i<soundRes.data.length;i++){
-            //      PIXI.sound.add(soundRes.data[i].name,soundRes.data[i].url)
-            //      console.log('name:',soundRes.data[i].name,'url:',soundRes.data[i].url)
-            //    }
-            //    PIXI.sound.play('bgSound')
-            //
-            // }
-            self.showCheckArea = false;
-            MainGame.call(self,soundRes.data);
-
-
-
-          });
-
+          MainGame.call(self);
           /**
            * 判断所有对小怪物的资源加载
            */
-          function MainGame(soundData){
-            console.log("COM ON")
+          function MainGame(){
+
             var self = this;
             for(let i=0;i<self.allPartNames.length;i++){
               switch (self.allPartNames[i]){
@@ -369,77 +325,116 @@
             };
 
 
-            PIXI.loader.add(soundData)
-            PIXI.loader.add(response.data)
-              .add(monsterLoaders)
-              .on('progress', (loader) => {
-                _Ga.progress = loader.progress;
-              })
-              .load(function (loader, resource) {
-                console.log('res;;',PIXI.loader.resources)
+
+            var allsound = [{"src":"static/sound/ground_music.mp3", "id":"bgSound"},
+              {"src":"static/sound/book_close.mp3", "id":"book_close"},
+              {"src":"static/sound/book_open.mp3", "id":"book_open"},
+              {"src":"static/sound/book_turn.mp3", "id":"book_turn"},
+              {"src":"static/sound/box_right.mp3", "id":"box_right"},
+              {"src":"static/sound/box_wrong.mp3", "id":"box_wrong"},
+              {"src":"static/sound/click.mp3", "id":"click"},
+              {"src":"static/sound/hand_down.mp3", "id":"hand_down"},
+              {"src":"static/sound/hand_down2.mp3", "id":"hand_down2"},
+              {"src":"static/sound/hand_up.mp3", "id":"hand_up"},
+              {"src":"static/sound/nextpart.mp3", "id":"nextpart"},
+              {"src":"static/sound/power_gain.mp3", "id":"power_gain"},
+              {"src":"static/sound/power_over.mp3", "id":"power_over"},
+              {"src":"static/sound/select_right.mp3", "id":"select_right"},
+              {"src":"static/sound/select_wrong.mp3", "id":"select_wrong"},
+              {"src":"static/sound/win_jump.mp3", "id":"win_jump"}]
 
 
-                var gameCtn = new PIXI.Container();
-                var gameStartPage = new PIXI.spine.Spine(PIXI.loader.resources['monsterStartPage_json'].spineData);
-                gameStartPage.x = 1920 / 2;
-                gameStartPage.y = 1080 / 2;
-                let gameBg = new PIXI.Graphics();
-                gameBg.beginFill(0xffffff);
-                gameBg.drawRect(0, 0, 1920, 1080);
-                gameBg.endFill();
-                gameBg.interactive = true;
-                gameStartPage.state.setAnimation(0, 'animation', true);
-                let gameStartBtn = new PIXI.Graphics();
-                gameStartBtn.beginFill(0xffffff, 0);
-                gameStartBtn.drawRect(-80, -190, 600, 400);
-                gameStartBtn.endFill();
-                gameStartBtn.x = 1920 / 2 - 200;
-                gameStartBtn.y = 820;
-                gameStartBtn.interactive = true;
-                gameCtn.addChild(gameBg);
-                gameCtn.addChild(gameStartPage);
-                gameCtn.addChild(gameStartBtn);
-                gameStartBtn.on('pointertap', () => {
+            var queue = new createjs.LoadQueue();
+            queue.installPlugin(createjs.Sound);
+            queue.on("complete", handleComplete, this);
+            queue.loadManifest(allsound);
+            function handleComplete() {
 
 
-                  var bgsound = PIXI.loader.resources['bgSound'].sound.play();
-                  bgsound.loop =true;
-
-                  gameStartBtn.destroy(true);
-                  gameStartPage.destroy(true);
-                  gameBg.destroy(true);
-
-
+              PIXI.loader.add(response.data)
+                .add(monsterLoaders)
+                .on('progress', (loader) => {
+                  _Ga.progress = loader.progress;
+                })
+                .load(function (loader, resource) {
 
 
-                  self.$router.push('/index');
-                  gameStartBtn.removeListener('pointertap')
+                  var gameCtn = new PIXI.Container();
+                  var gameStartPage = new PIXI.spine.Spine(PIXI.loader.resources['monsterStartPage_json'].spineData);
+                  gameStartPage.x = 1920 / 2;
+                  gameStartPage.y = 1080 / 2;
+                  var gameBg = new PIXI.Graphics();
+                  gameBg.beginFill(0xffffff);
+                  gameBg.drawRect(0, 0, 1920, 1080);
+                  gameBg.endFill();
+                  gameBg.interactive = true;
+                  gameStartPage.state.setAnimation(0, 'animation', true);
+                  var gameStartBtn = new PIXI.Graphics();
+                  gameStartBtn.beginFill(0xffffff, 0);
+                  gameStartBtn.drawRect(-80, -190, 600, 400);
+                  gameStartBtn.endFill();
+                  gameStartBtn.x = 1920 / 2 - 200;
+                  gameStartBtn.y = 820;
+                  gameStartBtn.interactive = true;
+                  gameCtn.addChild(gameBg);
+                  gameCtn.addChild(gameStartPage);
+                  gameCtn.addChild(gameStartBtn);
+                  gameStartBtn.on('pointertap', () => {
+
+                    gameStartBtn.destroy(true);
+                    gameStartPage.destroy(true);
+                    gameBg.destroy(true);
+
+                    gameStartBtn.removeListener('pointertap');
+
+                    self.$router.push('/index');
+                    var bgsound =  createjs.Sound.createInstance('bgSound');
+                    bgsound.loop = -1
+                    bgsound.play();
+                    PIXIAudio.audios['bgSound'] = bgsound;
+                    //  console.log('all sound loaded',ground)
+                  });
+                  app.stage.addChild(gameCtn)
+                  self.SET_ASSETSPAGES({assetsName: 'indexPage', completedStat: 1});
+
+
+
+                  _Ga.loading = document.getElementsByClassName('container')[0];
+                  _Ga.loading.parentNode.removeChild(_Ga.loading);
+
+
+                  clearInterval(_Ga.intervalment);
+                  //
+                  PIXI.loader.removeListener('progress');
+
+
+                  _Ga.tm_meter.kill();
+                  _Ga.tm_plane1.kill();
+                  _Ga.tm_plane2.kill();
+                  _Ga = null;
+
+                  if (Number(self.openMagicBookByGameIndex) > 0) {
+
+                    gameStartBtn.destroy(true);
+                    gameStartPage.destroy(true);
+                    gameBg.destroy(true);
+
+                    gameStartBtn.removeListener('pointertap');
+
+                    if(!PIXIAudio.audios['bgSound']){
+                      let bgsound =  createjs.Sound.createInstance('bgSound');
+                      bgsound.loop = -1;
+                      bgsound.play();
+                      PIXIAudio.audios['bgSound'] = bgsound;
+                    }
+
+                    self.$router.push('/index');
+                  }
 
                 });
-                app.stage.addChild(gameCtn)
-                self.SET_ASSETSPAGES({assetsName: 'indexPage', completedStat: 1});
+            }
 
 
-
-                _Ga.loading = document.getElementsByClassName('container')[0];
-                _Ga.loading.parentNode.removeChild(_Ga.loading);
-
-
-                clearInterval(_Ga.intervalment);
-                //
-                PIXI.loader.removeListener('progress');
-
-
-                _Ga.tm_meter.kill();
-                _Ga.tm_plane1.kill();
-                _Ga.tm_plane2.kill();
-                _Ga = null;
-
-                if (Number(self.openMagicBookByGameIndex) > 0) {
-                  self.$router.push('/index');
-                }
-
-              });
           }
 
 

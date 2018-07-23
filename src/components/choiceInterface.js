@@ -1,6 +1,7 @@
 import GameMenuBars from "./gameui/GameMenuBar";
+import {PIXIAudio} from "./EasyPIXI";
 
-import {AudioManager, Debugs} from "./Utils";
+
 
 class ChoiceInterface extends PIXI.Container {
   constructor($options) {
@@ -15,6 +16,7 @@ class ChoiceInterface extends PIXI.Container {
 
 
     this.canDragDown = false;
+    this.alreadyChecked = false;//已经选中一个娃娃;
 
     this.THEME_TYPE = GameMenuBars.vueInstance.gameThemeType;
 
@@ -25,12 +27,6 @@ class ChoiceInterface extends PIXI.Container {
   killAlias($str){
     return $str.replace(/[0-9]+/g,'');
   }
-
-  createCommonAtlas($texturename) {
-    let sprite = new PIXI.Sprite(PIXI.loader.resources['commons_atlas'].textures[$texturename]);
-    return sprite;
-  }
-
   getSlotRegionByName($animation, $name) {
     for (let i = 0; i < $animation.slotContainers.length; i++) {
       for (let k = 0; k < $animation.slotContainers[i].children.length; k++) {
@@ -40,9 +36,9 @@ class ChoiceInterface extends PIXI.Container {
       }
     }
   }
-
   clickBoxHandler(i = 0, $timespeed = 1, event) {
     const self = this;
+    self.alreadyChecked = true;
     if (this.canDragDown == false) return;
     if (this.monsterHasDroped == true) return;
 
@@ -55,90 +51,115 @@ class ChoiceInterface extends PIXI.Container {
 
 
     if (i == 0) {
-      if (self.killAlias(event.currentTarget.boxName) == 'learning') {
+      if (self.killAlias && self.killAlias(event.currentTarget.boxName) == 'learning') {
+        if(event.currentTarget){
+          event.currentTarget.state.setAnimation(0, 'learning_select', true);
+        }
 
-        event.currentTarget.state.setAnimation(0, 'learning_select', true);
+
 
       } else {
-
-        event.currentTarget.state.setAnimation(0, 'practice_select', true);
-      }
-      TweenMax.to(self.monster, $timespeed, {
-        x: self.practiceBoxes[0].x, onComplete: function () {
-
-          self.monster.state.addAnimation(0, 'dropdown', false, 0);
-
-          PIXI.loader.resources['hand_down'].sound.play()
-
-
+        if(event.currentTarget){
+          event.currentTarget.state.setAnimation(0, 'practice_select', true);
         }
-      })
 
-      this.monster.state.addListener({
-        complete: function (entry) {
 
-          if (entry.animation.name == 'dropdown') {
+      }
+      if(self.monster){
+        TweenMax.to(self.monster, $timespeed, {
+          x: self.practiceBoxes[0].x, onComplete: function () {
+            if(self.monster){
+              self.monster.state.addAnimation(0, 'dropdown', false, 0);
+              createjs.Sound.play('hand_down')
 
-              self.vueInstance.$store.dispatch("SET_MODULEINDEX", i);
+            }
 
-              let moduleList = self.vueInstance.$store.state.lessonPartsList[self.vueInstance.$store.state.lessonPartsIndex].menus
-              self.vueInstance.$store.dispatch('SET_MODULELIST', moduleList);
+          }
+        });
+      }
 
-              self.vueInstance.$router.push(self.vueInstance.$route.fullPath + '/' + self.vueInstance.$store.state.currentModuleList[i].name);
+      if(this.monster){
+        this.monster.state.addListener({
+          complete: function (entry) {
+            if(self.monster){
 
-            let bgsound = PIXI.loader.resources['bgSound'].sound.play();
-            bgsound.volume = 0;
+              if (entry.animation.name == 'dropdown') {
+
+                self.vueInstance.$store.dispatch("SET_MODULEINDEX", i);
+
+                let moduleList = self.vueInstance.$store.state.lessonPartsList[self.vueInstance.$store.state.lessonPartsIndex].menus
+                self.vueInstance.$store.dispatch('SET_MODULELIST', moduleList);
+
+                self.vueInstance.$router.push(self.vueInstance.$route.fullPath + '/' + self.vueInstance.$store.state.currentModuleList[i].name);
+
+                PIXIAudio.audios['bgSound'].volume = 0;
+
+
+              }
+            }
 
 
           }
+        })
+      }
 
-        }
-      })
+
 
 
     } else if (i == 1) {
 
       if (self.killAlias(event.currentTarget.boxName) == 'learning') {
-
-        event.currentTarget.state.setAnimation(0, 'learning_select', true);
-      } else {
-        event.currentTarget.state.setAnimation(0, 'practice_select', true);
-      }
-
-      TweenMax.to(self.monster, $timespeed, {
-        x: self.practiceBoxes[1].x, onComplete: function () {
-          self.monster.state.addAnimation(0, 'dropdown', false, 0);
-
-
-
-
-          PIXI.loader.resources['hand_down'].sound.play();
-
+        if(event.currentTarget){
+          event.currentTarget.state.setAnimation(0, 'learning_select', true);
         }
-      })
-
-      this.monster.state.addListener({
-        complete: function (entry) {
 
 
-            if (entry.animation.name == 'dropdown') {
+      } else {
+        if(event.currentTarget){
+          event.currentTarget.state.setAnimation(0, 'practice_select', true);
+        }
 
-              self.vueInstance.$store.dispatch("SET_MODULEINDEX", i);
-              let moduleList = self.vueInstance.$store.state.lessonPartsList[self.vueInstance.$store.state.lessonPartsIndex].menus;
-              self.vueInstance.$store.dispatch('SET_MODULELIST', moduleList);
+      }
+      if(self.monster){
+        TweenMax.to(self.monster, $timespeed, {
+          x: self.practiceBoxes[1].x, onComplete: function () {
+            if(self.monster){
+              self.monster.state.addAnimation(0, 'dropdown', false, 0);
 
-              self.vueInstance.$router.push(self.vueInstance.$route.fullPath + '/' + self.vueInstance.$store.state.currentModuleList[i].name);
-
-
+              createjs.Sound.play('hand_down');
             }
 
 
+          }
+        });
+
+      }
 
 
+      if(this.monster){
+        this.monster.state.addListener({
+          complete: function (entry) {
+            if(self.monster){
+
+              if (entry.animation.name == 'dropdown') {
+
+                self.vueInstance.$store.dispatch("SET_MODULEINDEX", i);
+                let moduleList = self.vueInstance.$store.state.lessonPartsList[self.vueInstance.$store.state.lessonPartsIndex].menus;
+                self.vueInstance.$store.dispatch('SET_MODULELIST', moduleList);
+
+                self.vueInstance.$router.push(self.vueInstance.$route.fullPath + '/' + self.vueInstance.$store.state.currentModuleList[i].name);
 
 
-        }
-      })
+              }
+
+            }
+
+          }
+        })
+
+      }
+
+
 
 
     }
@@ -146,6 +167,8 @@ class ChoiceInterface extends PIXI.Container {
   }
 
   destroyed() {
+
+
     this.gameMenuBars.clearGameMenuEvents();
     this.gameMenuBars.destroy();
     this.gameMenuBars = null;
@@ -339,8 +362,11 @@ class ChoiceInterface extends PIXI.Container {
     this.gameMenuBars.homeBtnShow = false;
     this.gameMenuBars.updateGameMenu();
     this.gameMenuBars.setBackBtn_tapHandler(() => {
-
+      if(self.alreadyChecked==false){
         self.vueInstance.$router.push('/index/')
+      }
+
+
 
 
     });

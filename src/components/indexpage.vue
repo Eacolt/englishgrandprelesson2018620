@@ -1,13 +1,12 @@
 <template>
   <div class="bgContainer" ref="pixicanvas">
-    <!--<pixi-canvas @startGame="gameStart"></pixi-canvas>-->
-    <!--<div></div>-->
+
   </div>
 </template>
 <script>
   import {mapActions, mapState} from 'vuex'
   import IndexPage from './indexpage.js'
-  import {AudioManager, Debugs, myVueMixin} from "./Utils";
+  import { Debugs, myVueMixin} from "./Utils";
 
   var pixiScene = null;
   var canvasApp = null;
@@ -25,8 +24,7 @@
         }
       }
     },
-
-    mounted(){
+    beforeCreate(){
       if(this.$store.state.lessonPartsList.length==0){
         this.$router.push('/');
         window.location.reload()
@@ -46,14 +44,9 @@
         });
 
         app.stage.addChild(pixiScene);
-
-
         //END
       },
     },
-
-
-
     mounted(){
       const self = this;
       canvasApp  = new PIXI.Application({
@@ -80,11 +73,9 @@
         pixiScene = null;
       }
       if(canvasApp){
-
         canvasApp.destroy(true);
         canvasApp = null;
       }
-
     }
   }
 </script>
