@@ -1,7 +1,6 @@
 <template>
   <div>
     <div  class="bg" :style="bgStyle"></div>
-
     <div  id="swiperContainerMain" class="swiper-container">
       <div v-cloak id="swiperWrapperMain" class="swiper-wrapper">
         <div   v-for="(item,index) in slideLists" class="swiper-slide swiper-slide-main">
@@ -34,10 +33,7 @@
       </div>
     </div>
 
-
-
     <div class="canvasApp" :style="canvasAppLevel" ref="pixicanvas"></div>
-
 
     <div v-show="showCheckArea" class="babyChechArea" @click="boyBtnAreaClicked"></div>
       <congraPopup :showType="popupType" v-if="showCongra"
@@ -45,7 +41,6 @@
                    @continueGame="continueGame_hdr()"
                    @continueClicked="clickContinue_hdr()"
                    @againClicked="againClicked_hdr">
-
       </congraPopup>
 
 
@@ -84,18 +79,14 @@
         paginationballs_style:{
           opacity:0
         },
-        backShow:false,
-        homeShow:true,
         currentPage:0,
         currentGameLevel:0,
         showCongra:false,
 
-        currentLessonCompleted:false,
 
         leftTriangle_style:{},
         rightTriangle_style:{},
 
-        boyCanClicked:true,
 
         currentPaginationPages:-1,
         bgStyle:{
@@ -222,7 +213,7 @@
       },
       againClicked_hdr(){
         this.showCongra = false;
-        this.boyCanClicked = true;
+
 
         if(mySwiper){
           mySwiper.slideTo(0,500)
@@ -280,12 +271,11 @@
               }
             });
 
-          // self.axios.get('static/' + modulesUrl + '/gameconfig.json').then((gameConfigData) => {
-          //
-          //   GameStart.call(self,gameConfigData.data);
-          //
-          // });
-          setTimeout(()=>{
+
+            //$nextTicker;
+
+          self.$nextTick(gameTask);
+          function gameTask(){
             Object.assign(self.paginationballs_style,{
               backgroundImage:"url("+globalStatic+'/pagiball1.png'+")",
               backgroundRepeat:'no-repeat',
@@ -356,18 +346,10 @@
                 slideChange(){
                   self.currentPage = this.activeIndex;
                   if(this.activeIndex>=this.slides.length-1){
-
                     if(pixiScene){
                       pixiScene.showBoy();
-
                     }
-                    // self.canvasAppLevel = {
-                    //   zIndex:100
-                    // }
                     self.showCheckArea = true;
-
-                    self.currentLessonCompleted= true;
-
                   }else{
                     if(pixiScene){
                       pixiScene.hideBoy();
@@ -376,26 +358,18 @@
                       zIndex:1
                     }
                     self.showCheckArea = false;
-
                   }
                   if(pixiScene){
                     pixiScene.stopAudios();
                     pixiScene.playAudios();
                   }
-
-                  //self.$parent.$parent.$refs.gameMenu.showAudio = false;
-                  //【重要】设置当前下部导航的索引;
                   self.currentPaginationPages = this.realIndex;
-
                 },
                 tap: function () {
-
                   self.currentPage = this.activeIndex;
-
                 },
                 init: function () {
                   this.slides.eq(this.activeIndex).addClass('none-effect');
-
                   setTimeout(()=>{
                     mySwiperPagination.slides.eq(0).find('.paginationballs').css({
                       backgroundImage:"url("+globalStatic+'/pagiball2.png'+")",
@@ -404,21 +378,16 @@
                       color:"white"
                     });
                   },20)
-
-
                   this.update();
                 }
               },
             });
-
             var audioManifest = [];
-
             for(let i=0;i< gameConfigData.data.gameData.pictureList.length;i++){
               let audioSrc =  gameConfigData.data.gameData.pictureList[i].audioSrc;
               let audioSrcTrim = _.trim(audioSrc);
               if(audioSrcTrim!=''){
                 let audioName = modulesUrl+'_'+audioSrcTrim.replace(/\./g,'_');
-
                 audioManifest.push({
                   id:audioName,
                   src:'static/'+modulesUrl+'/'+audioSrc
@@ -430,12 +399,10 @@
             var audioAvalid = false;
             for(let i=0;i<audioManifest.length;i++){
               if(PIXI.loader.resources[audioManifest[i]]){
-
                 audioAvalid = true;
                 break;
               }
             }
-
             if(self.assetsPages[modulesUrl] && self.assetsPages[modulesUrl] == 1) {
               pixiScene = new PixiScene1({
                 json: gameConfigData.data.gameData,
@@ -451,13 +418,13 @@
               queue.loadManifest(audioManifest);
               function handleComplete() {
 
-                  pixiScene = new PixiScene1({
-                    json: gameConfigData.data.gameData,
-                    vueInstance:self,
-                    swiper:mySwiper
-                  });
-                  app.stage.addChild(pixiScene);
-                  document.getElementById('gamebasemasker').style.visibility = 'hidden';
+                pixiScene = new PixiScene1({
+                  json: gameConfigData.data.gameData,
+                  vueInstance:self,
+                  swiper:mySwiper
+                });
+                app.stage.addChild(pixiScene);
+                document.getElementById('gamebasemasker').style.visibility = 'hidden';
 
                 self.SET_ASSETSPAGES({
                   assetsName:modulesUrl,
@@ -465,12 +432,8 @@
                 });
               }
             }
-
-
-
-          },100)
+          }
         });
-
 
       }
     },

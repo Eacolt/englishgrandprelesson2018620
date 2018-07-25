@@ -8,10 +8,9 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-//
-// require('pixi-sound')
-const _ = require('lodash');
 
+require('pixi-sound');
+const _ = require('lodash');
 
 
 Vue.use(VueAxios,axios)
